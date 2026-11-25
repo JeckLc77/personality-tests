@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>你是什么小动物人格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#FFF8EE; --bg2:#FFEFE3; --card:#FFFFFF; --ink:#3D2C29; --ink2:#7A6560; --line:#F0DDD3;
+--accent:#FF7A59; --accent2:#FFB35C; --mint:#5EC8A6; --pink:#FF9EBB; --sky:#7EC8E3; --lav:#B8A9E8;
+--soft:#FFF1E6; --shadow:0 12px 32px rgba(180,110,70,.14);
+--radius:22px;
+}
+@media (prefers-color-scheme: dark){
+:root{ --bg:#1E1A24; --bg2:#2A2333; --card:#2E2838; --ink:#F5EDE6; --ink2:#C4B2AA; --line:#453D52; --soft:#3A3247; --shadow:0 12px 32px rgba(0,0,0,.4);}
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+font-family:"Noto Sans SC",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+background:
+radial-gradient(600px 400px at 10% -5%, rgba(255,179,92,.35), transparent 60%),
+radial-gradient(700px 500px at 95% 10%, rgba(255,158,187,.28), transparent 60%),
+radial-gradient(600px 600px at 50% 110%, rgba(94,200,166,.22), transparent 60%),
+linear-gradient(180deg,var(--bg),var(--bg2));
+color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:640px;margin:0 auto;padding:20px 18px 48px}
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp.45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.screen.active{animation:none}.opt{transition:none!important}}
+
+/* ===== COVER ===== */
+.cover{text-align:center;padding-top:28px}
+.paw-row{font-size:22px;letter-spacing:14px;opacity:.85}
+.cover h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:clamp(34px,8.5vw,52px);line-height:1.2;margin:18px 0 6px;letter-spacing:.02em}
+.cover h1.hl{color:var(--accent)}
+.cover.sub{font-size:17px;color:var(--ink2);line-height:1.7;margin:10px auto 0;max-width:420px}
+.cover-card{background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:26px 22px;margin:26px 0 20px;text-align:left}
+.cover-card h3{margin:0 0 12px;font-size:15px;letter-spacing:.06em}
+.cover-card ul{margin:0;padding:0;list-style:none}
+.cover-card li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;font-size:14.5px;line-height:1.6;color:var(--ink2)}
+.cover-card li b{color:var(--ink)}
+.dot{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;margin-top:1px}
+.animal-strip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0 4px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:700;box-shadow:0 3px 10px rgba(180,110,70,.08)}
+.btn-primary{
+display:block;width:100%;border:none;border-radius:999px;padding:17px 20px;font-size:18px;font-weight:900;color:#fff;
+background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 24px rgba(255,122,89,.38);
+transition:transform.15s ease, box-shadow.15s ease;min-height:56px;
+}
+.btn-primary:active{transform:scale(.98)}
+.btn-ghost{display:block;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:14px 20px;font-size:16px;font-weight:700;min-height:52px}
+.fineprint{text-align:center;font-size:12.5px;color:var(--ink2);margin-top:14px;line-height:1.6}
+
+/* ===== QUIZ ===== */
+.topbar{display:flex;align-items:center;gap:12px;margin:6px 0 14px}
+.back-btn{flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-size:18px;color:var(--ink);display:grid;place-items:center}
+.progress-wrap{flex:1}
+.progress-meta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2);font-weight:700;margin-bottom:6px}
+.progress{height:10px;background:var(--soft);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width.4s ease}
+.q-card{background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);padding:28px 22px 22px}
+.q-tag{display:inline-block;font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--accent);background:var(--soft);padding:5px 11px;border-radius:99px;margin-bottom:14px}
+.q-title{font-family:"Noto Serif SC",serif;font-size:clamp(20px,5.4vw,25px);font-weight:900;line-height:1.5;margin:0 0 6px}
+.q-hint{font-size:13.5px;color:var(--ink2);margin:0 0 20px;line-height:1.6}
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{
+text-align:left;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--ink);
+border-radius:16px;padding:15px 16px;font-size:15.5px;line-height:1.55;font-weight:500;min-height:52px;
+display:flex;gap:12px;align-items:flex-start;transition:border-color.15s, background.15s, transform.12s;
+}
+.opt:hover{border-color:var(--accent2)}
+.opt:active{transform:scale(.99)}
+.opt.k{flex:0 0 auto;width:26px;height:26px;border-radius:8px;background:var(--soft);display:grid;place-items:center;font-weight:900;font-size:13px;color:var(--accent)}
+.opt.picked{border-color:var(--accent);background:var(--soft)}
+.opt.picked.k{background:var(--accent);color:#fff}
+.quiz-foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.link-btn{background:none;border:none;color:var(--ink2);font-size:14.5px;font-weight:700;padding:10px 6px;min-height:44px}
+.link-btn:disabled{opacity:.35}
+
+/* ===== RESULT POSTER ===== */
+.poster{
+border-radius:30px;padding:6px;box-shadow:0 20px 44px rgba(160,90,60,.25);
+background:linear-gradient(150deg,var(--pc1,#FFD9C0),var(--pc2,#FFB35C));
+}
+.poster-inner{background:var(--card);border-radius:25px;padding:30px 24px 24px;position:relative;overflow:hidden}
+.poster-inner::before{content:"🐾 🐾";position:absolute;top:12px;right:16px;font-size:15px;opacity:.35;letter-spacing:6px}
+.poster.kicker{text-align:center;font-size:12.5px;font-weight:900;letter-spacing:.28em;color:var(--ink2)}
+.animal-face{text-align:center;font-size:96px;line-height:1.15;margin:8px 0 2px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.12))}
+.poster h2{text-align:center;font-family:"Noto Serif SC",serif;font-size:clamp(30px,8vw,40px);font-weight:900;margin:4px 0 2px}
+.poster.en{text-align:center;font-size:12px;letter-spacing:.3em;color:var(--ink2);font-weight:700;text-transform:uppercase}
+.tagline{
+text-align:center;font-family:"Noto Serif SC",serif;font-size:17.5px;font-weight:600;line-height:1.65;
+margin:16px auto 4px;max-width:400px;color:var(--ink);
+}
+.tagline::before{content:"「 ";color:var(--accent);font-weight:900}
+.tagline::after{content:" 」";color:var(--accent);font-weight:900}
+.match{text-align:center;margin:12px 0 4px}
+.match span{display:inline-block;background:var(--soft);border:1px dashed var(--accent2);color:var(--ink);font-size:13px;font-weight:700;border-radius:99px;padding:6px 14px}
+.divider{border:none;border-top:1.5px dashed var(--line);margin:20px 0}
+.sec-title{font-size:13px;font-weight:900;letter-spacing:.14em;color:var(--accent);margin:0 0 10px}
+.desc{font-size:15px;line-height:1.85;color:var(--ink);margin:0}
+.traits{display:flex;flex-wrap:wrap;gap:8px}
+.trait{background:var(--soft);border-radius:99px;padding:7px 13px;font-size:13.5px;font-weight:700}
+.flaw{font-size:14px;line-height:1.75;color:var(--ink2);margin:0}
+.dims{display:flex;flex-direction:column;gap:9px}
+.dim-row{display:grid;grid-template-columns:64px 1fr 30px;align-items:center;gap:10px;font-size:13px}
+.dim-row.name{font-weight:700;color:var(--ink2)}
+.dim-track{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.dim-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pc1,#FFD9C0),var(--pc2,#FFB35C));width:0%;transition:width.8s ease}
+.dim-row.val{text-align:right;font-weight:900;color:var(--ink2);font-size:12px}
+.egg{background:var(--soft);border-radius:16px;padding:14px 16px;font-size:14px;line-height:1.75}
+.egg b{color:var(--accent)}
+.poster-foot{text-align:center;font-size:11.5px;color:var(--ink2);margin-top:18px;letter-spacing:.06em}
+.result-actions{display:flex;flex-direction:column;gap:11px;margin-top:20px}
+.toast{
+position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;
+background:#3D2C29;color:#FFF6EC;padding:12px 22px;border-radius:99px;font-size:14px;font-weight:700;transition:.3s;z-index:50;box-shadow:0 10px 24px rgba(0,0,0,.25);max-width:88vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media (min-width:560px){.result-actions{flex-direction:row}.result-actions>*{flex:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- COVER -->
+<section class="screen active" id="screen-cover">
+<div class="cover">
+<div class="paw-row">🐾 🐾 🐾</div>
+<h1>你是什么<br><span class="hl">小动物</span>人格？</h1>
+<p class="sub">如果把你变成一只小动物，你会是黏人的小狗、高冷的布偶猫，还是慢吞吞的树懒？20 道生活小题，扒一扒你藏在日常里的「兽性」。</p>
+<div class="animal-strip">
+<span class="chip">🐱 布偶猫</span><span class="chip">🐶 小狗</span><span class="chip">🦊 狐狸</span><span class="chip">🦥 树懒</span><span class="chip">🦜 鹦鹉</span>
+<span class="chip">🦔 刺猬</span><span class="chip">🐹 仓鼠</span><span class="chip">🦌 小鹿</span><span class="chip">🦉 猫头鹰</span><span class="chip">🦦 水獭</span>
+</div>
+<div class="cover-card">
+<h3>测试说明</h3>
+<ul>
+<li><span class="dot" style="background:#FFE3D3">1</span><span><b>20 道单选题</b>，全是社交、作息、情绪、领地、撒娇这些生活场景，没有标准答案，选第一反应就好。</span></li>
+<li><span class="dot" style="background:#D9F2E6">2</span><span>从<b>黏人度、警惕性、活力、独立性、好奇心、治愈感、贪吃度</b>七个维度综合匹配，共 10 种小动物人格。</span></li>
+<li><span class="dot" style="background:#FFE9F1">3</span><span>结果是一张<b>海报卡</b>，带专属文案和趣味彩蛋，截图就能发小红书和朋友圈。</span></li>
+</ul>
+</div>
+<button class="btn-primary" id="btn-start">开始测试 →</button>
+<p class="fineprint">趣味人格测试，仅供娱乐，不是专业心理诊断哦。</p>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section class="screen" id="screen-quiz">
+<div class="topbar">
+<button class="back-btn" id="btn-home" aria-label="回到首页">←</button>
+<div class="progress-wrap">
+<div class="progress-meta"><span id="prog-text">第 1 / 20 题</span><span id="prog-pct">0%</span></div>
+<div class="progress"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+</div>
+<div class="q-card" id="q-card">
+<span class="q-tag" id="q-tag">生活场景</span>
+<h2 class="q-title" id="q-title"></h2>
+<p class="q-hint" id="q-hint"></p>
+<div class="opts" id="opts"></div>
+</div>
+<div class="quiz-foot">
+<button class="link-btn" id="btn-prev">← 上一题</button>
+<span style="font-size:12.5px;color:var(--ink2)">选完自动跳到下一题</span>
+</div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="screen-result">
+<div class="poster" id="poster">
+<div class="poster-inner">
+<p class="kicker">你 的 小 动 物 人 格</p>
+<div class="animal-face" id="r-face">🐱</div>
+<h2 id="r-name"></h2>
+<p class="en" id="r-en"></p>
+<p class="tagline" id="r-tagline"></p>
+<div class="match"><span id="r-match"></span></div>
+<hr class="divider">
+<p class="sec-title">🐾 习性解读</p>
+<p class="desc" id="r-desc"></p>
+<hr class="divider">
+<p class="sec-title">✦ 性格特点</p>
+<div class="traits" id="r-traits"></div>
+<p class="flaw" id="r-flaw" style="margin-top:12px"></p>
+<hr class="divider">
+<p class="sec-title">✦ 你的七维小兽图谱</p>
+<div class="dims" id="r-dims"></div>
+<hr class="divider">
+<p class="sec-title">★ 隐藏优势</p>
+<p class="desc" id="r-adv"></p>
+<hr class="divider">
+<p class="sec-title">🎁 趣味彩蛋</p>
+<div class="egg" id="r-egg"></div>
+<p class="poster-foot">《你是什么小动物人格》 · 趣味测试 · 截图分享给朋友测一测</p>
+</div>
+</div>
+<div class="result-actions">
+<button class="btn-primary" id="btn-copy">📋 复制我的结果</button>
+<button class="btn-ghost" id="btn-retest">↺ 重新测试</button>
+</div>
+<p class="fineprint">长按或截图上方海报卡，即可分享到小红书 / 朋友圈。</p>
+</section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* 维度: C黏人 A警惕 E活力 I独立 Q好奇 H治愈 F贪吃 */
+var DIMS = [
+{k:'C', name:'黏人度'}, {k:'A', name:'警惕性'}, {k:'E', name:'活力值'},
+{k:'I', name:'独立性'}, {k:'Q', name:'好奇心'}, {k:'H', name:'治愈感'}, {k:'F', name:'贪吃度'}
+];
+
+var QUESTIONS = [
+{tag:'社交方式', q:'朋友临时组局，喊你半小时后出门，你的第一反应是？', hint:'别想太多，选身体最诚实的那个。', opts:[
+{t:'立刻弹起来换衣服，这种热闹怎么能少了我', s:{C:2,E:3,Q:1}},
+{t:'先问一句"都有谁"，有熟人才安心去', s:{A:2,C:1,H:1}},
+{t:'内心挣扎三分钟，最后还是窝在家里回一句"下次一定"', s:{I:2,E:0,A:1}},
+{t:'去可以，但得先看看附近有什么好吃的', s:{F:3,Q:1}}]},
+{tag:'作息习惯', q:'你的周末早晨通常是什么画风？', hint:'', opts:[
+{t:'闹钟一响就醒，生物钟比上班还准时', s:{E:2,I:1}},
+{t:'睡到自然醒，醒来先在床上躺着玩半小时手机', s:{H:1,F:1,E:0}},
+{t:'昨晚熬夜到凌晨三点，上午基本处于"关机"状态', s:{I:2,Q:1}},
+{t:'被饿醒，第一件事是想今天早餐吃什么', s:{F:3,E:1}}]},
+{tag:'情绪反应', q:'被领导/老师当众点名批评了一句，你会？', hint:'', opts:[
+{t:'表面稳如泰山，内心已经演完了一整部苦情剧', s:{A:2,H:1}},
+{t:'当场有点委屈，下班必须找朋友狠狠吐槽一顿', s:{C:2,E:1}},
+{t:'左耳进右耳出，五分钟后就忘了这回事', s:{I:2,H:2}},
+{t:'默默记在小本本上，下次用实力把场子找回来', s:{I:1,Q:1,A:1}}]},
+{tag:'领地意识', q:'有人没打招呼就坐了你的专属位置、用了你的杯子，你？', hint:'', opts:[
+{t:'浑身难受，那是我的地盘！但嘴上说"没事没事"', s:{A:3,I:1}},
+{t:'完全不在意，大家开心就好', s:{H:2,C:1}},
+{t:'默默把自己的东西收好，下次藏得更隐蔽一点', s:{A:2,I:2}},
+{t:'当场开玩笑宣示主权："这位子可是有主的哦"', s:{E:2,C:1}}]},
+{tag:'撒娇与独立', q:'遇到搞不定的麻烦事，你的第一反应是？', hint:'', opts:[
+{t:'先撒个娇/卖个萌，看看能不能摇到人帮忙', s:{C:3,H:1}},
+{t:'自己闷头研究，实在不行才开口求助', s:{I:3,Q:1}},
+{t:'立刻在群里喊人，众人拾柴火焰高', s:{C:2,E:2}},
+{t:'先放一放，说不定睡一觉它自己就好了', s:{E:0,H:1,I:1}}]},
+{tag:'社交方式', q:'在聚会上，你通常是哪个位置？', hint:'', opts:[
+{t:'气氛组组长，话题和笑声都由我承包', s:{E:3,C:1,Q:1}},
+{t:'安静听大家聊，偶尔一句神补刀逗笑全场', s:{Q:2,H:1}},
+{t:'守着餐桌和零食区，那里才是我的主场', s:{F:3,A:1}},
+{t:'找个角落和一两个人深聊，拒绝无效社交', s:{I:2,A:2}}]},
+{tag:'作息习惯', q:'深夜十一点，你的手机使用状态是？', hint:'', opts:[
+{t:'正刷得起劲，夜晚才是我真正苏醒的时间', s:{Q:2,I:2}},
+{t:'已经放下手机准备睡了，养生局选手', s:{H:2,E:1}},
+{t:'在和人有一搭没一搭地聊天，聊到困为止', s:{C:3}},
+{t:'在翻外卖软件，琢磨夜宵点什么', s:{F:3}}]},
+{tag:'情绪反应', q:'好朋友突然冷落你两天没回消息，你会？', hint:'', opts:[
+{t:'疯狂脑补：我是不是说错话了？他是不是生气了？', s:{A:3,C:1}},
+{t:'直接发个表情包试探一下，主动出击', s:{C:2,E:2}},
+{t:'无所谓，各忙各的很正常，过几天再说', s:{I:3}},
+{t:'有点难过，但吃点好吃的就自我治愈了', s:{F:2,H:2}}]},
+{tag:'好奇心', q:'路边新开了一家没见过的奇怪小店，你会？', hint:'', opts:[
+{t:'立刻进去逛一圈，不看看今晚睡不着', s:{Q:3,E:1}},
+{t:'先站在门口观察一下人流和评价再决定', s:{A:2,Q:1}},
+{t:'记下位置，等朋友一起去探店', s:{C:2,F:1}},
+{t:'路过就路过，我对新东西的兴趣有限', s:{I:1,E:0}}]},
+{tag:'领地意识', q:'你的房间/工位是什么状态？', hint:'', opts:[
+{t:'乱中有序，别人看不懂，但我闭着眼都能找到东西', s:{I:2,Q:1}},
+{t:'整整齐齐，每样东西都有固定坐标', s:{A:1,I:2}},
+{t:'囤了一堆吃的和杂物，像个小仓库', s:{F:3,H:1}},
+{t:'摆满了喜欢的人送的小玩意儿，温馨最重要', s:{C:2,H:2}}]},
+{tag:'撒娇与独立', q:'生病不舒服的时候，你最想？', hint:'', opts:[
+{t:'有人守在旁边，喂水喂药陪我说话', s:{C:3,H:1}},
+{t:'一个人安安静静躺着，谁都别来打扰我恢复', s:{I:3,A:1}},
+{t:'喝一碗热乎乎的粥/汤，胃暖了心就暖了', s:{F:2,H:2}},
+{t:'刷点搞笑视频，笑着笑着就忘了难受', s:{E:2,Q:1}}]},
+{tag:'社交方式', q:'微信群里突然冷场了，你会？', hint:'', opts:[
+{t:'甩一个搞笑表情包/段子，把场子热起来', s:{E:3,H:1}},
+{t:'默默潜水，绝不当那个打破沉默的人', s:{A:2,I:1}},
+{t:'发一张美食照片，成功把话题带偏到吃上', s:{F:3,Q:1}},
+{t:'私聊群里最熟的人：他们怎么都不说话呀', s:{C:2,A:1}}]},
+{tag:'活力值', q:'公司/学校组织户外团建爬山，你的内心OS是？', hint:'', opts:[
+{t:'冲！我要第一个登顶，顺便拍一百张照片', s:{E:3,Q:1}},
+{t:'能不能申请在山脚下的农家乐等大家……', s:{E:0,F:2,H:1}},
+{t:'慢慢走，看看风景，和自然贴贴也挺治愈', s:{H:3,Q:1}},
+{t:'先查好路线和天气，做足功课再出发', s:{A:2,I:1,Q:1}}]},
+{tag:'情绪反应', q:'被夸奖的时候，你的反应通常是？', hint:'', opts:[
+{t:'开心到飞起，尾巴都要翘上天，还想再听两句', s:{C:2,E:2}},
+{t:'表面淡定说"还好啦"，心里已经放起了烟花', s:{A:1,H:2}},
+{t:'有点不好意思，下意识想躲开大家的目光', s:{A:3,I:1}},
+{t:'立刻反夸回去，夸夸要双向流动才行', s:{H:2,E:1,C:1}}]},
+{tag:'好奇心', q:'给你一个完全陌生的城市自由行一天，你会？', hint:'', opts:[
+{t:'不做攻略，走到哪算哪，迷路也是惊喜', s:{Q:3,E:2}},
+{t:'提前把路线、美食、避坑指南查得明明白白', s:{A:2,Q:2}},
+{t:'直奔当地最有名的菜市场和小吃街', s:{F:3,Q:1}},
+{t:'找一家舒服的咖啡馆坐一下午，感受当地的慢生活', s:{H:3,I:1}}]},
+{tag:'领地意识', q:'合租/同住的人把公共区域弄得一团乱，你会？', hint:'', opts:[
+{t:'忍不了，默默收拾干净，但心里记上一笔', s:{A:2,H:1}},
+{t:'直接沟通，规矩要立好，大家都舒服', s:{I:2,E:1}},
+{t:'关上自己房间的门，眼不见为净', s:{I:2,A:1,E:0}},
+{t:'喊大家一起大扫除，完事点个大餐庆祝', s:{C:2,F:2,E:1}}]},
+{tag:'撒娇与独立', q:'想要一个有点小贵的心仪好物，你会？', hint:'', opts:[
+{t:'疯狂暗示身边的人，就差把链接甩脸上了', s:{C:3,Q:1}},
+{t:'自己攒钱买，靠自己买到手的最香', s:{I:3}},
+{t:'先放购物车冷静一周，还想要再下单', s:{A:2,F:1}},
+{t:'纠结半天，最后钱花在了吃上面……', s:{F:3}}]},
+{tag:'活力值', q:'连续忙了一周，终于空出完整的一天，你想怎么过？', hint:'', opts:[
+{t:'睡到中午，下午躺平，晚上继续躺平，能量回充中', s:{E:0,H:2,I:1}},
+{t:'约上三五好友，逛街吃饭唱歌，行程拉满', s:{E:3,C:2}},
+{t:'一个人去探索没去过的地方，给自己攒点新故事', s:{Q:3,I:1}},
+{t:'做一桌好吃的犒劳自己，吃饱就是幸福', s:{F:3,H:1}}]},
+{tag:'警惕性', q:'陌生人突然对你特别热情，你的第一反应是？', hint:'', opts:[
+{t:'先警惕：无事献殷勤，他是不是想推销什么', s:{A:3,I:1}},
+{t:'来者不拒，多个朋友多条路，先聊聊看', s:{E:2,C:1,Q:1}},
+{t:'礼貌回应但保持距离，慢慢观察再说', s:{A:2,I:2}},
+{t:'受宠若惊，心里有点小开心', s:{C:2,H:1}}]},
+{tag:'治愈感', q:'朋友心情低落来找你，你通常会？', hint:'', opts:[
+{t:'什么都不多说，默默陪着，递纸巾递热水', s:{H:3,C:1}},
+{t:'讲笑话、整活儿，想方设法把他逗笑', s:{E:2,H:2}},
+{t:'带他去吃一顿好的，没有什么是一顿火锅解决不了的', s:{F:2,H:2,C:1}},
+{t:'帮他分析问题、出谋划策，解决问题才是正经事', s:{Q:2,I:1,A:1}}]}
+];
+
+var ANIMALS = [
+{id:'cat', face:'🐱', name:'高冷布偶猫', en:'Ragdoll Cat', c1:'#F6D5E8', c2:'#B8A9E8',
+profile:{C:6,A:4,E:2,I:6,Q:4,H:9,F:5},
+tagline:'表面高冷勿扰，心里住着一团棉花糖。',
+desc:'你像布偶猫一样，平时安安静静、不吵不闹，看起来有点不好接近。但只要认定了一个人，你就会悄悄蹭过去，把最柔软的一面露出来。你的世界不大，却打理得精致舒服；你不喜欢无效社交，更愿意把温柔留给真正懂你的人。',
+traits:['安静治愈体质','慢热但长情','审美在线','情绪稳定'],
+flaw:'小缺点：太佛系了，抢零食永远抢不过别人；心情不好时只会躲起来自己消化，让关心你的人干着急。',
+adv:'你自带「降噪」能力。和你待在一起的人会不自觉地慢下来、静下来，这种松弛感在人人焦虑的时代里，是稀缺的治愈力。',
+egg:'布偶猫被抱起来时会全身放松像个布娃娃——这就是你！在信任的人面前，你的防备值直接归零。今日幸运物：一把软乎乎的毯子。'},
+{id:'dog', face:'🐶', name:'黏人小狗', en:'Clingy Puppy', c1:'#FFE3B3', c2:'#FF9E5C',
+profile:{C:10,A:2,E:8,I:2,Q:5,H:9,F:6},
+tagline:'快乐小狗本狗，快乐会传染，你也是。',
+desc:'你就是行走的快乐源泉，热情、直接、藏不住心事。开心了要分享，难过了要贴贴，你对喜欢的人从不吝啬表达。像小狗一样，你的世界简单又热烈：谁对你好，你就掏心掏肺对谁好，忠诚得让人心软。',
+traits:['热情直球选手','快乐传染源','忠诚度拉满','情绪写在脸上'],
+flaw:'小缺点：太容易相信人，热情有时会被辜负；独处耐受度低，一个人待久了容易蔫儿。',
+adv:'你的感染力就是超能力。低气压的场子只要有你在，三分钟就能热起来；朋友低落时，第一个想找的人往往就是你。',
+egg:'小狗摇尾巴的频率和开心程度成正比——朋友说，你一开心，连打字都带波浪号。今日幸运物：和朋友的一顿临时起意的饭。'},
+{id:'fox', face:'🦊', name:'机灵小狐狸', en:'Clever Fox', c1:'#FFD0B0', c2:'#FF7A59',
+profile:{C:3,A:8,E:6,I:8,Q:9,H:4,F:4},
+tagline:'别被我的可爱骗了，我聪明着呢。',
+desc:'你像小狐狸一样机敏，眼睛一转就是一个主意。好奇心旺盛，什么新鲜事都想掺一脚；同时又很有分寸感，不轻易交底。你擅长在人群里观察，关键时刻一出手就惊艳所有人，是朋友眼中「最靠谱的军师」。',
+traits:['脑子转得飞快','观察力敏锐','鬼点子制造机','进退有度'],
+flaw:'小缺点：想得太多做得太少，偶尔聪明反被聪明误；对人防备心重，真心话只说三分。',
+adv:'你的洞察力远超同龄人。别人还在状况外，你已经把局势看透了三层，这种「提前看穿」的能力，在学习、工作和人际里都是王牌。',
+egg:'狐狸的耳朵能听到地下三米的声音——怪不得八卦和风吹草动永远逃不过你的耳朵。今日幸运物：一个突然冒出来的好点子。'},
+{id:'sloth', face:'🦥', name:'慢吞吞树懒', en:'Slow Sloth', c1:'#D9EBD0', c2:'#8FCB8F',
+profile:{C:4,A:3,E:1,I:7,Q:2,H:6,F:5},
+tagline:'人生苦短，我先躺为敬。',
+desc:'你信奉「慢就是快」，天塌下来先睡一觉再说。像树懒一样，你有自己的节奏，谁也别想催你。表面上懒洋洋的，其实你内心稳得很，不焦虑、不内耗，用最省电的模式，过最自在的日子。',
+traits:['反内耗达人','节奏稳如泰山','省电模式常驻','知足常乐'],
+flaw:'小缺点：拖延症晚期，事情不到最后一刻绝不动手；对新事物的启动成本高得离谱。',
+adv:'你的情绪稳定性堪称一绝。大家都在焦虑内卷的时候，你能守住自己的节奏——这种「不被带偏」的定力，是长跑型选手的致胜法宝。',
+egg:'树懒慢到身上能长出绿藻——你的慢不是懒，是自带生态系统。今日幸运物：一场没有闹钟的午觉。'},
+{id:'parrot', face:'🦜', name:'社牛鹦鹉', en:'Social Parrot', c1:'#CDEFF5', c2:'#5EC8A6',
+profile:{C:7,A:5,E:10,I:3,Q:8,H:5,F:3},
+tagline:'话痨不是病，是我发光的方式。',
+desc:'你天生自带麦克风，走到哪儿都是话题中心。像鹦鹉一样，你学什么像什么，模仿力和表达欲双双拉满。你热爱新鲜事，讨厌冷场，是朋友局里永远的「气氛担当」，有你在的地方就不会无聊。',
+traits:['天生气氛组','表达欲爆棚','学啥都快','自来熟体质'],
+flaw:'小缺点：话太多偶尔会说漏嘴；三分钟热度，新玩具到手没两天就腻了。',
+adv:'你的表达和模仿天赋是天生的社交货币。无论是演讲、直播还是带新人，你都能快速拉近距离，这种能力在很多赛道里都吃香。',
+egg:'鹦鹉能记住上百个词汇——你记住的梗比单词还多，聊天永远不缺素材。今日幸运物：一句逗笑全场的话。'},
+{id:'hedgehog', face:'🦔', name:'敏感小刺猬', en:'Sensitive Hedgehog', c1:'#EAD9C2', c2:'#C99B6A',
+profile:{C:2,A:10,E:3,I:9,Q:5,H:5,F:3},
+tagline:'刺是盔甲，肚皮只给最信任的人摸。',
+desc:'你像小刺猬一样，初见时竖着刺，让人觉得不好接近。其实你的内心柔软得一塌糊涂，只是太敏感、太怕受伤，所以先把保护层拉满。一旦有人耐心地走近你，你就会露出软乎乎的肚皮，那份真心比谁都珍贵。',
+traits:['外冷内热本热','敏感细腻','自我保护意识强','认定了就掏心掏肺'],
+flaw:'小缺点：容易想太多，一句话能在心里反复琢磨一整天；受了委屈只会缩起来，不爱解释。',
+adv:'你的共情力藏在敏感里。你总能第一时间察觉到别人的情绪变化，是那种「什么都不用说，他都懂」的朋友。',
+egg:'刺猬遇到信任的人会把刺收起来露出肚皮——据说见过你撒娇的人，不超过三个。今日幸运物：一个安安静静的独处角落。'},
+{id:'hamster', face:'🐹', name:'贪吃小仓鼠', en:'Foodie Hamster', c1:'#FFE9B8', c2:'#FFB35C',
+profile:{C:5,A:6,E:5,I:5,Q:6,H:7,F:10},
+tagline:'人生大事，吃饱再说。',
+desc:'你的快乐开关长在味蕾上。像仓鼠一样，你热爱囤货——囤零食、囤好吃的店、囤生活的小确幸。腮帮子鼓鼓的你，对世界没什么大野心，吃饱喝足、睡个好觉，就是顶级幸福。你的满足感简单又纯粹，特别治愈人。',
+traits:['干饭第一名','囤货小能手','快乐阈值超低','满足感制造机'],
+flaw:'小缺点：看见好吃的就走不动道，钱包常为美食破防；囤的东西经常囤到过期。',
+adv:'你拥有把平凡日子过出滋味的本事。一顿用心做的饭、一包藏起来的零食，你总能给自己和朋友制造小惊喜，是团队里的幸福感担当。',
+egg:'仓鼠的腮帮子能塞下相当于自身体重一半的食物——朋友说，你的包里永远能掏出吃的，像哆啦A梦的口袋。今日幸运物：藏在抽屉深处的那包零食。'},
+{id:'deer', face:'🦌', name:'优雅小鹿', en:'Elegant Deer', c1:'#DFF3E4', c2:'#7EC8A0',
+profile:{C:4,A:9,E:5,I:6,Q:5,H:9,F:3},
+tagline:'温柔有边界，优雅有力量。',
+desc:'你像小鹿一样温润干净，待人接物自带分寸感，让人如沐春风。但别被你的温柔骗了——你警觉、清醒，有自己的底线和判断，不喜欢的人和事，你会安安静静地走开，不吵不闹，却再也不回头。',
+traits:['温柔有边界','气质干净','警觉又清醒','安静的美学家'],
+flaw:'小缺点：太容易受惊吓，一点风吹草动就想逃跑；不擅长拒绝，委屈常常自己咽。',
+adv:'你的气质就是通行证。干净、舒服、可信赖，和你相处过的人都会留下好印象，这种口碑在关键时刻会变成实实在在的机会。',
+egg:'小鹿的听觉超级灵敏，能分辨最细微的动静——怪不得你总能提前察觉气氛不对。今日幸运物：一阵带着花香的风。'},
+{id:'owl', face:'🦉', name:'夜猫子猫头鹰', en:'Night Owl', c1:'#D8D5F2', c2:'#7A76B8',
+profile:{C:2,A:7,E:3,I:10,Q:10,H:4,F:3},
+tagline:'白天是节能模式，深夜才是我的主场。',
+desc:'你像猫头鹰一样，白天低调安静，甚至有点没精神；可一到深夜，思路全开、灵感喷涌。独立、清醒、爱思考，你享受独处时的深度探索，是朋友眼中「平时不说话，一开口就是金句」的神秘型选手。',
+traits:['深夜灵感爆发','独立思考者','冷静观察者','金句制造机'],
+flaw:'小缺点：作息和全世界有时差，白天约你等于约了个「低电量版」的你；想得太多，偶尔显得疏离。',
+adv:'你的深度思考能力是稀缺品。别人刷手机的深夜，你在构建自己的知识体系——长期主义在你身上，从来不是一句口号。',
+egg:'猫头鹰的脖子能转270度——视角全面这块，你天生赢在起跑线。今日幸运物：凌晨一点突然想通的一件事。'},
+{id:'otter', face:'🦦', name:'爱玩小水獭', en:'Playful Otter', c1:'#CDEBFA', c2:'#5AA9D6',
+profile:{C:9,A:3,E:7,I:4,Q:9,H:8,F:7},
+tagline:'人生是旷野，我先玩为敬。',
+desc:'你像水獭一样，天生会玩、爱玩、玩什么都能玩出花样。好奇心爆棚，什么都想上手试试；和喜欢的人在一起时黏黏糊糊，分开一秒都要牵手手。你的快乐很有感染力，和你在一起，连发呆都变得有趣起来。',
+traits:['玩商超高','好奇心爆棚','黏人又有趣','快乐制造机'],
+flaw:'小缺点：玩心太重，正事容易往后拖；对什么都三分钟热度，玩具买一堆玩两天。',
+adv:'你的「玩商」是未来最值钱的能力之一。你总能把枯燥的事变得好玩，这种把日子过成游戏的本事，会让你在任何领域都自带吸引力。',
+egg:'水獭睡觉时会和同伴手牵手防止被水冲走——这不就是你吗，睡觉都要挨着喜欢的人。今日幸运物：一次说走就走的小冒险。'}
+];
+
+var state = { idx:0, answers:[]};
+var $ = function(id){ return document.getElementById(id);};
+
+function showScreen(name){
+['cover','quiz','result'].forEach(function(n){
+$('screen-'+n).classList.toggle('active', n===name);
+});
+window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderQuestion(){
+var q = QUESTIONS[state.idx];
+$('q-tag').textContent = q.tag + ' · 第 ' + (state.idx+1) + ' 题';
+$('q-title').textContent = q.q;
+$('q-hint').textContent = q.hint || '';
+$('q-hint').style.display = q.hint? 'block': 'none';
+var pct = Math.round(state.idx / QUESTIONS.length * 100);
+$('prog-text').textContent = '第 ' + (state.idx+1) + ' / ' + QUESTIONS.length + ' 题';
+$('prog-pct').textContent = pct + '%';
+$('prog-fill').style.width = pct + '%';
+$('btn-prev').disabled = state.idx === 0;
+var box = $('opts'); box.innerHTML = '';
+var keys = ['A','B','C','D'];
+q.opts.forEach(function(opt, i){
+var b = document.createElement('button');
+b.className = 'opt' + (state.answers[state.idx] === i? ' picked': '');
+b.innerHTML = '<span class="k"></span><span></span>';
+b.querySelector('.k').textContent = keys[i];
+b.querySelectorAll('span')[1].textContent = opt.t;
+b.addEventListener('click', function(){ pick(i);});
+box.appendChild(b);
+});
+var card = $('q-card');
+card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'fadeUp.35s ease both';
+}
+
+function pick(i){
+state.answers[state.idx] = i;
+renderQuestionPicked(i);
+setTimeout(function(){
+if (state.idx < QUESTIONS.length - 1){ state.idx++; renderQuestion();}
+else { finish();}
+}, 220);
+}
+function renderQuestionPicked(i){
+var opts = $('opts').children;
+for (var j=0;j<opts.length;j++){ opts[j].classList.toggle('picked', j===i);}
+}
+
+function computeScores(){
+var raw = {}; DIMS.forEach(function(d){ raw[d.k]=0;});
+var max = {}; DIMS.forEach(function(d){ max[d.k]=0;});
+QUESTIONS.forEach(function(q, qi){
+DIMS.forEach(function(d){
+var m = 0;
+q.opts.forEach(function(o){ m = Math.max(m, o.s[d.k]||0);});
+max[d.k] += m;
+});
+var a = state.answers[qi];
+if (a!= null){
+var s = q.opts[a].s;
+Object.keys(s).forEach(function(k){ raw[k]+= s[k];});
+}
+});
+var EXP = {C:3.07, A:3.26, E:2.70, I:3.18, Q:3.30, H:3.44, F:2.63};
+var norm = {};
+DIMS.forEach(function(d){
+var base = max[d.k]? raw[d.k]/max[d.k]*10: 0;
+var v = 5 + (base - EXP[d.k]) * 3.0;
+v = Math.max(0, Math.min(10, v));
+norm[d.k] = Math.round(v*10)/10;
+});
+return norm;
+}
+
+function matchAnimal(norm){
+var best=null, bestDist=1e9, second=1e9;
+ANIMALS.forEach(function(a){
+var dist=0;
+DIMS.forEach(function(d){
+var diff = norm[d.k] - a.profile[d.k];
+dist += diff*diff;
+});
+dist = Math.sqrt(dist);
+if (dist < bestDist){ second=bestDist; bestDist=dist; best=a;}
+else if (dist < second){ second=dist;}
+});
+var closeness = Math.max(72, Math.min(99, Math.round(100 - bestDist*2.6)));
+return {animal:best, closeness:closeness};
+}
+
+function finish(){
+$('prog-fill').style.width = '100%';
+$('prog-pct').textContent = '100%';
+var norm = computeScores();
+var res = matchAnimal(norm);
+var a = res.animal;
+var poster = $('poster');
+poster.style.setProperty('--pc1', a.c1); poster.style.setProperty('--pc2', a.c2);
+poster.style.background = 'linear-gradient(150deg,'+a.c1+','+a.c2+')';
+$('r-face').textContent = a.face;
+$('r-name').textContent = a.name;
+$('r-en').textContent = a.en;
+$('r-tagline').textContent = a.tagline;
+$('r-match').textContent = '灵魂匹配度 ' + res.closeness + '% · 本次共答 ' + QUESTIONS.length + ' 题';
+$('r-desc').textContent = a.desc;
+$('r-flaw').textContent = a.flaw;
+$('r-adv').textContent = a.adv;
+$('r-egg').innerHTML = '';
+var eggB = document.createElement('b'); eggB.textContent = '彩蛋：';
+$('r-egg').appendChild(eggB);
+$('r-egg').appendChild(document.createTextNode(a.egg));
+var tr = $('r-traits'); tr.innerHTML='';
+a.traits.forEach(function(t){
+var s=document.createElement('span'); s.className='trait'; s.textContent=t; tr.appendChild(s);
+});
+var dims = $('r-dims'); dims.innerHTML='';
+DIMS.forEach(function(d){
+var v = norm[d.k];
+var row = document.createElement('div'); row.className='dim-row';
+row.innerHTML = '<span class="name"></span><div class="dim-track"><div class="dim-fill"></div></div><span class="val"></span>';
+row.querySelector('.name').textContent = d.name;
+row.querySelector('.val').textContent = v.toFixed(0);
+row.querySelector('.dim-fill').style.background = 'linear-gradient(90deg,'+a.c1+','+a.c2+')';
+dims.appendChild(row);
+requestAnimationFrame(function(){ setTimeout(function(){ row.querySelector('.dim-fill').style.width = Math.min(100, v*10) + '%';}, 60);});
+});
+showScreen('result');
+window._lastResult = {animal:a, closeness:res.closeness, norm:norm};
+}
+
+var toastTimer=null;
+function toast(msg){
+var t=$('toast'); t.textContent=msg; t.classList.add('show');
+clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('show');}, 2400);
+}
+
+$('btn-start').addEventListener('click', function(){
+state = { idx:0, answers:[]};
+showScreen('quiz'); renderQuestion();
+});
+$('btn-home').addEventListener('click', function(){ showScreen('cover');});
+$('btn-prev').addEventListener('click', function(){
+if (state.idx>0){ state.idx--; renderQuestion();}
+});
+$('btn-retest').addEventListener('click', function(){
+state = { idx:0, answers:[]};
+showScreen('quiz'); renderQuestion();
+});
+$('btn-copy').addEventListener('click', function(){
+var r = window._lastResult; if(!r) return;
+var a = r.animal;
+var text = '🐾 我在《你是什么小动物人格》里测出了'+a.face+'\n「'+a.tagline+'」\n灵魂匹配度 '+r.closeness+'%\n性格特点：'+a.traits.join('、')+'\n你也来测测你是什么小动物吧！';
+function done(){ toast('结果文案已复制，去粘贴分享吧 🎉');}
+function fail(){
+var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+document.body.appendChild(ta); ta.select();
+try{ document.execCommand('copy'); done();}catch(e){ toast('复制失败，截图海报分享也一样好看哦');}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).then(done).catch(fail);
+} else { fail();}
+});
+</script>
+</body>
+</html>

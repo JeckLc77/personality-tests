@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="data:," />
+<title>七宗罪人格测试</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+--bg:#0c0a10;
+--bg2:#14101c;
+--panel:#17131f;
+--panel2:#1e1829;
+--line:rgba(232,201,138,.18);
+--line-soft:rgba(255,255,255,.08);
+--text:#f2ecdf;
+--muted:#a99f8d;
+--muted2:#7d7466;
+--gold:#e8c98a;
+--gold-deep:#b98a2f;
+--accent:#e8c98a;
+--radius:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+background:
+radial-gradient(1200px 600px at 50% -10%, rgba(232,201,138,.07), transparent 60%),
+linear-gradient(180deg, var(--bg2), var(--bg) 40%);
+background-color:var(--bg);
+color:var(--text);
+font-family:"Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+min-height:100vh;
+line-height:1.65;
+}
+button{font-family:inherit;cursor:pointer;min-height:44px}
+.wrap{max-width:640px;margin:0 auto;padding:28px 18px 56px}
+.serif{font-family:"Noto Serif SC","Songti SC",serif}
+
+/* ---------- screens ---------- */
+.screen{display:none}
+.screen.active{display:block;animation:screenIn.45s ease both}
+@keyframes screenIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- home ---------- */
+.home{padding-top:5vh;text-align:center}
+.home.rule{width:56px;height:1px;background:var(--gold);margin:0 auto 22px;opacity:.8}
+.home h1{
+font-family:"Noto Serif SC","Songti SC",serif;font-weight:900;
+font-size:clamp(38px,9vw,56px);letter-spacing:.06em;margin:0 0 6px;line-height:1.2;
+}
+.home.sub{color:var(--gold);letter-spacing:.5em;font-size:13px;margin:0 0 26px;text-indent:.5em}
+.home.intro{color:var(--muted);font-size:15px;max-width:30em;margin:0 auto 30px;text-align:center}
+.home.intro b{color:var(--text);font-weight:700}
+.sins{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 auto 34px;max-width:480px}
+.sin-chip{
+border:1px solid var(--line);border-radius:999px;padding:8px 16px;font-size:14px;
+color:var(--text);background:rgba(255,255,255,.02);display:flex;align-items:center;gap:8px;min-height:40px;
+}
+.sin-chip i{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.btn-primary{
+display:inline-block;border:none;border-radius:999px;padding:0 44px;height:54px;
+font-size:17px;font-weight:700;letter-spacing:.14em;color:#171106;
+background:linear-gradient(135deg,#f3d9a0,#dfae54);
+box-shadow:0 10px 28px rgba(223,174,84,.25);
+transition:transform.15s ease, box-shadow.15s ease;
+}
+.btn-primary:active{transform:scale(.97)}
+.home.meta{margin-top:26px;color:var(--muted2);font-size:12.5px;line-height:1.9}
+.home.stats{display:flex;justify-content:center;gap:0;margin:38px auto 0;max-width:420px;border-top:1px solid var(--line-soft);padding-top:22px}
+.home.stats div{flex:1}
+.home.stats b{display:block;font-family:"Noto Serif SC",serif;font-size:22px;color:var(--gold);font-weight:900}
+.home.stats span{font-size:12px;color:var(--muted2)}
+
+/* ---------- quiz ---------- */
+.quiz-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.btn-back{
+background:none;border:1px solid var(--line-soft);color:var(--muted);border-radius:999px;
+padding:0 16px;height:40px;font-size:14px;min-height:40px;flex:none;
+}
+.btn-back:disabled{opacity:.3;cursor:default}
+.qcount{font-size:13px;color:var(--muted);letter-spacing:.12em;white-space:nowrap}
+.qcount b{color:var(--gold);font-size:16px}
+.progress{height:5px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin:10px 0 34px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:99px;transition:width.45s cubic-bezier(.22,.8,.3,1)}
+.qcard{animation:qIn.38s ease both}
+@keyframes qIn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+.qcard.back{animation-name:qInBack}
+@keyframes qInBack{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+.qtag{font-size:12px;color:var(--gold);letter-spacing:.3em;margin-bottom:12px}
+.qtext{font-family:"Noto Serif SC","Songti SC",serif;font-weight:900;font-size:clamp(21px,5.6vw,27px);line-height:1.5;margin:0 0 26px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{
+text-align:left;width:100%;border:1px solid var(--line-soft);background:var(--panel);
+color:var(--text);border-radius:var(--radius);padding:16px 18px;font-size:15.5px;line-height:1.55;
+display:flex;gap:13px;align-items:flex-start;transition:border-color.15s, background.15s, transform.1s;
+}
+.opt.letter{
+flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
+display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold);margin-top:1px;
+}
+.opt:hover{border-color:var(--line);background:var(--panel2)}
+.opt:active{transform:scale(.985)}
+.opt.picked{border-color:var(--gold);background:rgba(232,201,138,.1)}
+.opt.picked.letter{background:var(--gold);color:#171106;border-color:var(--gold);font-weight:700}
+.quiz-hint{text-align:center;color:var(--muted2);font-size:12.5px;margin-top:22px}
+
+/* ---------- result / poster ---------- */
+.poster{
+position:relative;border-radius:26px;overflow:hidden;
+background:linear-gradient(165deg,#1d1626 0%,#120e19 55%,#0d0a12 100%);
+border:1px solid var(--line);
+padding:34px 24px 28px;
+box-shadow:0 24px 60px rgba(0,0,0,.5);
+}
+.poster::before{
+content:attr(data-char);position:absolute;right:-30px;top:-58px;
+font-family:"Noto Serif SC",serif;font-weight:900;font-size:230px;line-height:1;
+color:var(--accent);opacity:.09;pointer-events:none;
+}
+.poster.brand{font-size:11.5px;letter-spacing:.42em;color:var(--muted);text-align:center}
+.poster.combo{text-align:center;margin-top:20px;font-size:13.5px;color:var(--muted)}
+.poster.combo b{color:var(--accent);font-size:15px}
+.poster.combo.x{margin:0 6px;color:var(--muted2)}
+.poster h2{
+text-align:center;font-family:"Noto Serif SC",serif;font-weight:900;
+font-size:clamp(30px,8vw,42px);margin:10px 0 4px;letter-spacing:.04em;line-height:1.3;
+}
+.poster h2.sinname{color:var(--accent)}
+.poster.title2{text-align:center;color:var(--muted);font-size:14.5px;letter-spacing:.2em;margin-bottom:20px}
+.motto{
+text-align:center;font-family:"Noto Serif SC",serif;font-size:17.5px;font-weight:600;
+color:var(--text);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+padding:16px 8px;margin:0 4px 22px;line-height:1.7;
+}
+.motto::before{content:"「 "}
+.motto::after{content:" 」"}
+.radar-wrap{display:flex;justify-content:center;margin:2px 0 6px}
+.radar-wrap svg{max-width:300px;width:100%;height:auto}
+.sec{margin-top:22px}
+.sec h3{
+font-size:13px;letter-spacing:.3em;color:var(--accent);margin:0 0 8px;font-weight:700;
+display:flex;align-items:center;gap:10px;
+}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+.sec p{margin:0;font-size:14.5px;color:#ddd5c4}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{border:1px solid var(--line-soft);background:rgba(255,255,255,.03);border-radius:999px;padding:6px 13px;font-size:13px;color:#e6ddcb;min-height:32px;display:inline-flex;align-items:center}
+.egg{background:rgba(255,255,255,.03);border:1px dashed var(--line);border-radius:14px;padding:13px 15px}
+.egg p{font-size:14px}
+.poster.foot{margin-top:24px;text-align:center;color:var(--muted2);font-size:11.5px;letter-spacing:.14em}
+.score-strip{display:flex;justify-content:space-between;gap:6px;margin-top:18px}
+.score-strip div{flex:1;text-align:center}
+.score-strip.bar{height:4px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px}
+.score-strip.bar i{display:block;height:100%;border-radius:99px}
+.score-strip span{font-size:11.5px;color:var(--muted)}
+.score-strip b{display:block;font-size:13px;color:var(--text)}
+.actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+.actions button{flex:1;border-radius:999px;font-size:15.5px;font-weight:700;letter-spacing:.08em;padding:0 18px;height:52px;min-width:140px}
+.btn-ghost{background:none;border:1px solid var(--line);color:var(--text)}
+.btn-solid{border:none;color:#171106;background:linear-gradient(135deg,#f3d9a0,#dfae54)}
+.save-tip{text-align:center;color:var(--muted2);font-size:12.5px;margin-top:14px}
+.toast{
+position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);opacity:0;pointer-events:none;
+background:#2a2138;border:1px solid var(--line);color:var(--text);padding:11px 22px;border-radius:999px;
+font-size:14px;transition:all.3s ease;z-index:50;box-shadow:0 12px 30px rgba(0,0,0,.45);white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.disclaimer{max-width:640px;margin:20px auto 0;text-align:center;color:var(--muted2);font-size:12px;padding:0 18px}
+
+@media (max-width:420px){
+.poster{padding:28px 18px 24px}
+.poster::before{font-size:180px;top:-40px}
+}
+@media (prefers-reduced-motion: reduce){
+.screen.active,.qcard{animation:none}
+.progress i{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ===== 首页 ===== -->
+<section class="screen active" id="screen-home">
+<div class="home">
+<div class="rule"></div>
+<h1>七宗罪人格测试</h1>
+<p class="sub">你 的 主 导 罪 是 哪 一 宗</p>
+<p class="intro">20 道生活场景题，测出藏在你日常里的<b>主导人格</b>：是自带主角光环，还是干饭即正义？没有标准答案，<b>选最像你的那一个</b>就好——诚实作答，结果准到离谱。</p>
+<div class="sins" id="sin-chips"></div>
+<button class="btn-primary" id="btn-start">开始测试</button>
+<div class="stats">
+<div><b>20</b><span>道生活场景题</span></div>
+<div><b>7</b><span>个罪格维度</span></div>
+<div><b>7</b><span>种主导人格</span></div>
+</div>
+<p class="meta">趣味人格测试 · 约 2 分钟完成<br/>结果含专属海报卡，截图即可分享</p>
+</div>
+</section>
+
+<!-- ===== 答题 ===== -->
+<section class="screen" id="screen-quiz">
+<div class="quiz-top">
+<button class="btn-back" id="btn-prev">← 上一题</button>
+<div class="qcount">第 <b id="q-now">1</b> / 20 题</div>
+</div>
+<div class="progress"><i id="progress-bar"></i></div>
+<div class="qcard" id="qcard">
+<div class="qtag" id="q-tag">SCENE 01</div>
+<p class="qtext" id="q-text"></p>
+<div class="opts" id="q-opts"></div>
+</div>
+<p class="quiz-hint">凭第一直觉选，别想太多——想太多测出来的是你的演技</p>
+</section>
+
+<!-- ===== 结果 ===== -->
+<section class="screen" id="screen-result">
+<div class="poster" id="poster" data-char="">
+<div class="brand">七 宗 罪 人 格 测 试</div>
+<div class="combo" id="r-combo"></div>
+<h2 id="r-title"></h2>
+<div class="title2" id="r-title2"></div>
+<div class="motto" id="r-motto"></div>
+<div class="radar-wrap" id="radar"></div>
+<div class="score-strip" id="score-strip"></div>
+<div class="sec">
+<h3>具体表现</h3>
+<p id="r-desc"></p>
+</div>
+<div class="sec">
+<h3>性格特点</h3>
+<div class="tags" id="r-tags"></div>
+</div>
+<div class="sec">
+<h3>隐藏优势</h3>
+<p id="r-strength"></p>
+</div>
+<div class="sec">
+<h3>趣味彩蛋</h3>
+<div class="egg"><p id="r-egg"></p></div>
+</div>
+<div class="foot">SEVEN DEADLY SINS · PERSONALITY TEST</div>
+</div>
+<div class="actions">
+<button class="btn-ghost" id="btn-retry">重新测试</button>
+<button class="btn-solid" id="btn-copy">复制结果文案</button>
+</div>
+<p class="save-tip">长按或截图上方海报卡，就能分享到小红书和朋友圈</p>
+</section>
+
+</div>
+<p class="disclaimer">本测试为趣味娱乐内容，不是专业心理诊断，结果仅供一笑。</p>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 维度定义 ================= */
+var SINS = {
+pride: { name:"傲慢", color:"#e8b84b"},
+envy: { name:"嫉妒", color:"#43c98a"},
+wrath: { name:"暴怒", color:"#ef5350"},
+sloth: { name:"懒惰", color:"#8b9dc3"},
+greed: { name:"贪婪", color:"#f08c3a"},
+gluttony: { name:"暴食", color:"#e86a92"},
+lust: { name:"心动", color:"#c77fd6"}
+};
+var SIN_ORDER = ["pride","envy","wrath","sloth","greed","gluttony","lust"];
+
+/* ================= 题库 =================
+每题 4 个选项：[文案, 主维度, 次维度(可空)]
+主维度 +3 分，次维度 +1 分 */
+var QUESTIONS = [
+{ q:"周末早上十点，你的被窝正在经历什么？", opts:[
+["已经出门吃 brunch 了，照片必须发朋友圈","pride","lust"],
+["还在睡，手机调静音，天塌下来也别叫我","sloth",null],
+["醒了，但躺着刷手机看别人去哪儿玩了","envy","sloth"],
+["醒了，第一件事是想中午吃什么","gluttony",null]
+]},
+{ q:"公司年会抽奖，一等奖被隔壁桌同事抽走了，你：", opts:[
+["心里默念：凭什么是他，酸气冲天","envy",null],
+["无所谓，反正我是万年中奖绝缘体","sloth",null],
+["默默盘算：明年怎么把整个奖池都包圆","greed",null],
+["气得想掀桌——当然，只敢在心里掀","wrath",null]
+]},
+{ q:"你的购物车里，有件东西已经躺了三个月了，因为：", opts:[
+["不是不买，是在等一个配得上它的折扣","pride","greed"],
+["全都想要，恨不得把整个店搬回家","greed",null],
+["懒得删，就让它在里面躺着吧","sloth",null],
+["每次点开，都是因为又被别人种草了","envy",null]
+]},
+{ q:"朋友请你吃火锅，你的画风是：", opts:[
+["毛肚鸭肠黄喉，菜单从第一页点到最后一页","gluttony",null],
+["先拍九宫格，等点赞够了再动筷子","pride",null],
+["看到别人碗里的小料，都想伸筷子尝一口","envy","gluttony"],
+["全程帮忙调蘸料捞菜，顺便收获一波好感","lust",null]
+]},
+{ q:"排队买奶茶，前面的人点了整整十分钟还没点完：", opts:[
+["内心已经上演了八百遍催促大戏","wrath",null],
+["无所谓，正好多刷一会儿手机","sloth",null],
+["默默记下他点的那杯，下次我也要同款","envy",null],
+["趁排队，多看两眼店员小哥/小姐姐的手","lust",null]
+]},
+{ q:"发工资那天，你最想干的事是：", opts:[
+["把收藏夹里想要的东西一次性全清空","greed",null],
+["请朋友吃饭，而且必须有排面","pride",null],
+["先囤一大堆好吃的，狠狠犒劳自己","gluttony",null],
+["什么都不想干，只想请假躺平一天","sloth",null]
+]},
+{ q:"心动对象回了你一条消息，你会：", opts:[
+["反复品读每个标点，截图发给好友逐字分析","lust",null],
+["秒回显得太掉价，先晾他十分钟再说","pride","lust"],
+["开心到在床上打滚，然后翻个身继续躺","lust","sloth"],
+["顺手点开他/她的动态，从今年翻到去年","lust","envy"]
+]},
+{ q:"同事升职加薪了，你的第一反应：", opts:[
+["表面恭喜，回家默默酸成一颗柠檬","envy",null],
+["哼，我超过他只是时间问题","pride",null],
+["开始盘算：跳槽涨薪是不是更快一点","greed",null],
+["升不升无所谓，别给我加活就行","sloth",null]
+]},
+{ q:"外卖超时了二十分钟，饭还没到：", opts:[
+["已经在脑子里写好了三百字差评","wrath",null],
+["饿到开始啃手指甲，眼巴巴盯着门口","gluttony",null],
+["安慰自己骑手也不容易——但饭凉了还是气","wrath","gluttony"],
+["正好，躺沙发上再眯一会儿","sloth",null]
+]},
+{ q:"朋友喊你去健身房，你的态度是：", opts:[
+["去！身材管理就是门面工程","pride",null],
+["卡可以办，去不去那是另一回事","sloth",null],
+["看到别人身材好，瞬间热血上头三分钟","envy","lust"],
+["可以去，但练完必须吃顿好的补回来","gluttony",null]
+]},
+{ q:"刷到「同龄人已经年入百万」的帖子，你：", opts:[
+["酸，太酸了，酸到今晚睡不着","envy",null],
+["认真研究：他到底是靠什么赚的","greed",null],
+["划走，关掉手机，世界与我无关","sloth",null],
+["不屑一顾：这种人设，我装我也行","pride",null]
+]},
+{ q:"团建要表演节目，话筒递到你面前：", opts:[
+["必须 C 位，麦克风就是我的权杖","pride",null],
+["能躲就躲，我只想安静当个吃瓜观众","sloth",null],
+["看到别人表演受欢迎，心里有点痒痒","envy","lust"],
+["表演可以，先说好晚饭吃什么","gluttony",null]
+]},
+{ q:"翻一翻你的手机相册，数量最多的是：", opts:[
+["美食照片，吃过的东西不许白吃","gluttony",null],
+["自拍，每一张都是精修大片级别","pride",null],
+["各种截图：别人的好物清单和同款链接","envy",null],
+["心动对象的照片，还有舍不得删的聊天记录","lust",null]
+]},
+{ q:"遇上大堵车，车流半天挪不动一步：", opts:[
+["路怒值飙升，喇叭按出了节奏感","wrath",null],
+["翻出零食，堵车也得吃点什么垫垫","gluttony",null],
+["正好，放空补觉，到了再说","sloth",null],
+["东张西望，看看旁边车里有没有好看的人","lust",null]
+]},
+{ q:"大促之夜，你的战斗状态是：", opts:[
+["凑满减凑到凌晨，省下一块是一块","greed",null],
+["零食囤满一整箱，购物车比衣柜还满","gluttony","greed"],
+["规则复杂得让人上火，气得想删购物车——最后还是买了","wrath","sloth"],
+["只买最贵的那件，品质即尊严","pride",null]
+]},
+{ q:"朋友在群里发了个红包，你：", opts:[
+["手速全群第一，0.01 元也要抢到手","greed",null],
+["抢到后凡尔赛发言：哎呀，又是手气最佳","pride","greed"],
+["永远慢半拍，红包和我基本无缘","sloth",null],
+["没抢到，气得想退群——冷静三秒又留下了","wrath","envy"]
+]},
+{ q:"有人当面阴阳怪气你，你会：", opts:[
+["当场怼回去，谁也别想让我受气","wrath",null],
+["微笑点头保持体面，心里已经把他拉黑八百遍","pride","wrath"],
+["表面淡定，回家越想越气，半夜翻来覆去","wrath",null],
+["转身走开——不是大度，是真懒得计较","sloth",null]
+]},
+{ q:"你理想中的约会打开方式是：", opts:[
+["烛光晚餐加一点小惊喜，心跳直接拉满","lust",null],
+["在家窝着点外卖看剧，肩膀靠着肩膀就很心动","lust","sloth"],
+["去高级餐厅打卡，出片率必须第一","pride","lust"],
+["吃遍一条街，从街头第一家吃到街尾","gluttony","lust"]
+]},
+{ q:"如果突然中了五百万，你的第一件事是：", opts:[
+["换车换表，气场先拉到两米八","pride",null],
+["拿去投资，钱必须给我生钱","greed",null],
+["辞职！先躺平一年，其他以后再说","sloth",null],
+["开启环球美食之旅，吃遍各地招牌菜","gluttony",null]
+]},
+{ q:"朋友评价你时，最常挂在嘴边的一句是：", opts:[
+["「你也太凡尔赛了」","pride",null],
+["「你怎么什么都想要」","greed",null],
+["「你也太能吃了」","gluttony",null],
+["「你一见好看的人就走不动道」","lust",null]
+]}
+];
+
+/* ================= 结果人格 ================= */
+var RESULTS = {
+pride: {
+title:"天生的主角", title2:"PRIDE · THE PROTAGONIST",
+motto:"我不是自恋，我只是和镜子里的那个人互相欣赏。",
+desc:"出场自带 BGM，合影永远站中间。朋友圈要么不发，一发就是精修九宫格；被人夸会说「哪里哪里」，心里已经默默点了个赞。你不是爱出风头，你只是坚信：人生这部戏，自己不当主角，难道让给别人？",
+tags:["出场自带气场","精修强迫症","输人不输阵","夸我请继续","体面是底线"],
+strength:"这份「傲慢」其实是顶级的自我驱动力。你对品质和体面的高标准，会推着你把每件事都做到拿得出手——别人眼里的偶像包袱，是你偷偷卷赢全场的发动机。",
+egg:"彩蛋：你删掉的自拍，比发出来的多十倍。这事只有你的相册知道。"
+},
+envy: {
+title:"柠檬成精", title2:"ENVY · THE LEMON SPIRIT",
+motto:"别人的好日子，是我努力的闹钟——就是有点酸。",
+desc:"朋友圈资深巡逻员，谁换新车、谁升职、谁脱单，你比当事人还先知道。表面「恭喜恭喜」，内心已经把对方的生活拆解成了分析报告。你不是见不得人好，你是见不得人比你先好。",
+tags:["朋友圈巡逻员","酸味雷达满格","暗中对标狂魔","恭喜说得最快","越酸越清醒"],
+strength:"嫉妒的另一面，是敏锐的观察力和不甘心。你总能第一时间发现「更好的活法长什么样」，这份不服气用好了，就是最持久的燃料——多少人的翻身，都是从一句「凭什么他可以」开始的。",
+egg:"彩蛋：你点开讨厌的人的主页，比点开喜欢的人还勤。承认吧，那是另一种在意。"
+},
+wrath: {
+title:"一点就着", title2:"WRATH · THE FIRECRACKER",
+motto:"我的脾气来得快，去得也快——就是来的时候动静大了点。",
+desc:"外卖超时、排队被插队、消息已读不回——你的怒气值充能只要三秒。怼人从不隔夜，差评写得像小作文。但你气完就忘，从不记仇，朋友都说：你这人吧，脾气是爆了点，心是真不坏。",
+tags:["怒气充能三秒","有话当面说","不记仇体质","差评文学家","气完就翻篇"],
+strength:"暴怒的底色是强烈的边界感和正义感。你不愿意受委屈，也不忍心看别人受委屈——这份「不好惹」，其实是保护自己和朋友最硬的壳。情绪来得猛的人，往往也最真诚。",
+egg:"彩蛋：你写过最长的文字不是情书，是给某家店的差评，目前已有 27 人觉得「有用」。"
+},
+sloth: {
+title:"能躺绝不坐", title2:"SLOTH · THE HORIZONTAL MASTER",
+motto:"人生苦短，我先躺为敬。",
+desc:"外卖能送到门口绝不下楼，能用语音绝不打字，周末的计划就是没有计划。你的口头禅是「明天再说」，而明天还有明天。但别误会——真到了 deadline，你爆发出的效率能让所有人闭嘴。",
+tags:["躺平哲学家","deadline 战神","能省一步是一步","沙发原住民","大智若懒"],
+strength:"懒惰的隐藏款是顶级的效率思维。你对「不值得的事」有天然的过滤器，擅长找到最省力的最优解。把力气留给真正重要的事——这不叫懒，这叫精力管理大师。",
+egg:"彩蛋：你发明过至少三种「不用下床就能拿到遥控器」的方法，请收下这份民间智慧奖。"
+},
+greed: {
+title:"全都要", title2:"GREED · THE ALL-IN COLLECTOR",
+motto:"小孩子才做选择，我的购物车从不清空。",
+desc:"优惠券叠满减算得比会计还精，红包 0.01 元也要抢到手，收藏夹里的东西够开个小卖部。不是抠，是「我的钱必须花出双倍快乐」。你的野心很直白：好东西那么多，凭什么不能都是我的？",
+tags:["满减计算器","红包手速王","收藏夹囤积症","全都要选手","薅羊毛艺术家"],
+strength:"贪婪翻过来，就是野心和资源整合力。你对机会的嗅觉比谁都灵，擅长把每一分钱、每一分钟都用出最大价值。这份「想要」，正是搞钱路上最原始也最靠谱的动力。",
+egg:"彩蛋：你为了省 5 块运费凑单多花了 88 块这件事，我们就当没发生过。"
+},
+gluttony: {
+title:"干饭即正义", title2:"GLUTTONY · THE FOOD JUSTICE",
+motto:"没有什么坏心情，是一顿火锅解决不了的；如果有，就两顿。",
+desc:"你的地图 App 里收藏的全是餐厅，旅行攻略本质上是吃饭路线图，朋友聚会你负责点菜从没失手过。人生信条非常朴素：天大地大，吃饭最大；可以亏待任何事，不能亏待这张嘴。",
+tags:["人形点菜机","美食雷达","干饭不积极思想有问题","菜单全背选手","快乐很简单"],
+strength:"暴食的本质，是对生活最旺盛的热爱。你对滋味的敏感让你天生会享受当下，也最懂怎么治愈别人——一顿你张罗的饭，胜过十句安慰。热爱食物的人，运气都不会差。",
+egg:"彩蛋：你说「我就吃一口」的时候，历史数据表明，平均摄入量是半份起步。"
+},
+lust: {
+title:"人间多情种", title2:"LUST · THE HEARTBEAT COLLECTOR",
+motto:"心动不是病，动起来要命——但我乐意。",
+desc:"好看的皮囊你雷达全开，一句晚安能品出三层意思，对视超过三秒就开始脑补偶像剧情节。你不是花心，你只是对美好的人和心动的感觉毫无抵抗力——生活已经够苦了，不磕点糖怎么行？",
+tags:["心动易感体质","颜值雷达","脑补小剧场","晚安品鉴师","浪漫收集者"],
+strength:"这份「多情」其实是强大的共情力和审美力。你对情绪和氛围的感知比常人细腻得多，总能捕捉到别人忽略的闪光点。和你相处的人，很容易觉得自己被认真看见了。",
+egg:"彩蛋：你聊天记录里删删改改最后只发了个「嗯」的次数，保守估计三位数。"
+}
+};
+
+/* ================= 状态与流程 ================= */
+var current = 0;
+var answers = new Array(QUESTIONS.length).fill(-1);
+var picking = false;
+
+var $ = function(id){ return document.getElementById(id);};
+
+function showScreen(name){
+var screens = document.querySelectorAll(".screen");
+for (var i=0;i<screens.length;i++) screens[i].classList.remove("active");
+$("screen-"+name).classList.add("active");
+window.scrollTo(0,0);
+}
+
+/* 首页罪格 chips */
+(function(){
+var box = $("sin-chips"), html = "";
+SIN_ORDER.forEach(function(k){
+html += '<span class="sin-chip"><i style="background:'+SINS[k].color+'"></i>'+SINS[k].name+'</span>';
+});
+box.innerHTML = html;
+})();
+
+$("btn-start").addEventListener("click", function(){
+current = 0; answers.fill(-1);
+showScreen("quiz");
+renderQuestion(1);
+});
+
+function renderQuestion(dir){
+var item = QUESTIONS[current];
+$("q-now").textContent = current + 1;
+$("progress-bar").style.width = ((current) / QUESTIONS.length * 100) + "%";
+$("q-tag").textContent = "SCENE " + ("0"+(current+1)).slice(-2);
+$("q-text").textContent = item.q;
+$("btn-prev").disabled = current === 0;
+var letters = ["A","B","C","D"];
+var html = "";
+item.opts.forEach(function(o, i){
+html += '<button class="opt" data-i="'+i+'"><span class="letter">'+letters[i]+'</span><span>'+o[0]+'</span></button>';
+});
+$("q-opts").innerHTML = html;
+var card = $("qcard");
+card.classList.remove("qcard"); void card.offsetWidth;
+card.classList.add("qcard"); if (dir < 0) card.classList.add("back");
+var btns = $("q-opts").querySelectorAll(".opt");
+btns.forEach(function(b){
+b.addEventListener("click", function(){ pick(parseInt(b.getAttribute("data-i"),10), b);});
+});
+}
+
+function pick(i, btn){
+if (picking) return;
+picking = true;
+answers[current] = i;
+btn.classList.add("picked");
+$("progress-bar").style.width = ((current+1) / QUESTIONS.length * 100) + "%";
+setTimeout(function(){
+picking = false;
+if (current < QUESTIONS.length - 1){
+current++;
+renderQuestion(1);
+} else {
+showResult();
+}
+}, 300);
+}
+
+$("btn-prev").addEventListener("click", function(){
+if (current > 0){ current--; renderQuestion(-1);}
+});
+
+/* ================= 计分与结果 ================= */
+function calcScores(){
+var s = {}; SIN_ORDER.forEach(function(k){ s[k]=0;});
+QUESTIONS.forEach(function(item, qi){
+var a = answers[qi];
+if (a < 0) return;
+var o = item.opts[a];
+s[o[1]] += 3;
+if (o[2]) s[o[2]] += 1;
+});
+return s;
+}
+
+/* 每维度的理论最高分（各题取该维最优选项累加），用于归一化，
+   避免出镜多的维度天然占便宜 */
+var MAXP = {};
+SIN_ORDER.forEach(function(k){
+MAXP[k] = QUESTIONS.reduce(function(sum, item){
+var best = 0;
+item.opts.forEach(function(o){
+var v = (o[1]===k ? 3 : 0) + (o[2]===k ? 1 : 0);
+if (v > best) best = v;
+});
+return sum + best;
+}, 0);
+});
+/* 排名分：原始分 / sqrt(理论最高分)，做温和归一化 */
+function rankVal(scores, k){ return scores[k] / Math.sqrt(MAXP[k]); }
+/* 展示百分比：占该维理论最高分的比例 */
+function pctOf(scores, k){ return Math.round(scores[k] / MAXP[k] * 100); }
+
+function radarSVG(scores){
+var cx=150, cy=142, R=96;
+function pt(i, r){
+var ang = -Math.PI/2 + i * 2*Math.PI/7;
+return [cx + r*Math.cos(ang), cy + r*Math.sin(ang)];
+}
+var out = '<svg viewBox="0 0 300 284" role="img" aria-label="七罪雷达图">';
+[1,.66,.33].forEach(function(f){
+var pts = SIN_ORDER.map(function(k,i){ var p=pt(i, R*f); return p[0].toFixed(1)+","+p[1].toFixed(1);}).join(" ");
+out += '<polygon points="'+pts+'" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>';
+});
+SIN_ORDER.forEach(function(k,i){
+var p = pt(i, R);
+out += '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'" stroke="rgba(255,255,255,.08)"/>';
+});
+var dataPts = SIN_ORDER.map(function(k,i){
+var v = Math.max(pctOf(scores,k)/100, scores[k]>0?.15:.04);
+var p = pt(i, R*v);
+return p[0].toFixed(1)+","+p[1].toFixed(1);
+}).join(" ");
+out += '<polygon points="'+dataPts+'" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>';
+SIN_ORDER.forEach(function(k,i){
+var v = Math.max(pctOf(scores,k)/100, scores[k]>0?.15:.04);
+var p = pt(i, R*v);
+out += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.2" fill="'+SINS[k].color+'"/>';
+var lp = pt(i, R+20);
+out += '<text x="'+lp[0].toFixed(1)+'" y="'+(lp[1]+4).toFixed(1)+'" text-anchor="middle" font-size="13" fill="'+SINS[k].color+'" font-weight="700">'+SINS[k].name+'</text>';
+});
+out += "</svg>";
+return out;
+}
+
+var lastResult = null;
+
+function showResult(){
+var scores = calcScores();
+var sorted = SIN_ORDER.slice().sort(function(a,b){ return rankVal(scores,b)-rankVal(scores,a); });
+var main = sorted[0], sub = sorted[1];
+var R = RESULTS[main];
+lastResult = { main:main, sub:sub, scores:scores};
+
+var poster = $("poster");
+poster.style.setProperty("--accent", SINS[main].color);
+poster.setAttribute("data-char", SINS[main].name.charAt(0));
+
+$("r-combo").innerHTML = '主导罪 <b>'+SINS[main].name+'</b><span class="x">×</span>次罪 <b style="color:'+SINS[sub].color+'">'+SINS[sub].name+'</b>';
+$("r-title").innerHTML = '<span class="sinname">'+SINS[main].name+'</span> · '+R.title;
+$("r-title2").textContent = R.title2;
+$("r-motto").textContent = R.motto;
+$("radar").innerHTML = radarSVG(scores);
+$("r-desc").textContent = R.desc;
+$("r-tags").innerHTML = R.tags.map(function(t){ return "<span>"+t+"</span>";}).join("");
+$("r-strength").textContent = R.strength;
+$("r-egg").textContent = R.egg;
+
+$("score-strip").innerHTML = SIN_ORDER.map(function(k){
+var pct = pctOf(scores, k);
+return '<div><div class="bar"><i style="width:'+pct+'%;background:'+SINS[k].color+'"></i></div><span>'+SINS[k].name+'</span><b>'+pct+'</b></div>';
+}).join("");
+
+showScreen("result");
+}
+
+$("btn-retry").addEventListener("click", function(){
+current = 0; answers.fill(-1);
+showScreen("quiz");
+renderQuestion(1);
+});
+
+function toast(msg){
+var t = $("toast");
+t.textContent = msg;
+t.classList.add("show");
+setTimeout(function(){ t.classList.remove("show");}, 2200);
+}
+
+$("btn-copy").addEventListener("click", function(){
+if (!lastResult) return;
+var R = RESULTS[lastResult.main];
+var text = "我的主导罪是「"+SINS[lastResult.main].name+"·"+R.title+"」，次罪是「"+SINS[lastResult.sub].name+"」。"+R.motto+" 你是哪一宗？快来测测！";
+function done(){ toast("结果文案已复制，去分享吧");}
+function fallback(){
+var ta = document.createElement("textarea");
+ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+document.body.appendChild(ta); ta.select();
+try { document.execCommand("copy"); done();}
+catch(e){ toast("复制失败，截图海报分享吧");}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).then(done, fallback);
+} else { fallback();}
+});
+</script>
+</body>
+</html>

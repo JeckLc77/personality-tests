@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>你的专属氛围感标签</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"] { min-height: 2.25rem; }
+      :root{
+        --bg:#f5f1ea; --surface:#fffdf9; --surface2:#efe9df;
+        --ink:#26221d; --ink-soft:#5c554b; --ink-faint:#8a8175;
+        --line:#ddd3c2; --accent:#a4522e; --accent-deep:#7e3c1f;
+        --gold:#b98d4f; --sage:#77815f;
+        --shadow:0 18px 44px rgba(64,48,28,.14);
+        --radius:18px;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#16130f; --surface:#211d17; --surface2:#2a251d;
+          --ink:#efe7d8; --ink-soft:#c9bda6; --ink-faint:#9a8d76;
+          --line:#3d362b; --accent:#d98a5f; --accent-deep:#eda87c;
+          --gold:#cfa763; --sage:#9aa582;
+          --shadow:0 18px 44px rgba(0,0,0,.5);
+        }
+      }
+      *{box-sizing:border-box;}
+      html{scroll-behavior:smooth;}
+      body{
+        margin:0; background:var(--bg); color:var(--ink);
+        font-family:"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+        -webkit-font-smoothing:antialiased; line-height:1.65;
+      }
+      .serif{font-family:"Noto Serif SC","Songti SC",serif;}
+      .wrap{max-width:700px;margin:0 auto;padding:28px 18px 56px;position:relative;}
+      /* ---------- screens ---------- */
+      .screen{display:none;}
+      .screen.active{display:block;animation:screenIn .45s ease both;}
+      @keyframes screenIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+      /* ---------- home ---------- */
+      .home-hero{position:relative;padding:34px 6px 6px;text-align:center;overflow:hidden;}
+      .home-hero .ghost{
+        position:absolute;inset:auto 0 -30px 0;font-family:"Noto Serif SC",serif;font-weight:900;
+        font-size:11rem;line-height:1;color:transparent;-webkit-text-stroke:1px var(--line);
+        opacity:.5;pointer-events:none;user-select:none;letter-spacing:.05em;
+      }
+      .kicker{
+        display:inline-flex;align-items:center;gap:8px;font-size:.8rem;letter-spacing:.32em;
+        color:var(--accent);font-weight:700;text-transform:uppercase;
+      }
+      .kicker::before,.kicker::after{content:"";width:26px;height:1px;background:var(--accent);opacity:.6;}
+      h1.title{
+        font-family:"Noto Serif SC",serif;font-weight:900;font-size:2.55rem;line-height:1.25;
+        margin:16px 0 6px;letter-spacing:.02em;position:relative;
+      }
+      h1.title .hl{color:var(--accent);position:relative;white-space:nowrap;}
+      .subtitle{color:var(--ink-soft);font-size:1rem;max-width:30em;margin:10px auto 0;position:relative;}
+      .meta-row{
+        display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:22px 0 4px;position:relative;
+      }
+      .meta-chip{
+        border:1px solid var(--line);background:var(--surface);border-radius:999px;
+        padding:6px 14px;font-size:.83rem;color:var(--ink-soft);
+      }
+      .meta-chip b{color:var(--ink);}
+      .tag-cloud{margin:26px auto 4px;max-width:560px;position:relative;}
+      .tag-cloud p{font-size:.82rem;color:var(--ink-faint);letter-spacing:.18em;margin:0 0 12px;}
+      .chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
+      .chip{
+        font-family:"Noto Serif SC",serif;font-weight:700;font-size:.95rem;
+        border:1px solid var(--line);background:var(--surface);color:var(--ink-soft);
+        border-radius:10px;padding:8px 14px;
+      }
+      .chip.q{color:var(--ink-faint);border-style:dashed;}
+      .btn{
+        appearance:none;border:none;cursor:pointer;font:inherit;font-weight:700;
+        border-radius:999px;padding:14px 34px;font-size:1.02rem;min-height:3rem;
+        transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn-primary{background:var(--ink);color:var(--bg);box-shadow:var(--shadow);letter-spacing:.12em;}
+      .btn-primary:hover{transform:translateY(-2px);}
+      .btn-primary:active{transform:translateY(0);}
+      .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);}
+      .btn-ghost:hover{border-color:var(--ink-faint);}
+      .start-zone{text-align:center;margin-top:30px;position:relative;}
+      .fineprint{margin-top:16px;font-size:.78rem;color:var(--ink-faint);text-align:center;}
+      .how{
+        margin:34px auto 0;max-width:560px;background:var(--surface);border:1px solid var(--line);
+        border-radius:var(--radius);padding:20px 22px;text-align:left;
+      }
+      .how h3{margin:0 0 10px;font-family:"Noto Serif SC",serif;font-size:1.02rem;letter-spacing:.06em;}
+      .how ul{margin:0;padding-left:1.15em;color:var(--ink-soft);font-size:.92rem;}
+      .how li{margin:4px 0;}
+      /* ---------- quiz ---------- */
+      .quiz-top{display:flex;align-items:center;gap:14px;margin:10px 0 6px;}
+      .back-btn{
+        appearance:none;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);
+        border-radius:999px;padding:8px 16px;cursor:pointer;font:inherit;font-size:.86rem;min-height:2.5rem;
+        visibility:hidden;
+      }
+      .back-btn.show{visibility:visible;}
+      .progress-wrap{flex:1;}
+      .progress-meta{display:flex;justify-content:space-between;font-size:.8rem;color:var(--ink-faint);margin-bottom:6px;letter-spacing:.08em;}
+      .progress-track{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;border:1px solid var(--line);}
+      .progress-fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .4s ease;}
+      .q-card{
+        background:var(--surface);border:1px solid var(--line);border-radius:22px;
+        box-shadow:var(--shadow);padding:30px 24px 26px;margin-top:18px;
+      }
+      .q-card.enter{animation:qIn .38s ease both;}
+      @keyframes qIn{from{opacity:0;transform:translateX(26px);}to{opacity:1;transform:none;}}
+      .q-card.enter-back{animation:qInB .38s ease both;}
+      @keyframes qInB{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}}
+      .q-scene{font-size:.8rem;letter-spacing:.24em;color:var(--accent);font-weight:700;margin-bottom:10px;}
+      .q-text{font-family:"Noto Serif SC",serif;font-weight:700;font-size:1.42rem;line-height:1.5;margin:0 0 22px;}
+      .opts{display:grid;gap:11px;}
+      .opt{
+        display:flex;align-items:flex-start;gap:13px;text-align:left;width:100%;
+        background:var(--bg);border:1.5px solid var(--line);border-radius:14px;
+        padding:15px 16px;cursor:pointer;font:inherit;font-size:.99rem;color:var(--ink);
+        transition:border-color .15s ease, background .15s ease, transform .15s ease;line-height:1.55;
+      }
+      .opt:hover{border-color:var(--accent);transform:translateY(-1px);}
+      .opt .letter{
+        flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);
+        display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;
+        color:var(--ink-soft);margin-top:1px;background:var(--surface);
+      }
+      .opt.selected{border-color:var(--accent);background:var(--surface2);}
+      .opt.selected .letter{background:var(--accent);border-color:var(--accent);color:#fff;}
+      .quiz-hint{text-align:center;color:var(--ink-faint);font-size:.8rem;margin-top:16px;}
+      /* ---------- result / poster ---------- */
+      .poster{
+        position:relative;border-radius:26px;overflow:hidden;color:#2b241c;
+        box-shadow:0 26px 60px rgba(50,35,18,.28);padding:34px 28px 30px;
+        animation:screenIn .55s ease both;
+      }
+      .poster::before{
+        content:"";position:absolute;inset:0;opacity:.16;pointer-events:none;
+        background-image:radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.4px);
+        background-size:22px 22px;
+      }
+      .poster.light-text{color:#f3ecdf;}
+      .poster .p-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;}
+      .poster .p-brand{font-size:.74rem;letter-spacing:.34em;font-weight:700;opacity:.75;}
+      .stamp{
+        flex:none;width:74px;height:74px;border:2px solid currentColor;border-radius:50%;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        transform:rotate(10deg);opacity:.85;font-family:"Noto Serif SC",serif;
+      }
+      .stamp .s1{font-size:1.05rem;font-weight:900;line-height:1.1;}
+      .stamp .s2{font-size:.58rem;letter-spacing:.2em;}
+      .p-label-line{font-size:.82rem;letter-spacing:.3em;margin-top:20px;opacity:.8;position:relative;}
+      .p-name{
+        font-family:"Noto Serif SC",serif;font-weight:900;font-size:2.7rem;line-height:1.2;
+        margin:8px 0 4px;position:relative;letter-spacing:.02em;
+      }
+      .p-en{font-size:.8rem;letter-spacing:.28em;text-transform:uppercase;opacity:.65;position:relative;}
+      .p-quote{
+        font-family:"Noto Serif SC",serif;font-size:1.18rem;font-weight:700;line-height:1.6;
+        margin:20px 0 4px;padding:14px 16px;position:relative;
+        border-top:1px solid currentColor;border-bottom:1px solid currentColor;
+      }
+      .p-quote::before{content:"“";position:absolute;left:-2px;top:-16px;font-size:2rem;opacity:.5;}
+      .p-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;position:relative;}
+      .p-tag{border:1px solid currentColor;border-radius:999px;padding:4px 12px;font-size:.8rem;opacity:.9;}
+      .p-sub{margin-top:14px;font-size:.9rem;position:relative;opacity:.92;}
+      .p-sub b{font-family:"Noto Serif SC",serif;}
+      .result-body{margin-top:26px;display:grid;gap:16px;}
+      .r-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;}
+      .r-card h3{
+        margin:0 0 10px;font-family:"Noto Serif SC",serif;font-size:1.05rem;letter-spacing:.08em;
+        display:flex;align-items:center;gap:9px;
+      }
+      .r-card h3 .dot{width:9px;height:9px;border-radius:3px;background:var(--accent);flex:none;}
+      .r-card p{margin:0;color:var(--ink-soft);font-size:.95rem;}
+      .r-card ul{margin:0;padding-left:1.15em;color:var(--ink-soft);font-size:.95rem;}
+      .r-card li{margin:5px 0;}
+      .r-card li b{color:var(--ink);}
+      .bars{display:grid;gap:12px;}
+      .bar-row{display:grid;grid-template-columns:64px 1fr 44px;align-items:center;gap:10px;font-size:.88rem;}
+      .bar-row .bn{color:var(--ink);font-weight:500;}
+      .bar-track{height:9px;border-radius:99px;background:var(--surface2);overflow:hidden;}
+      .bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--accent));width:0%;transition:width .8s ease;}
+      .bar-row .bv{text-align:right;color:var(--ink-faint);font-size:.82rem;}
+      .egg{background:linear-gradient(135deg,var(--surface2),var(--surface));}
+      .egg p{font-size:.95rem;}
+      .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:26px;}
+      .actions .btn{flex:1;min-width:150px;max-width:260px;}
+      /* ---------- toast ---------- */
+      .toast{
+        position:fixed;left:50%;bottom:28px;transform:translate(-50%,80px);z-index:50;
+        background:var(--ink);color:var(--bg);padding:11px 22px;border-radius:999px;
+        font-size:.9rem;opacity:0;transition:all .35s ease;pointer-events:none;box-shadow:var(--shadow);
+        max-width:88vw;text-align:center;
+      }
+      .toast.show{transform:translate(-50%,0);opacity:1;}
+      @media (max-width:560px){
+        h1.title{font-size:2rem;}
+        .home-hero .ghost{font-size:7rem;}
+        .p-name{font-size:2.15rem;}
+        .poster{padding:26px 20px 24px;}
+        .q-text{font-size:1.24rem;}
+        .q-card{padding:24px 18px 20px;}
+      }
+      @media (prefers-reduced-motion: reduce){
+        *,*::before,*::after{animation-duration:.001s !important;transition-duration:.001s !important;}
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <!-- ================= HOME ================= -->
+      <section id="screen-home" class="screen active">
+        <div class="home-hero">
+          <div class="ghost" aria-hidden="true">氛围</div>
+          <span class="kicker">Vibe Check</span>
+          <h1 class="title">你的专属<br /><span class="hl">氛围感标签</span></h1>
+          <p class="subtitle">氛围感不是滤镜，是你走进房间时，空气先认出的那部分你。<br />20 道生活小题，测出你自带的那一种。</p>
+          <div class="meta-row">
+            <span class="meta-chip"><b>20</b> 道单选题</span>
+            <span class="meta-chip">约 <b>2 分钟</b></span>
+            <span class="meta-chip"><b>9</b> 种氛围标签</span>
+          </div>
+          <div class="tag-cloud">
+            <p>— 你可能是其中之一 —</p>
+            <div class="chips">
+              <span class="chip">清冷疏离感</span>
+              <span class="chip">松弛老钱感</span>
+              <span class="chip">破碎故事感</span>
+              <span class="chip">无辜少年感</span>
+              <span class="chip">人间烟火感</span>
+              <span class="chip">神秘危险感</span>
+              <span class="chip">治愈氧气感</span>
+              <span class="chip">复古港风感</span>
+              <span class="chip">贵气千金感</span>
+              <span class="chip q">？？？</span>
+            </div>
+          </div>
+          <div class="start-zone">
+            <button class="btn btn-primary" id="btn-start" type="button">开始鉴定我的氛围 →</button>
+            <p class="fineprint">趣味人格测试，仅供娱乐，不是专业心理诊断 · 结果海报卡适合截图分享</p>
+          </div>
+        </div>
+        <div class="how">
+          <h3>这份测试在测什么</h3>
+          <ul>
+            <li>题目全部来自生活：<b>穿搭审美、社交距离、拍照风格、说话语气、生活仪式感</b>。</li>
+            <li>每道题都在为 9 个氛围维度计分：清冷感、松弛感、故事感、少年气、贵气、烟火气、神秘感、治愈感、港风感。</li>
+            <li>凭第一直觉选，别想太多——氛围感这东西，想多了就不准了。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= QUIZ ================= -->
+      <section id="screen-quiz" class="screen">
+        <div class="quiz-top">
+          <button class="back-btn" id="btn-back" type="button">← 上一题</button>
+          <div class="progress-wrap">
+            <div class="progress-meta"><span id="progress-text">第 1 / 20 题</span><span id="progress-pct">0%</span></div>
+            <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+          </div>
+        </div>
+        <div class="q-card" id="q-card">
+          <div class="q-scene" id="q-scene">SCENE 01</div>
+          <h2 class="q-text" id="q-text"></h2>
+          <div class="opts" id="q-opts"></div>
+        </div>
+        <p class="quiz-hint">选完自动进入下一题 · 凭直觉，别纠结</p>
+      </section>
+
+      <!-- ================= RESULT ================= -->
+      <section id="screen-result" class="screen">
+        <div class="poster" id="poster">
+          <div class="p-top">
+            <div>
+              <div class="p-brand">氛围感鉴定报告</div>
+              <div class="p-label-line">你的专属氛围感标签是</div>
+            </div>
+            <div class="stamp"><span class="s1">氛围</span><span class="s2">已鉴定</span></div>
+          </div>
+          <div class="p-name" id="r-name"></div>
+          <div class="p-en" id="r-en"></div>
+          <div class="p-quote" id="r-quote"></div>
+          <div class="p-tags" id="r-tags"></div>
+          <p class="p-sub" id="r-sub"></p>
+        </div>
+
+        <div class="result-body">
+          <div class="r-card">
+            <h3><span class="dot"></span>标签解读</h3>
+            <p id="r-desc"></p>
+          </div>
+          <div class="r-card">
+            <h3><span class="dot"></span>你的氛围浓度</h3>
+            <div class="bars" id="r-bars"></div>
+          </div>
+          <div class="r-card">
+            <h3><span class="dot"></span>性格特点</h3>
+            <ul id="r-traits"></ul>
+          </div>
+          <div class="r-card">
+            <h3><span class="dot"></span>隐藏优势</h3>
+            <ul id="r-advantages"></ul>
+          </div>
+          <div class="r-card">
+            <h3><span class="dot"></span>氛围感加分小建议</h3>
+            <ul id="r-tips"></ul>
+          </div>
+          <div class="r-card egg">
+            <h3><span class="dot"></span>趣味彩蛋</h3>
+            <p id="r-egg"></p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="btn-copy" type="button">复制结果文案</button>
+          <button class="btn btn-ghost" id="btn-restart" type="button">重新测试</button>
+        </div>
+        <p class="fineprint">长按或截图上方海报卡，即可分享到小红书 / 朋友圈 · 本测试仅供娱乐</p>
+      </section>
+
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+    /* ============ 维度 ============
+       ql 清冷感 · sc 松弛感 · gs 故事感 · sn 少年气 · gq 贵气
+       yh 烟火气 · sm 神秘感 · zy 治愈感 · gf 港风感          */
+    var DIM_NAMES = {
+      ql:"清冷感", sc:"松弛感", gs:"故事感", sn:"少年气", gq:"贵气",
+      yh:"烟火气", sm:"神秘感", zy:"治愈感", gf:"港风感"
+    };
+
+    /* ============ 题目：每题 4 个选项，d=主维度(+3) s=副维度(+1) ============ */
+    var QUESTIONS = [
+      { scene:"穿搭审美", q:"出门前选衣服，你的第一原则是？",
+        opts:[
+          {t:"黑白灰为主，越简单越高级", d:"ql", s:"gq"},
+          {t:"宽松舒适，舒服比好看重要", d:"sc", s:"sn"},
+          {t:"面料要有质感，再配一件小配饰，低调但贵", d:"gq", s:"sc"},
+          {t:"要有设计感和记忆点，不想和别人撞款", d:"gf", s:"gs"}
+        ]},
+      { scene:"穿搭审美", q:"打开你的衣柜，出现最多的颜色是？",
+        opts:[
+          {t:"燕麦色、奶白色这类大地色，温温柔柔", d:"zy", s:"sc"},
+          {t:"牛仔蓝和白，干净清爽不出错", d:"sn", s:"ql"},
+          {t:"红与黑，回头率直接拉满", d:"gf", s:"sm"},
+          {t:"藏青、墨绿等深色系，沉稳又有距离感", d:"sm", s:"ql"}
+        ]},
+      { scene:"拍照风格", q:"你发朋友圈的照片，通常是哪种风格？",
+        opts:[
+          {t:"背影、侧脸居多，留白很多，不爱露全脸", d:"ql", s:"sm"},
+          {t:"美食、街景、市集，生活气息拉满", d:"yh", s:"zy"},
+          {t:"胶片感滤镜，像从老电影里截下来的图", d:"gf", s:"gs"},
+          {t:"大笑抓拍，主打一个真实和感染力", d:"sn", s:"yh"}
+        ]},
+      { scene:"拍照风格", q:"自拍的时候，你的表情管理是？",
+        opts:[
+          {t:"淡淡的，甚至不看镜头，越不看越有故事", d:"ql", s:"sm"},
+          {t:"微微笑，眼睛弯成月牙", d:"zy", s:"sn"},
+          {t:"冷脸或微微挑眉，气场全开", d:"sm", s:"gq"},
+          {t:"鬼脸搞怪，完全没有偶像包袱", d:"sn", s:"yh"}
+        ]},
+      { scene:"社交距离感", q:"在陌生人面前，你通常是哪种状态？",
+        opts:[
+          {t:"保持边界感，熟了之后才慢慢热络", d:"ql", s:"sm"},
+          {t:"自来熟，五分钟就能打成一片", d:"yh", s:"sn"},
+          {t:"话不多，但一开口就句句在点上", d:"gs", s:"ql"},
+          {t:"温和倾听型，让人忍不住想靠近", d:"zy", s:"sc"}
+        ]},
+      { scene:"说话语气", q:"微信聊天时，你的画风更接近？",
+        opts:[
+          {t:"简短利落，能打字绝不发表情包", d:"ql", s:"gq"},
+          {t:"语气词超多，「哈哈哈」和表情包常驻", d:"yh", s:"sn"},
+          {t:"慢悠悠的，经常发长长的语音条", d:"sc", s:"zy"},
+          {t:"偶尔蹦出一句很戳人的话，让人记很久，也猜不透", d:"sm", s:"gs"}
+        ]},
+      { scene:"生活节奏", q:"理想的周末，你想怎么打开？",
+        opts:[
+          {t:"睡到自然醒，咖啡配本书，节奏越慢越好", d:"sc", s:"ql"},
+          {t:"逛菜市场买菜，回家做一桌子好菜", d:"yh", s:"zy"},
+          {t:"探一家有故事的老店，或者看个展", d:"gs", s:"gf"},
+          {t:"骑行、滑板、爬山，出去撒野才过瘾", d:"sn", s:"sc"}
+        ]},
+      { scene:"拍照风格", q:"给别人拍照时，你最在意的是？",
+        opts:[
+          {t:"光影和构图，氛围感比脸重要", d:"gs", s:"ql"},
+          {t:"皮肤状态和整体精致度，必须出片", d:"gq", s:"gf"},
+          {t:"自然不摆拍，真实的样子最美", d:"sc", s:"sn"},
+          {t:"背景要有生活气：老街、摊位、热气腾腾", d:"yh", s:"gf"}
+        ]},
+      { scene:"气味偏好", q:"如果选一款香水送自己，你会挑？",
+        opts:[
+          {t:"冷冽的木质调、雪松，清清冷冷，闻起来就不好惹", d:"sm", s:"ql"},
+          {t:"奶香或白桃香，甜甜软软的", d:"zy", s:"sn"},
+          {t:"檀香、乌木，沉稳又有阅历感", d:"gs", s:"gq"},
+          {t:"海洋或柑橘调，清爽得像少年", d:"sn", s:"sc"}
+        ]},
+      { scene:"社交距离感", q:"朋友聚会时，你通常是哪个位置？",
+        opts:[
+          {t:"安静坐在一边，但总有人主动来找我聊", d:"sm", s:"ql"},
+          {t:"气氛组组长，有我在绝不冷场", d:"yh", s:"sn"},
+          {t:"优雅得体，分寸感拿捏得刚刚好", d:"gq", s:"sc"},
+          {t:"默默照顾所有人：添水、递纸、张罗吃的", d:"zy", s:"yh"}
+        ]},
+      { scene:"生活仪式感", q:"你的房间，最接近哪种布置？",
+        opts:[
+          {t:"极简留白，一尘不染，东西越少越好", d:"ql", s:"gq"},
+          {t:"复古海报、旧物摆件，越有年代感越爱", d:"gf", s:"gs"},
+          {t:"绿植、香薰、暖光灯，温馨治愈", d:"zy", s:"sc"},
+          {t:"乱中有序，到处都是生活留下的痕迹", d:"yh", s:"gs"}
+        ]},
+      { scene:"音乐品味", q:"你的歌单，整体是什么气质？",
+        opts:[
+          {t:"粤语老歌和爵士，像走在旧香港的街头", d:"gf", s:"gs"},
+          {t:"独立民谣，歌词写得好比什么都重要", d:"gs", s:"ql"},
+          {t:"轻快的流行和 City Pop，心情立刻放晴", d:"sn", s:"zy"},
+          {t:"钢琴曲、古典乐，安静又贵气", d:"gq", s:"ql"}
+        ]},
+      { scene:"生活仪式感", q:"对待「吃饭」这件事，你的态度是？",
+        opts:[
+          {t:"摆盘要精致，餐具要成套，仪式感不能少", d:"gq", s:"gf"},
+          {t:"大排档、路边摊，好吃就是王道", d:"yh", s:"sn"},
+          {t:"哪怕一个人，也要认认真真做一餐", d:"sc", s:"zy"},
+          {t:"偏爱深夜食堂式的小馆子，暖胃又暖心", d:"zy", s:"gs"}
+        ]},
+      { scene:"拍照风格", q:"出去旅行时，你的拍照方式是？",
+        opts:[
+          {t:"拍风景大片，人在画里，像老电影的取景", d:"gf", s:"gs"},
+          {t:"当地人视角：钻巷子、逛早市、找老店", d:"yh", s:"gs"},
+          {t:"穿搭大片，每天换一套 Look 认真营业", d:"gq", s:"gf"},
+          {t:"随手拍，糊了也很有感觉", d:"sc", s:"sn"}
+        ]},
+      { scene:"社交距离感", q:"被当面夸好看/有气质时，你的反应是？",
+        opts:[
+          {t:"淡淡说声谢谢，内心毫无波澜，让人猜不透", d:"sm", s:"ql"},
+          {t:"开心藏不住，眼睛都在发光", d:"sn", s:"zy"},
+          {t:"反手夸回去，把对方哄得更开心", d:"gq", s:"sc"},
+          {t:"有点不好意思，耳朵先红了", d:"zy", s:"sn"}
+        ]},
+      { scene:"穿搭审美", q:"你的日常妆容和发型偏好是？",
+        opts:[
+          {t:"伪素颜，清透干净，像天生好皮肤", d:"sn", s:"ql"},
+          {t:"红唇配大波浪，复古又明艳", d:"gf", s:"gq"},
+          {t:"几乎不化妆，怎么舒服怎么来", d:"sc", s:"yh"},
+          {t:"妆面可以淡，但耳饰、指甲、发丝都要精致", d:"gq", s:"zy"}
+        ]},
+      { scene:"情绪画面", q:"下雨天，你脑子里自动播放的画面是？",
+        opts:[
+          {t:"撑着伞慢慢走，像电影里的长镜头", d:"gs", s:"ql"},
+          {t:"窝在家里煮热汤，看一部老电影", d:"zy", s:"yh"},
+          {t:"踩水玩，雨越大越兴奋", d:"sn", s:"yh"},
+          {t:"找家咖啡馆，靠窗看雨发呆，谁也不想理", d:"ql", s:"sc"}
+        ]},
+      { scene:"生活仪式感", q:"给好朋友准备礼物，你的风格是？",
+        opts:[
+          {t:"贵精不贵多，连包装都要高级", d:"gq", s:"ql"},
+          {t:"手写卡片，再加一件亲手做的小东西", d:"zy", s:"gs"},
+          {t:"实用派，送的全是对方正需要的", d:"yh", s:"sc"},
+          {t:"搞点神秘感：盲盒，或者在礼物里藏彩蛋", d:"sm", s:"sn"}
+        ]},
+      { scene:"第一印象", q:"朋友对你的第一印象，通常是？",
+        opts:[
+          {t:"看起来不好接近，熟了之后发现很反差", d:"sm", s:"ql"},
+          {t:"像一阵风，自由自在，无拘无束", d:"sc", s:"sn"},
+          {t:"感觉是个有故事的人，想多了解一点", d:"gs", s:"sm"},
+          {t:"贵气扑面，像被富养长大的", d:"gq", s:"gf"}
+        ]},
+      { scene:"人生画面", q:"选一个画面，作为你理想人生的定格？",
+        opts:[
+          {t:"海边小屋，慢生活，一直松弛到老", d:"sc", s:"zy"},
+          {t:"老城洋房，岁月静好，质感拉满", d:"gf", s:"gq"},
+          {t:"走过很多路，故事都写在眼神里", d:"gs", s:"sm"},
+          {t:"热热闹闹一大家人，烟火长明", d:"yh", s:"zy"}
+        ]}
+    ];
+
+    /* ============ 结果库 ============ */
+    var RESULTS = {
+      ql:{ name:"清冷疏离感", en:"Cool & Distant",
+        quote:"你不是高冷，你只是把热闹调成了静音。",
+        tags:["#人间清醒","#留白美学","#生人勿近熟人疯"],
+        gradient:"linear-gradient(155deg,#e3ebee 0%,#b3c5cc 55%,#8fa9b4 100%)", dark:false,
+        desc:"你身上有一种天然的距离感，像冬日清晨的薄雾——看得见，抓不住。你不争不抢，不解释也不讨好，越是了解你的人越知道：你的温柔不是没有，只是设有门槛。这种清冷不是拒人千里，而是把世界调成了自己舒服的音量。",
+        traits:["<b>边界感极强</b>，不爱无效社交，独处是充电方式","<b>审美极简</b>，越素越高级，讨厌一切花里胡哨","<b>情绪稳定</b>，很少失态，心里再翻江倒海脸上也平静","<b>慢热长情</b>，认定的人和事，很难轻易放下"],
+        advantages:["<b>留白感稀缺</b>：越不主动，越让人忍不住想靠近了解","<b>第一眼就显贵</b>：干净克制的气质，自带高级感滤镜","<b>不被情绪裹挟</b>：清醒是你最大的底牌，很少做后悔的决定"],
+        tips:["偶尔主动分享一点日常动态，疏离感里掺一丝烟火气，杀伤力翻倍","银色系、冷色调配饰是你的本命，冷感直接拉满","拍照多用侧脸和背影——你的留白，就是氛围感本体"],
+        egg:"你的头像多半是风景、背影或干脆不换；朋友圈设置了三天可见，但每一条的构图，都像杂志内页。"
+      },
+      sc:{ name:"松弛老钱感", en:"Effortless Old Money",
+        quote:"不费力的高级，才是最高级的炫富。",
+        tags:["#松弛感天花板","#人间富贵花（低调版）","#不内耗体质"],
+        gradient:"linear-gradient(155deg,#f0e8d5 0%,#dcc9a3 55%,#c3a878 100%)", dark:false,
+        desc:"你的高级感不靠 Logo，靠状态：天大的事，也能先坐下来喝口茶。你不追潮流、不赶时间，穿搭看似随手一抓，件件都是好面料。这种「老钱感」的核心不是钱，是那种「什么都见过，所以什么都不慌」的底气。",
+        traits:["<b>不追潮流</b>，自有风格，经典款能穿很多年","<b>情绪松弛</b>，很少焦虑外露，节奏永远在自己手里","<b>看似随意实则讲究</b>，对面料、版型、质感异常敏锐","<b>从不炫耀</b>，但生活处处透着品味和分寸"],
+        advantages:["<b>越素越贵</b>：这种气质不挑年龄，时间越久越吃香","<b>自带疗愈场</b>：朋友都爱和你待着，靠近你就自动降压","<b>不内耗体质</b>：不拧巴、不纠结，运气通常不会差"],
+        tips:["亚麻、羊绒、真丝是你的本命面料，闭眼入不踩雷","配饰做减法：全身只留一件最有分量的，就够了","千万别用力过猛——松弛感一旦「演」出来，就破功了"],
+        egg:"你买衣服先摸面料、再看吊牌，导购扫你一眼就知道：这位是行家，不用多介绍。"
+      },
+      gs:{ name:"破碎故事感", en:"Beautifully Broken Story",
+        quote:"你的眼睛里，住着一整个故事会。",
+        tags:["#天选电影脸","#破碎感美人","#眼里有光心里有事"],
+        gradient:"linear-gradient(155deg,#eeddd4 0%,#cfa294 55%,#a9766a 100%)", dark:false,
+        desc:"你不是故作深沉，而是敏感和经历让你自带叙事感：笑起来眼底有光，安静时又像藏着一段没讲完的往事。别人拍照是记录，你出现的地方自动成片——因为你的氛围感里，有别人没有的「内容」。",
+        traits:["<b>共情力超强</b>，总能第一时间察觉别人的情绪","<b>眼神有内容</b>，开心和难过都格外动人","<b>偏爱有年代感的东西</b>：老歌、旧物、老地方","<b>表达欲细腻</b>，随手写的小作文能把人看哭"],
+        advantages:["<b>故事感最稀缺</b>：它让美有了深度，耐看又耐品","<b>天生电影感</b>：随手一拍都是剧照，不需要摆拍","<b>自带保护欲磁场</b>：让人想靠近，想听你慢慢讲"],
+        tips:["胶片滤镜和暖黄光是你的主场，氛围感直接封神","破碎感别过度使用——笑起来的反差，才是最杀人的","把你的故事写下来吧，你的气质，天生适合被记录"],
+        egg:"你的歌单里一定有几首「一听就想起某个人」的歌，循环了无数遍，但你从不删。"
+      },
+      sn:{ name:"无辜少年感", en:"Innocent Youth",
+        quote:"世界再复杂，你眼里还有光。",
+        tags:["#初恋感本感","#人间小太阳","#年龄成谜"],
+        gradient:"linear-gradient(155deg,#e8f2f8 0%,#bcd9ec 55%,#8fbcd9 100%)", dark:false,
+        desc:"年龄只是数字，你身上的干净和真诚才是本体。笑起来毫无防备，认真起来又格外动人。少年气从来不是装嫩，而是心里那块地方，始终没被世故磨平——这在成年人世界里，稀缺得发光。",
+        traits:["<b>笑点低、快乐简单</b>，一杯奶茶就能开心半天","<b>穿搭清清爽爽</b>，自带校园感，合照永远最显小","<b>对人真诚没心眼</b>，想什么都写在脸上","<b>好奇心旺盛</b>，什么新鲜事都想试一试"],
+        advantages:["<b>顶级减龄神器</b>：少年气是花钱买不到的年轻感","<b>路人缘极好</b>：你的真诚最容易让人卸下防备","<b>自带初恋滤镜</b>：干净的气质，天生自带好感度加成"],
+        tips:["白 T、牛仔、帆布鞋就是你的战袍，别轻易换风格","保持运动和早睡——少年气的底气，全在精气神里","拍照时大胆笑，你的笑容就是氛围感本身，别藏着"],
+        egg:"你去买奶茶，店员会下意识多问一句「同学，要去冰吗」——别生气，这是夸你。"
+      },
+      gq:{ name:"贵气千金感", en:"Born Elegant",
+        quote:"你不用开口，气质已经报了价。",
+        tags:["#人间富贵花","#教养感拉满","#行走的质感"],
+        gradient:"linear-gradient(155deg,#f4ecdc 0%,#e0c491 55%,#c39f5e 100%)", dark:false,
+        desc:"你的贵气不是 Logo 堆出来的，而是刻在细节里的讲究：挺拔的仪态、得体的分寸、稳定的情绪、不动声色的审美。往人群里一站，就是「被好好养大」的样子——这种气质装不出来，只能长出来。",
+        traits:["<b>仪态在线</b>，坐有坐相、站有站相，自带挺拔感","<b>细节控</b>：指甲、发丝、鞋面，永远干干净净","<b>说话有分寸</b>，从不让人难堪，情商藏在语气里","<b>审美稳定</b>，不盲目跟风，买一件是一件"],
+        advantages:["<b>贵气无法速成</b>：它来自教养和见识，是最难被模仿的氛围","<b>第一印象杀伤力极强</b>：面试、约会、见家长，全面加分","<b>精致不张扬</b>：越低调的贵气，段位越高"],
+        tips:["珍珠、细金链、小颗金属耳饰，是为你量身定做的加分项","投资经典款而非爆款——你的气质，适合「穿十年」的衣服","越重要的场合妆越淡：你的底气在骨相，不在妆面"],
+        egg:"你拍照从不用力凹造型，因为随便一站，周围的背景都像在给你的气质打工。"
+      },
+      yh:{ name:"人间烟火感", en:"Warmth of Everyday Life",
+        quote:"和你在一起，连吃饭都像过节。",
+        tags:["#人间小暖炉","#福气担当","#快乐源泉"],
+        gradient:"linear-gradient(155deg,#fdeeda 0%,#f6bd8a 55%,#e08e4e 100%)", dark:false,
+        desc:"你是行走的人间温暖：爱美食、爱热闹、爱生活里一切具体的小幸福。你的氛围感不在远方，就在热气腾腾的饭桌上、在爽朗的笑声里、在「多吃点」三个字里。和你在一起的人，很难不快乐。",
+        traits:["<b>食欲和生活欲都旺盛</b>，对好吃的有雷达般的嗅觉","<b>热情好客</b>，朋友都爱往你家跑，你家永远有吃的","<b>笑声有感染力</b>，天生的冷场克星、气氛担当","<b>对生活认真</b>，再忙也要好好吃饭、好好过日子"],
+        advantages:["<b>烟火气最治愈</b>：谁和你相处都放松，不用端着","<b>旺自己也旺别人</b>：朋友圈公认的「福气担当」","<b>越真实越动人</b>：你的氛围感不需要任何包装和滤镜"],
+        tips:["厨艺就是你的高定礼服，继续深耕，魅力无上限","拍照多选市集、老街、夜市——烟火气就是你的大片背景","穿搭多用暖色调：橘、红、焦糖，亲和力直接翻倍"],
+        egg:"朋友去你家做客从来不空着手——不是客气，是都知道你肯定备了一桌子菜，得带点喝的来配。"
+      },
+      sm:{ name:"神秘危险感", en:"Mysterious & Dangerous",
+        quote:"越是看不透，越是想靠近。",
+        tags:["#高段位猎手","#氛围感刺客","#别猜，猜不透"],
+        gradient:"linear-gradient(155deg,#454c5c 0%,#232833 55%,#12151d 100%)", dark:true,
+        desc:"你像一本封面极简的书，没人能一眼读完。话不多，情绪不外露，偶尔流露的一点锋芒，反而让人上头。你的「危险」不是坏，而是不可控、不可测、不可得——这种吸引力，段位最高，也最致命。",
+        traits:["<b>喜怒不形于色</b>，心思深，很少有人能猜透你","<b>话少但精准</b>，一开口就是重点，从不废话","<b>有自己的世界</b>，不轻易交底，保留三分神秘","<b>眼神有压迫感</b>，安静的时候气场反而最强"],
+        advantages:["<b>神秘感是顶级猎手</b>：越克制，越勾人，这是人性","<b>主动权永远在你手里</b>：不被看透的人，永远不被拿捏","<b>反差感拉满</b>：越冷的外表，越让人好奇你的柔软面"],
+        tips:["深色系和利落剪裁是你的主场，越简约越有压迫感","香水选木质调——尾调的留香，就是你的个人签名","保持你的节奏：神秘感最忌自曝，留三分余地最致命"],
+        egg:"你的朋友圈更新极慢，但每次一发图，评论区就排队：问地点的、问链接的、问你最近在忙什么的——你通常只回其中一条。"
+      },
+      zy:{ name:"治愈氧气感", en:"Healing Oxygen",
+        quote:"你一笑，世界的褶皱都被抚平了。",
+        tags:["#人间小氧气","#笑容杀手","#谁见谁心软"],
+        gradient:"linear-gradient(155deg,#eef6e9 0%,#c2dfba 55%,#93bd8b 100%)", dark:false,
+        desc:"你像清晨的阳光和雨后的空气：干净、温和、不设防。和你相处不需要演戏，紧绷的神经会自动放松下来。这种治愈力不是人设，是天赋——你的存在本身，就是一种疗愈。",
+        traits:["<b>笑容干净</b>，眼睛弯弯，看着就让人心情变好","<b>说话温柔有分寸</b>，很少让人感到不舒服","<b>喜欢一切柔软的事物</b>：小动物、绿植、毛茸茸","<b>情绪价值拉满</b>，朋友难过时第一个想到的就是你"],
+        advantages:["<b>氧气感老少通吃</b>：是最稀缺、也最长久的亲和力","<b>信任感天生满格</b>：特别适合做任何需要被信任的事","<b>越自然越美</b>：素颜都自带滤镜，不费力就赢很大"],
+        tips:["奶油色、浅蓝、薄荷绿是你的本命色系，温柔翻倍","多笑——你的笑容就是最好的妆容，别浪费","拍照选自然光：你的氛围感，在阳光下基本无敌"],
+        egg:"小朋友和小动物都特别爱黏着你。别怀疑——它们识别善意的雷达，比大人准多了。"
+      },
+      gf:{ name:"复古港风感", en:"Retro Hong Kong Vibe",
+        quote:"你从旧时光里走来，美得自带 BGM。",
+        tags:["#港风本风","#黄金年代女主","#风情万种"],
+        gradient:"linear-gradient(155deg,#f6ddba 0%,#dd9261 55%,#b0512c 100%)", dark:false,
+        desc:"你身上有黄金年代的影子：明艳、大气、风情万种，又带着一点英气和江湖气。红唇、卷发、胶片感——你不是在复刻港风，你像是直接从那个时代的电影里走出来的主角，美得有声有色。",
+        traits:["<b>明艳大气</b>，气质越浓越美，淡妆反而压不住你","<b>偏爱有年代感的东西</b>：老歌、旧物、复古穿搭","<b>性格有江湖气</b>，仗义、洒脱，拿得起放得下","<b>拍照自带胶片质感</b>，不用滤镜都是故事感"],
+        advantages:["<b>经得起时间考验</b>：港风式的美，越品越有味道","<b>气场压得住大场面</b>：越隆重的场合，你越出彩","<b>辨识度极高</b>：人群里一眼就能被认出来，过目难忘"],
+        tips:["红唇、大波浪、金属大耳环——你的经典三件套","牛仔、皮衣、花衬衫大胆穿，你的气场撑得起一切","拍照时开闪光灯直打，港风大片当场出炉，百试百灵"],
+        egg:"你的歌单里粤语歌占比惊人；去 KTV，你的必点曲目里一定有一首《千千阙歌》或《海阔天空》。"
+      }
+    };
+
+/* ============ 流程逻辑 ============ */
+var state = { idx: 0, answers: []};
+var $ = function(id){ return document.getElementById(id);};
+var screens = { home: $("screen-home"), quiz: $("screen-quiz"), result: $("screen-result")};
+function show(name){
+for (var k in screens) screens[k].classList.toggle("active", k === name);
+window.scrollTo({ top: 0, behavior: "smooth"});
+}
+var LETTERS = ["A","B","C","D"];
+
+function renderQuestion(back){
+var item = QUESTIONS[state.idx];
+var total = QUESTIONS.length;
+$("progress-text").textContent = "第 " + (state.idx + 1) + " / " + total + " 题";
+var pct = Math.round(state.idx / total * 100);
+$("progress-pct").textContent = pct + "%";
+$("progress-fill").style.width = pct + "%";
+$("btn-back").classList.toggle("show", state.idx > 0);
+$("q-scene").textContent = "SCENE " + String(state.idx + 1).padStart(2, "0") + " · " + item.scene;
+$("q-text").textContent = item.q;
+var box = $("q-opts");
+box.innerHTML = "";
+item.opts.forEach(function(opt, i){
+var btn = document.createElement("button");
+btn.type = "button";
+btn.className = "opt";
+var letter = document.createElement("span");
+letter.className = "letter";
+letter.textContent = LETTERS[i];
+var txt = document.createElement("span");
+txt.textContent = opt.t;
+btn.appendChild(letter);
+btn.appendChild(txt);
+btn.addEventListener("click", function(){ pick(i, btn);});
+box.appendChild(btn);
+});
+var card = $("q-card");
+card.classList.remove("enter", "enter-back");
+void card.offsetWidth;
+card.classList.add(back? "enter-back": "enter");
+}
+
+function pick(i, btn){
+var opts = document.querySelectorAll(".opt");
+opts.forEach(function(o){ o.classList.remove("selected");});
+btn.classList.add("selected");
+state.answers[state.idx] = i;
+setTimeout(function(){
+if (state.idx < QUESTIONS.length - 1) {
+state.idx++;
+renderQuestion(false);
+} else {
+$("progress-fill").style.width = "100%";
+$("progress-pct").textContent = "100%";
+computeResult();
+}
+}, 280);
+}
+
+function computeScores(){
+var scores = {};
+for (var k in DIM_NAMES) scores[k] = 0;
+state.answers.forEach(function(ai, qi){
+var opt = QUESTIONS[qi].opts[ai];
+scores[opt.d] += 3;
+if (opt.s) scores[opt.s] += 1;
+});
+return scores;
+}
+
+function computeResult(){
+var scores = computeScores();
+var ranked = Object.keys(scores).sort(function(a, b){ return scores[b] - scores[a];});
+var top = ranked[0], second = ranked[1];
+var r = RESULTS[top];
+var poster = $("poster");
+poster.style.background = r.gradient;
+poster.classList.toggle("light-text",!!r.dark);
+poster.style.color = r.dark? "#f3ecdf": "#2b241c";
+$("r-name").textContent = r.name;
+$("r-en").textContent = r.en;
+$("r-quote").textContent = r.quote;
+var tags = $("r-tags");
+tags.innerHTML = "";
+r.tags.forEach(function(t){
+var s = document.createElement("span");
+s.className = "p-tag";
+s.textContent = t;
+tags.appendChild(s);
+});
+$("r-sub").innerHTML = "隐藏副标签：<b>" + RESULTS[second].name + "</b> —— 主标签管气质，副标签管反差，这才是完整的你。";
+$("r-desc").textContent = r.desc;
+/* 氛围浓度条：Top 4 维度，以最高分归一化 */
+var bars = $("r-bars");
+bars.innerHTML = "";
+var maxScore = scores[top] || 1;
+ranked.slice(0, 4).forEach(function(dim){
+var row = document.createElement("div");
+row.className = "bar-row";
+var pctv = Math.max(8, Math.round(scores[dim] / maxScore * 100));
+row.innerHTML = "";
+var bn = document.createElement("span"); bn.className = "bn"; bn.textContent = DIM_NAMES[dim];
+var track = document.createElement("div"); track.className = "bar-track";
+var fill = document.createElement("div"); fill.className = "bar-fill";
+fill.setAttribute("data-w", pctv);
+track.appendChild(fill);
+var bv = document.createElement("span"); bv.className = "bv"; bv.textContent = pctv + "%";
+row.appendChild(bn); row.appendChild(track); row.appendChild(bv);
+bars.appendChild(row);
+});
+var fillList = function(id, items){
+var ul = $(id);
+ul.innerHTML = "";
+items.forEach(function(html){
+var li = document.createElement("li");
+li.innerHTML = html;
+ul.appendChild(li);
+});
+};
+fillList("r-traits", r.traits);
+fillList("r-advantages", r.advantages);
+fillList("r-tips", r.tips);
+$("r-egg").textContent = r.egg;
+state.lastResult = r;
+show("result");
+setTimeout(function(){
+document.querySelectorAll(".bar-fill").forEach(function(f){
+f.style.width = f.getAttribute("data-w") + "%";
+});
+}, 120);
+}
+
+var toastTimer = null;
+function toast(msg){
+var t = $("toast");
+t.textContent = msg;
+t.classList.add("show");
+clearTimeout(toastTimer);
+toastTimer = setTimeout(function(){ t.classList.remove("show");}, 2400);
+}
+
+function copyResult(){
+var r = state.lastResult;
+if (!r) return;
+var text = "鉴定结果：我是「" + r.name + "」——" + r.quote +
+" 9 种氛围标签里，你是哪一种？快来测测你的专属氛围感标签！";
+function done(){ toast("结果文案已复制，去分享给朋友吧");}
+function fallback(){
+var ta = document.createElement("textarea");
+ta.value = text;
+ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();}
+catch (e) { toast("复制失败，长按海报截图分享吧");}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, fallback);
+} else { fallback();}
+}
+
+function restart(){
+state.idx = 0;
+state.answers = [];
+state.lastResult = null;
+show("home");
+}
+
+$("btn-start").addEventListener("click", function(){
+state.idx = 0;
+state.answers = [];
+show("quiz");
+renderQuestion(false);
+});
+$("btn-back").addEventListener("click", function(){
+if (state.idx > 0) { state.idx--; renderQuestion(true);}
+});
+$("btn-copy").addEventListener("click", copyResult);
+$("btn-restart").addEventListener("click", restart);
+</script>
+</body>
+</html>

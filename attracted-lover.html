@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>你容易吸引什么样的恋人</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&display=swap" rel="stylesheet" />
+<style>
+button, [role="button"] { min-height: 2.75rem;}
+</style>
+<style>
+:root {
+--bg: #fdf4f1;
+--bg-soft: #fbe9e4;
+--card: #fffaf8;
+--ink: #40262f;
+--ink-soft: #7a5a64;
+--ink-faint: #a58790;
+--accent: #d94f70;
+--accent-deep: #b93357;
+--accent-soft: #fbe3e9;
+--line: #f0d5cd;
+--gold: #c99a3f;
+--shadow: 0 18px 44px rgba(185, 51, 87, 0.14);
+--radius: 20px;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+--bg: #211419;
+--bg-soft: #2b1a21;
+--card: #2e1d25;
+--ink: #f6e3e8;
+--ink-soft: #cfa7b2;
+--ink-faint: #9c7684;
+--accent: #f0839f;
+--accent-deep: #f0839f;
+--accent-soft: #452631;
+--line: #4a2c38;
+--gold: #d9ab5e;
+--shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+}
+}
+* { box-sizing: border-box;}
+html, body { margin: 0; padding: 0;}
+body {
+font-family: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+background:
+radial-gradient(560px 380px at 12% -6%, var(--bg-soft), transparent 70%),
+radial-gradient(640px 420px at 105% 8%, var(--bg-soft), transparent 70%),
+var(--bg);
+color: var(--ink);
+min-height: 100vh;
+-webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 600px; margin: 0 auto; padding: 28px 18px 56px;}
+.screen { display: none;}
+.screen.active { display: block; animation: screenIn 0.45s ease both;}
+@keyframes screenIn { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: none;}}
+
+/* ---------- 首页 ---------- */
+.hero { text-align: center; padding: 34px 6px 8px;}
+.heart-mark { width: 64px; height: 64px; margin: 0 auto 20px; display: block;}
+.hero h1 {
+font-family: "Noto Serif SC", serif; font-weight: 900;
+font-size: clamp(1.9rem, 7.4vw, 2.7rem); line-height: 1.3; margin: 0 0 14px; letter-spacing: 0.02em;
+}
+.hl { color: var(--accent-deep);}
+.sub { color: var(--ink-soft); font-size: 1rem; line-height: 1.8; margin: 0 auto 26px; max-width: 26em;}
+.meta-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px;}
+.meta-chip {
+border: 1px solid var(--line); background: var(--card); color: var(--ink-soft);
+border-radius: 999px; padding: 7px 14px; font-size: 0.85rem;
+}
+.meta-chip b { color: var(--accent-deep); font-weight: 700;}
+.btn {
+appearance: none; border: none; cursor: pointer; font-family: inherit;
+border-radius: 999px; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.06em;
+padding: 15px 44px; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 12px 26px rgba(217, 79, 112, 0.35);}
+.btn-primary:hover { background: var(--accent-deep); transform: translateY(-2px);}
+.btn-primary:active { transform: translateY(0);}
+.btn-ghost { background: transparent; color: var(--accent-deep); border: 1.5px solid var(--accent);}
+.btn-ghost:hover { background: var(--accent-soft);}
+.teaser {
+margin: 38px auto 0; max-width: 480px; text-align: left;
+background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+padding: 20px 22px; box-shadow: var(--shadow);
+}
+.teaser h2 { font-family: "Noto Serif SC", serif; font-size: 1.02rem; margin: 0 0 12px; color: var(--ink);}
+.teaser ul { margin: 0; padding: 0; list-style: none;}
+.teaser li { padding: 7px 0 7px 26px; position: relative; color: var(--ink-soft); font-size: 0.94rem; line-height: 1.6;}
+.teaser li::before {
+content: ""; position: absolute; left: 2px; top: 13px; width: 12px; height: 12px;
+background: var(--accent); opacity: 0.75;
+clip-path: path("M6 11 C2 8 0 5.6 0 3.4 C0 1.5 1.3 0 3 0 C4.3 0 5.4 0.7 6 1.7 C6.6 0.7 7.7 0 9 0 C10.7 0 12 1.5 12 3.4 C12 5.6 10 8 6 11 Z");
+transform: scale(0.85);
+}
+.fineprint { text-align: center; color: var(--ink-faint); font-size: 0.78rem; margin-top: 26px; line-height: 1.7;}
+
+/* ---------- 答题 ---------- */
+.quiz-top { display: flex; align-items: center; gap: 14px; margin: 8px 0 22px;}
+.back-btn {
+appearance: none; border: 1px solid var(--line); background: var(--card); color: var(--ink-soft);
+width: 44px; height: 44px; min-height: 44px; border-radius: 50%; font-size: 1.25rem; line-height: 1;
+cursor: pointer; flex: none; display: flex; align-items: center; justify-content: center;
+}
+.back-btn:disabled { opacity: 0.35; cursor: default;}
+.progress-wrap { flex: 1;}
+.progress-meta { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ink-faint); margin-bottom: 7px;}
+.progress-meta b { color: var(--accent-deep); font-weight: 700;}
+.progress-track { height: 8px; border-radius: 99px; background: var(--accent-soft); overflow: hidden;}
+.progress-fill {
+height: 100%; width: 0%; border-radius: 99px;
+background: linear-gradient(90deg, #ef7d99, var(--accent));
+transition: width 0.45s cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+.q-card {
+background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+box-shadow: var(--shadow); padding: 28px 24px 24px;
+}
+.q-card.enter { animation: qIn 0.38s ease both;}
+@keyframes qIn { from { opacity: 0; transform: translateX(26px);} to { opacity: 1; transform: none;}}
+.q-card.enter-back { animation: qInBack 0.38s ease both;}
+@keyframes qInBack { from { opacity: 0; transform: translateX(-26px);} to { opacity: 1; transform: none;}}
+.q-num {
+display: inline-block; font-family: "Noto Serif SC", serif; font-weight: 900;
+color: var(--accent-deep); background: var(--accent-soft);
+border-radius: 8px; padding: 3px 10px; font-size: 0.85rem; margin-bottom: 14px; letter-spacing: 0.08em;
+}
+.q-text { font-family: "Noto Serif SC", serif; font-weight: 600; font-size: 1.28rem; line-height: 1.55; margin: 0 0 22px;}
+.opts { display: flex; flex-direction: column; gap: 12px;}
+.opt {
+appearance: none; text-align: left; font-family: inherit; cursor: pointer;
+background: var(--bg); border: 1.5px solid var(--line); color: var(--ink);
+border-radius: 14px; padding: 15px 16px; font-size: 1rem; line-height: 1.55;
+display: flex; gap: 12px; align-items: flex-start; width: 100%;
+transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+}
+.opt:hover { border-color: var(--accent);}
+.opt:active { transform: scale(0.99);}
+.letter {
+flex: none; width: 26px; height: 26px; border-radius: 50%; margin-top: 1px;
+border: 1.5px solid var(--accent); color: var(--accent-deep);
+display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;
+}
+.opt.picked { background: var(--accent-soft); border-color: var(--accent);}
+.letter-on { background: var(--accent); color: #fff;}
+.quiz-hint { text-align: center; color: var(--ink-faint); font-size: 0.82rem; margin-top: 18px;}
+
+/* ---------- 结果海报 ---------- */
+.poster {
+position: relative; border-radius: 26px; overflow: hidden;
+background: var(--card); border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.poster-band {
+padding: 30px 26px 24px; text-align: center; position: relative;
+background: linear-gradient(160deg, var(--rsoft), transparent 78%);
+border-bottom: 1px dashed var(--line);
+}
+.poster-band::after {
+content: "心动鉴定"; position: absolute; top: 16px; right: 16px;
+font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 0.72rem; letter-spacing: 0.3em;
+color: var(--rc); border: 1.5px solid var(--rc); border-radius: 6px; padding: 5px 6px 5px 9px;
+transform: rotate(8deg); opacity: 0.85;
+}
+.kicker { color: var(--ink-soft); font-size: 0.88rem; letter-spacing: 0.24em; margin: 0 0 10px;}
+.r-name {
+font-family: "Noto Serif SC", serif; font-weight: 900; color: var(--rc);
+font-size: clamp(2.1rem, 9vw, 3rem); line-height: 1.2; margin: 0 0 12px; letter-spacing: 0.03em;
+}
+.r-tag {
+font-family: "Noto Serif SC", serif; font-size: 1.06rem; line-height: 1.65; color: var(--ink);
+margin: 0 auto; max-width: 21em;
+}
+.r-tag::before { content: "「 "; color: var(--rc);}
+.r-tag::after { content: " 」"; color: var(--rc);}
+.poster-body { padding: 24px 26px 8px;}
+.r-sec { margin-bottom: 22px;}
+.r-sec h3 {
+font-family: "Noto Serif SC", serif; font-size: 0.98rem; margin: 0 0 8px;
+display: flex; align-items: center; gap: 9px; color: var(--ink);
+}
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--rc); flex: none;}
+.r-sec p { margin: 0; color: var(--ink-soft); font-size: 0.97rem; line-height: 1.85; text-align: justify;}
+.radar { padding: 4px 26px 26px;}
+.radar h3 { font-family: "Noto Serif SC", serif; font-size: 0.98rem; margin: 0 0 14px; display: flex; align-items: center; gap: 9px;}
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 0.88rem;}
+.b-name { width: 3.6em; flex: none; color: var(--ink-soft);}
+.bar-track { flex: 1; height: 9px; border-radius: 99px; background: var(--accent-soft); overflow: hidden;}
+.bar-fill { height: 100%; border-radius: 99px; background: var(--rc); width: 0%; transition: width 0.9s cubic-bezier(0.22, 0.9, 0.3, 1);}
+.b-val { width: 2.6em; flex: none; text-align: right; color: var(--ink-faint); font-variant-numeric: tabular-nums;}
+.poster-foot {
+padding: 14px 26px 20px; border-top: 1px dashed var(--line);
+display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.test-name { font-family: "Noto Serif SC", serif; font-weight: 600; font-size: 0.88rem; color: var(--ink-soft);}
+.foot-note { font-size: 0.76rem; color: var(--ink-faint);}
+.result-actions { display: flex; gap: 12px; justify-content: center; margin-top: 26px; flex-wrap: wrap;}
+.action-btn { padding: 14px 30px; font-size: 1rem;}
+.toast {
+position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 20px);
+background: var(--ink); color: var(--bg); font-size: 0.9rem;
+padding: 11px 22px; border-radius: 999px; opacity: 0; pointer-events: none;
+transition: opacity 0.25s ease, transform 0.25s ease; z-index: 50; max-width: 88vw; text-align: center;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0);}
+@media (prefers-reduced-motion: reduce) {
+.screen.active,.q-card.enter,.q-card.enter-back { animation: none;}
+.progress-fill,.bar-fill,.btn,.opt { transition: none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 首页 -->
+<section class="screen active" id="screen-home">
+<div class="hero">
+<svg class="heart-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M12 21C6 16.6 2.4 13.1 2.4 9.3 2.4 6.4 4.6 4.2 7.4 4.2c1.8 0 3.5 1 4.6 2.6 1.1-1.6 2.8-2.6 4.6-2.6 2.8 0 5 2.2 5 5.1 0 3.8-3.6 7.3-9.6 11.7Z" fill="#d94f70"/>
+<path d="M12 21C6 16.6 2.4 13.1 2.4 9.3 2.4 6.4 4.6 4.2 7.4 4.2c1.8 0 3.5 1 4.6 2.6" stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>
+</svg>
+<h1>你容易吸引<br /><span class="hl">什么样的恋人</span></h1>
+<p class="sub">每个人身上都有一种独特的气场，<br />总会让某一类人心甘情愿地靠近。<br />20 道生活小题，测测你的心动磁场。</p>
+<div class="meta-row">
+<span class="meta-chip"><b>20</b> 道生活题</span>
+<span class="meta-chip"><b>8</b> 种恋人画像</span>
+<span class="meta-chip">约 <b>2</b> 分钟</span>
+</div>
+<button class="btn btn-primary" id="btn-start" type="button">开始测试</button>
+</div>
+<div class="teaser">
+<h2>你可能会遇到的他们</h2>
+<ul>
+<li>年下黏人型 · 成熟照顾型 · 文艺共鸣型</li>
+<li>搞笑搭子型 · 霸道护短型 · 温柔学长型</li>
+<li>野生自由型 · 闷骚慢热型</li>
+<li>凭直觉选，别想太多——第一反应最像你</li>
+</ul>
+</div>
+<p class="fineprint">趣味人格测试，图个开心和心动<br />不是专业心理诊断，结果仅供娱乐参考</p>
+</section>
+
+<!-- 答题 -->
+<section class="screen" id="screen-quiz">
+<div class="quiz-top">
+<button class="back-btn" id="btn-back" type="button" aria-label="上一题">‹</button>
+<div class="progress-wrap">
+<div class="progress-meta"><span>第 <b id="q-now">1</b> 题</span><span>共 20 题</span></div>
+<div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+</div>
+<div class="q-card" id="q-card">
+<span class="q-num" id="q-num">Q1</span>
+<p class="q-text" id="q-text"></p>
+<div class="opts" id="opts"></div>
+</div>
+<p class="quiz-hint">选最像你的那一个，没有对错</p>
+</section>
+
+<!-- 结果 -->
+<section class="screen" id="screen-result">
+<div class="poster" id="poster">
+<div class="poster-band">
+<p class="kicker">你 最 容 易 吸 引 的 恋 人 是</p>
+<h2 class="r-name" id="r-name"></h2>
+<p class="r-tag" id="r-tag"></p>
+</div>
+<div class="poster-body">
+<div class="r-sec">
+<h3><span class="dot"></span>他的性格画像</h3>
+<p id="r-portrait"></p>
+</div>
+<div class="r-sec">
+<h3><span class="dot"></span>为什么偏偏被你吸引</h3>
+<p id="r-why"></p>
+</div>
+<div class="r-sec">
+<h3><span class="dot"></span>相处彩蛋</h3>
+<p id="r-egg"></p>
+</div>
+</div>
+<div class="radar">
+<h3><span class="dot"></span>你的吸引力雷达</h3>
+<div id="radar-bars"></div>
+</div>
+<div class="poster-foot">
+<span class="test-name">《你容易吸引什么样的恋人》</span>
+<span class="foot-note">截图保存 · 分享给朋友测一测</span>
+</div>
+</div>
+<div class="result-actions">
+<button class="btn btn-ghost action-btn" id="btn-copy" type="button">复制结果文案</button>
+<button class="btn btn-primary action-btn" id="btn-restart" type="button">再测一次</button>
+</div>
+<p class="fineprint">结果由你的 20 道选择综合生成<br />换个心情再测，可能会遇到另一种心动</p>
+</section>
+
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// 维度：W 亲和力 / M 神秘感 / R 可靠感 / E 活力 / A 文艺气 / D 强势感 / H 治愈感
+var DIMS = { W: "亲和力", M: "神秘感", R: "可靠感", E: "活力", A: "文艺气", D: "强势感", H: "治愈感"};
+
+var QUESTIONS = [
+{ q: "朋友对你的第一印象，通常是？", opts: [
+{ t: "很好相处，笑起来特别亲切", s: { W: 2, H: 1}},
+{ t: "有点高冷，不太敢主动跟你搭话", s: { M: 2, D: 1}},
+{ t: "靠谱，有事第一个就想到你", s: { R: 2, W: 1}},
+{ t: "很有自己的风格，让人忍不住好奇", s: { A: 2, M: 1}}
+]},
+{ q: "周末完全没安排，你最可能在干嘛？", opts: [
+{ t: "约朋友出门，逛吃逛吃一整天", s: { E: 2, W: 1}},
+{ t: "一个人看展、逛书店、喝咖啡", s: { A: 2, H: 1}},
+{ t: "在家躺平，谁都别想把我叫出门", s: { H: 2, M: 1}},
+{ t: "把拖了很久的事情一件件处理掉", s: { R: 1, D: 2}}
+]},
+{ q: "在朋友聚会上，你通常是？", opts: [
+{ t: "气氛组组长，笑声最大的那个", s: { E: 2, W: 1}},
+{ t: "安静听大家聊，偶尔接个梗", s: { H: 2, A: 1}},
+{ t: "默默照顾全场：倒水、点菜、收尾", s: { R: 2, H: 1}},
+{ t: "和一两个人深聊，能聊到散场", s: { M: 2, A: 1}}
+]},
+{ q: "你的穿衣风格更接近哪一种？", opts: [
+{ t: "干净清爽，邻家感拉满", s: { W: 2, H: 1}},
+{ t: "简约高级，自带一点距离感", s: { M: 2, D: 1}},
+{ t: "舒适随性，怎么舒服怎么来", s: { H: 2, E: 1}},
+{ t: "有小心机，配饰和配色都很讲究", s: { A: 2, W: 1}}
+]},
+{ q: "朋友心情不好来找你倾诉，你会？", opts: [
+{ t: "先陪他一起吐槽，出气再说", s: { W: 2, E: 1}},
+{ t: "安静听完，给他倒杯热的", s: { H: 3}},
+{ t: "帮他捋逻辑、分析问题、给方案", s: { R: 2, D: 1}},
+{ t: "不多说，直接带他去吃好吃的", s: { W: 2, E: 1}}
+]},
+{ q: "你发朋友圈的风格是？", opts: [
+{ t: "九宫格日常，热热闹闹", s: { E: 2, H: 1}},
+{ t: "很少发，发必是精选照片配一句话", s: { M: 2, A: 1}},
+{ t: "只发风景和美食，本人从不露面", s: { M: 2, H: 1}},
+{ t: "想到什么发什么，快乐最重要", s: { E: 2, A: 1}}
+]},
+{ q: "你的房间或者桌面，通常是？", opts: [
+{ t: "乱中有序，反正我自己找得到", s: { E: 1, A: 2}},
+{ t: "极简整洁，每样东西各归其位", s: { R: 2, D: 1}},
+{ t: "温馨堆满：抱枕、香薰、小夜灯", s: { H: 2, W: 1}},
+{ t: "摆满书和淘来的小玩意儿", s: { A: 2, E: 1}}
+]},
+{ q: "遇到超喜欢的一家店或一首歌，你会？", opts: [
+{ t: "立刻安利给所有朋友", s: { W: 2, E: 1}},
+{ t: "自己默默收藏，谁也不告诉", s: { M: 3}},
+{ t: "记下来，下次带重要的人去", s: { H: 2, R: 1}},
+{ t: "写一段小作文记录当时的感受", s: { A: 3}}
+]},
+{ q: "在小组或团队里，你最常当的角色是？", opts: [
+{ t: "组织者：定时间、催进度、拍板", s: { R: 2, D: 1}},
+{ t: "开心果：负责活跃气氛", s: { E: 2, W: 1}},
+{ t: "军师：出主意、想方案", s: { A: 1, D: 2}},
+{ t: "后勤部长：订餐、拍照、善后", s: { H: 2, R: 1}}
+]},
+{ q: "你的笑点和哭点，属于哪种？", opts: [
+{ t: "笑点极低，什么都能笑出声", s: { E: 2, H: 1}},
+{ t: "笑点很高，但戳中了能笑一整天", s: { M: 2, A: 1}},
+{ t: "哭点很低，看个广告都能感动", s: { H: 2, W: 1}},
+{ t: "情绪稳定，喜怒基本不形于色", s: { D: 2, R: 1}}
+]},
+{ q: "别人最常夸你的一句是？", opts: [
+{ t: "「跟你待在一起特别放松」", s: { H: 2, W: 1}},
+{ t: "「你总有种让人猜不透的感觉」", s: { M: 3}},
+{ t: "「有你在，就特别安心」", s: { R: 3}},
+{ t: "「你好有想法，好有品味」", s: { A: 2, D: 1}}
+]},
+{ q: "压力大的时候，你的自救方式是？", opts: [
+{ t: "运动、暴走、出汗，出一身汗就好了", s: { E: 2, D: 1}},
+{ t: "睡一觉，天塌下来明天再说", s: { H: 2, M: 1}},
+{ t: "列个清单，一件一件解决掉", s: { R: 3}},
+{ t: "听歌、看电影、写写东西消化掉", s: { A: 2, H: 1}}
+]},
+{ q: "在朋友眼里，你的「人设」更接近？", opts: [
+{ t: "热心肠的老母亲 / 老父亲", s: { R: 2, H: 1}},
+{ t: "神秘失踪人口，偶尔诈尸出现", s: { M: 2, E: 1}},
+{ t: "文艺青年本青", s: { A: 3}},
+{ t: "行走的表情包", s: { E: 3}}
+]},
+{ q: "你对「仪式感」的态度是？", opts: [
+{ t: "生日纪念日，必须安排得满满当当", s: { W: 2, A: 1}},
+{ t: "是生活里的小糖，偶尔来一点刚好", s: { A: 2, H: 1}},
+{ t: "不太在意，日子过得实在最重要", s: { R: 2, M: 1}},
+{ t: "我就是仪式感本感，擅长制造惊喜", s: { E: 1, A: 2}}
+]},
+{ q: "陌生人向你问路或者求助，你通常？", opts: [
+{ t: "热情指路，还会多提醒两句", s: { W: 2, H: 1}},
+{ t: "指完就走，不多寒暄", s: { M: 1, R: 2}},
+{ t: "顺路的话，直接带他走一段", s: { W: 2, R: 1}},
+{ t: "先观察一下，确认没问题再帮", s: { D: 2, R: 1}}
+]},
+{ q: "你的聊天风格更像哪种？", opts: [
+{ t: "秒回选手，表情包管够", s: { E: 2, W: 1}},
+{ t: "慢回，但每一条都认真想过", s: { R: 2, M: 1}},
+{ t: "看心情，语音和文字混着来", s: { E: 1, H: 2}},
+{ t: "言简意赅，废话不多说", s: { D: 2, M: 1}}
+]},
+{ q: "选一个最像你的天气：", opts: [
+{ t: "晴天，阳光明媚，适合出门", s: { E: 2, H: 1}},
+{ t: "微雨，适合撑着伞慢慢散步", s: { A: 2, M: 1}},
+{ t: "阴天，凉凉的，舒服又安静", s: { M: 2, H: 1}},
+{ t: "大晴天带点风，适合出门撒野", s: { E: 2, D: 1}}
+]},
+{ q: "朋友形容你的「气场」，最像？", opts: [
+{ t: "小太阳，谁靠近都觉得暖", s: { W: 2, E: 1}},
+{ t: "深水，越了解越觉得有意思", s: { M: 2, A: 1}},
+{ t: "大树，稳稳当当，特别踏实", s: { R: 2, H: 1}},
+{ t: "一阵风，抓不住，但很吸引人", s: { M: 2, E: 1}}
+]},
+{ q: "理想中的休息日，你想这样打开：", opts: [
+{ t: "睡到自然醒，做顿好吃的犒劳自己", s: { H: 2, R: 1}},
+{ t: "背上包出门，去个没去过的地方", s: { E: 1, D: 2}},
+{ t: "窝在喜欢的角落，看书看剧一下午", s: { A: 2, H: 1}},
+{ t: "约上三五好友，热热闹闹一整天", s: { W: 2, H: 1}}
+]},
+{ q: "如果用一种饮品形容你，会是？", opts: [
+{ t: "热可可，甜甜的，暖暖的", s: { H: 2, W: 1}},
+{ t: "美式咖啡，提神，还有点上头", s: { D: 2, E: 1}},
+{ t: "茉莉花茶，清香，回味很长", s: { A: 2, M: 1}},
+{ t: "气泡水，噼里啪啦都是快乐", s: { E: 3}}
+]}
+];
+
+var RESULTS = [
+{ id: "nianxia", name: "年下黏人型", color: "#e2607f", soft: "rgba(226,96,127,0.12)",
+profile: { H: 3, R: 2, W: 1},
+tag: "你一皱眉，他连明天的早餐都想替你备好。",
+portrait: "比你小几岁，眼睛亮亮的，消息秒回，语音条一发就是一分钟。开心了围着你转，委屈了第一个找你，黏人但不油腻，像只认主的小狗，认定了就不撒手。",
+why: "你身上的安定感，对他来说是稀缺品。你不慌不忙、情绪稳定的样子，让他第一次觉得「可以不用逞强」。你随口一句关心，他能偷偷高兴一整天，然后变本加厉地对你好。",
+egg: "他会记住你随口提过的每一家店，然后在「恰好路过」时买给你。吵架基本不存在——他认错的速度，永远比你生气的速度快一步。"},
+{ id: "chengshu", name: "成熟照顾型", color: "#4a6b8a", soft: "rgba(74,107,138,0.12)",
+profile: { D: 3, M: 2, A: 1},
+tag: "他不说情话，但你的伞永远在他车里。",
+portrait: "大你几岁，事业稳当，话不多但句句落地。西装革履也能挽起袖子给你修水管，情绪稳定得像深海，宠起人来不动声色，却处处周到。",
+why: "你身上那股「有故事」的气质勾起了他的探索欲，而你的独立又让他暗暗心疼——他见过太多人，偏偏想照顾这个看起来什么都不需要的人。越了解，他越走不开。",
+egg: "他从不查岗，但你加班到十点，楼下一定停着他的车。纪念日他记得比你还清楚，只是从不提前剧透，惊喜永远准时送达。"},
+{ id: "wenyi", name: "文艺共鸣型", color: "#a0673f", soft: "rgba(160,103,63,0.12)",
+profile: { A: 3, M: 2, H: 1},
+tag: "你们还没在一起，歌单就已经过完了一生。",
+portrait: "气质先行的一类人：看展、听 Live、逛旧书店，朋友圈三个月一条但条条是金句。和他聊天像交换日记，灵魂先于身体相遇，三观比五官先对上眼。",
+why: "你的细腻和审美，就是他的雷达信号。别人觉得你「想太多」，他觉得你「刚刚好」——你随手拍的一张照片，他能读出三层意思，还想听你亲口讲第四层。",
+egg: "他会把你们的聊天记录存下来，将来写进给你的信里。吵架的方式也很文艺：互相推歌，用歌词隔空喊话，谁先破功谁输。"},
+{ id: "gaoxiao", name: "搞笑搭子型", color: "#d9930d", soft: "rgba(217,147,13,0.13)",
+profile: { E: 3, W: 2},
+tag: "别人在谈恋爱，你们在组团说相声。",
+portrait: "人形快乐源泉，梗多到需要备忘录。和他出门永远不会冷场，连服务员都能被他逗笑。看起来没个正形，吊儿郎当，关键时刻却意外地靠谱。",
+why: "你的笑点就是他的 KPI。你笑起来眼睛弯弯的样子，让他觉得所有段子都有了意义——他逗过很多人，唯独只想逗你一个人，只等你一个人的笑声。",
+egg: "你们的聊天记录翻出来能直接出书。纪念日礼物永远奇奇怪怪：会唱歌的鱼、印着你丑照的抱枕……但每一个，你都舍不得扔。"},
+{ id: "badao", name: "霸道护短型", color: "#b83a32", soft: "rgba(184,58,50,0.11)",
+profile: { W: 3, H: 2},
+tag: "全世界都可以欺负他，唯独不能动你。",
+portrait: "对外冷脸，对你破例。占有欲明明白白写在脸上，行动力拉满：你受了委屈，他比你还生气；你随口提的需求，他第二天就给你办妥。",
+why: "你的温柔激发了他的保护欲，而你偶尔的神秘感又让他抓心挠肝。他习惯了掌控一切，偏偏在你这里心甘情愿地失控——这种感觉，他只在你身上有过。",
+egg: "他吃醋从不明说，只会默默把你的外套拉链拉到最顶。出门永远让你走马路内侧，这个习惯，这辈子是改不掉了。"},
+{ id: "xuezhang", name: "温柔学长型", color: "#4f96a3", soft: "rgba(79,150,163,0.12)",
+profile: { A: 3, W: 2, H: 1},
+tag: "他像晚自习后的路灯，不刺眼，但一直都在。",
+portrait: "干净、耐心、情绪价值拉满。记得你的口味和作息，讲事情讲到你懂为止。不争不抢，不吵不闹，却总在你需要的时候，准时出现在你身边。",
+why: "你的亲和与灵气让他移不开眼。你叽叽喳喳分享日常的样子，是他平淡生活里最鲜活的部分——他愿意做你永远的听众，听你讲一辈子的小事。",
+egg: "他手机里有个备忘录，全是你的小习惯：奶茶三分糖、怕黑、天冷手脚先凉。论了解你，他比你本人还要专业。"},
+{ id: "ziyou", name: "野生自由型", color: "#dd6a1f", soft: "rgba(221,106,31,0.12)",
+profile: { D: 2, E: 2, M: 1},
+tag: "他像风一样来，却为你学会了停留。",
+portrait: "晒得微黑，背包里永远装着下一张车票。会冲浪、会露营、会修摩托，朋友圈定位从不重复。爱自由爱到了骨子里，却愿意把副驾驶的位置一直留给你。",
+why: "你的独立和力量感，是他眼里的同类信号。他见过太多依附型的人，只有你让他觉得：并肩比照顾更心动。你越是不需要他，他反而越走不开。",
+egg: "约会地点永远出人意料：凌晨的山顶、退潮的海滩、无人的天台。和他在一起，你的手机相册会在三个月内迅速爆满。"},
+{ id: "mensao", name: "闷骚慢热型", color: "#5c5f8f", soft: "rgba(92,95,143,0.13)",
+profile: { M: 3, R: 2},
+tag: "他爱你的方式，是把所有偏爱都藏在细节里。",
+portrait: "外冷内热的典型：朋友圈三天可见，聊天惜字如金。但你发的每条动态他都看，你随口说的话他都记。爱意从不挂在嘴上，全都落在行动里。",
+why: "你的神秘感和分寸感让他特别安心。他讨厌一切社交表演，只想找一个不用说话也不会尴尬的人——而你，恰好读得懂他的每一次沉默。",
+egg: "他不会说「我想你」，但会发来一张照片：你上次说想吃的那家店，他一个人排了四十分钟队。他对浪漫过敏，但对你，永远例外。"}
+];
+
+var state = { idx: 0, answers: [], result: null, scores: null};
+var LETTERS = ["A", "B", "C", "D"];
+
+function $(id) { return document.getElementById(id);}
+function showScreen(id) {
+var screens = document.querySelectorAll(".screen");
+for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+$(id).classList.add("active");
+window.scrollTo({ top: 0, behavior: "smooth"});
+}
+
+function renderQuestion(dir) {
+var q = QUESTIONS[state.idx];
+$("q-now").textContent = state.idx + 1;
+$("q-num").textContent = "Q" + (state.idx + 1);
+$("q-text").textContent = q.q;
+$("progress-fill").style.width = (state.idx / QUESTIONS.length * 100) + "%";
+$("btn-back").disabled = state.idx === 0;
+var box = $("opts");
+box.innerHTML = "";
+q.opts.forEach(function (opt, i) {
+var b = document.createElement("button");
+b.type = "button";
+b.className = "opt" + (state.answers[state.idx] === i? " picked": "");
+var letter = document.createElement("span");
+letter.className = "letter" + (state.answers[state.idx] === i ? " letter-on" : "");
+letter.textContent = LETTERS[i];
+var txt = document.createElement("span");
+txt.textContent = opt.t;
+b.appendChild(letter);
+b.appendChild(txt);
+b.addEventListener("click", function () { pick(i, b);});
+box.appendChild(b);
+});
+var card = $("q-card");
+card.classList.remove("enter", "enter-back");
+void card.offsetWidth;
+card.classList.add(dir === "back"? "enter-back": "enter");
+}
+
+function pick(i, btn) {
+state.answers[state.idx] = i;
+var opts = $("opts").children;
+for (var k = 0; k < opts.length; k++) { opts[k].classList.remove("picked"); var lt = opts[k].querySelector(".letter"); if (lt) lt.classList.remove("letter-on"); }
+btn.classList.add("picked");
+var bl = btn.querySelector(".letter"); if (bl) bl.classList.add("letter-on");
+setTimeout(function () {
+if (state.idx < QUESTIONS.length - 1) {
+state.idx++;
+renderQuestion("next");
+} else {
+$("progress-fill").style.width = "100%";
+finish();
+}
+}, 240);
+}
+
+function computeScores() {
+var scores = {};
+Object.keys(DIMS).forEach(function (d) { scores[d] = 0;});
+state.answers.forEach(function (a, qi) {
+if (a == null) return;
+var s = QUESTIONS[qi].opts[a].s;
+Object.keys(s).forEach(function (d) { scores[d] += s[d];});
+});
+return scores;
+}
+
+function maxScores() {
+var max = {};
+Object.keys(DIMS).forEach(function (d) { max[d] = 0;});
+QUESTIONS.forEach(function (q) {
+var per = {};
+q.opts.forEach(function (o) {
+Object.keys(o.s).forEach(function (d) { per[d] = Math.max(per[d] || 0, o.s[d]);});
+});
+Object.keys(per).forEach(function (d) { max[d] += per[d];});
+});
+return max;
+}
+
+function pickResult(scores) {
+var max = maxScores();
+var best = null, bestScore = -1;
+RESULTS.forEach(function (r) {
+var dot = 0, sum = 0;
+Object.keys(r.profile).forEach(function (d) {
+dot += (max[d] ? scores[d] / max[d] : 0) * r.profile[d];
+sum += r.profile[d];
+});
+var v = dot / sum;
+if (v > bestScore) { bestScore = v; best = r;}
+});
+return best;
+}
+
+function finish() {
+state.scores = computeScores();
+state.result = pickResult(state.scores);
+var r = state.result;
+var poster = $("poster");
+poster.style.setProperty("--rc", r.color);
+poster.style.setProperty("--rsoft", r.soft);
+$("r-name").textContent = r.name;
+$("r-tag").textContent = r.tag;
+$("r-portrait").textContent = r.portrait;
+$("r-why").textContent = r.why;
+$("r-egg").textContent = r.egg;
+var max = maxScores();
+var rows = Object.keys(DIMS).map(function (d) {
+return { d: d, pct: max[d]? Math.round(state.scores[d] / max[d] * 100): 0};
+}).sort(function (a, b) { return b.pct - a.pct;}).slice(0, 4);
+var bars = $("radar-bars");
+bars.innerHTML = "";
+rows.forEach(function (row) {
+var div = document.createElement("div");
+div.className = "bar-row";
+div.innerHTML = '<span class="b-name"></span><div class="bar-track"><div class="bar-fill"></div></div><span class="b-val"></span>';
+div.querySelector(".b-name").textContent = DIMS[row.d];
+div.querySelector(".b-val").textContent = row.pct + "%";
+div.querySelector(".bar-fill").setAttribute("data-w", row.pct);
+bars.appendChild(div);
+});
+showScreen("screen-result");
+setTimeout(function () {
+var fills = bars.querySelectorAll(".bar-fill");
+for (var i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute("data-w") + "%";
+}, 120);
+}
+
+var toastTimer = null;
+function toast(msg) {
+var t = $("toast");
+t.textContent = msg;
+t.classList.add("show");
+clearTimeout(toastTimer);
+toastTimer = setTimeout(function () { t.classList.remove("show");}, 2200);
+}
+
+function copyResult() {
+if (!state.result) return;
+var r = state.result;
+var text = "\n" +
+"我最容易吸引的是：" + r.name + "\n" +
+"「" + r.tag + "」\n" +
+"他的性格画像：" + r.portrait + "\n" +
+"你也来测测你容易吸引什么样的恋人吧！";
+function done() { toast("结果文案已复制，去分享给朋友吧");}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = text;
+ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();}
+catch (e) { toast("复制失败，截图海报分享也一样好看");}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, fallback);
+} else { fallback();}
+}
+
+$("btn-start").addEventListener("click", function () {
+state.idx = 0;
+state.answers = [];
+showScreen("screen-quiz");
+renderQuestion("next");
+});
+$("btn-back").addEventListener("click", function () {
+if (state.idx > 0) { state.idx--; renderQuestion("back");}
+});
+$("btn-restart").addEventListener("click", function () {
+state.idx = 0;
+state.answers = [];
+state.result = null;
+showScreen("screen-home");
+});
+$("btn-copy").addEventListener("click", copyResult);
+</script>
+</body>
+</html>

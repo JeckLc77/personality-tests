@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>你的宿命恋人来自哪个城市</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --bg:#faf3ef;
+        --bg-soft:#f3e6de;
+        --card:#fffaf6;
+        --ink:#3b2230;
+        --ink-soft:#7a5a68;
+        --line:#e7cfc2;
+        --rose:#b83a5e;
+        --rose-deep:#93304e;
+        --gold:#b8863b;
+        --gold-soft:#e9d3ac;
+        --shadow:0 18px 50px rgba(147,48,78,.14);
+        --radius:18px;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#1d1219;
+          --bg-soft:#291824;
+          --card:#2a1a24;
+          --ink:#f6e8ec;
+          --ink-soft:#c9a3b1;
+          --line:#4a2c3c;
+          --rose:#e58aa5;
+          --rose-deep:#e58aa5;
+          --gold:#d9a960;
+          --gold-soft:#5a4526;
+          --shadow:0 18px 50px rgba(0,0,0,.45);
+          color-scheme: dark;
+        }
+      }
+      *{ box-sizing:border-box; }
+      html,body{ margin:0; padding:0; }
+      body{
+        font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+        background:
+          radial-gradient(circle at 15% 8%, rgba(184,58,94,.07), transparent 42%),
+          radial-gradient(circle at 88% 92%, rgba(184,134,59,.08), transparent 40%),
+          var(--bg);
+        color:var(--ink);
+        min-height:100vh;
+        -webkit-font-smoothing:antialiased;
+      }
+      .wrap{ max-width:660px; margin:0 auto; padding:28px 18px 56px; }
+      .serif{ font-family:"Noto Serif SC","Songti SC","STSong",serif; }
+
+      .screen{ display:none; }
+      .screen.active{ display:block; animation:screenIn .45s ease both; }
+      @keyframes screenIn{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none;} }
+      @media (prefers-reduced-motion: reduce){
+        .screen.active{ animation:none; }
+        *{ transition:none !important; }
+      }
+
+      /* ---------- 首页 ---------- */
+      .home{ text-align:center; padding-top:5vh; }
+      .home .kicker{
+        display:inline-block; font-size:13px; letter-spacing:.35em; color:var(--rose);
+        border:1px solid var(--line); border-radius:999px; padding:7px 16px 7px 20px; background:var(--card);
+      }
+      .home h1{
+        font-family:"Noto Serif SC","Songti SC",serif; font-weight:900;
+        font-size:clamp(34px,8.5vw,52px); line-height:1.28; margin:26px 0 8px; letter-spacing:.02em;
+      }
+      .home h1 .accent{ color:var(--rose); }
+      .home .sub{ color:var(--ink-soft); font-size:15.5px; line-height:1.9; margin:14px auto 0; max-width:30em; }
+      .route{
+        display:flex; align-items:center; justify-content:center; gap:0; margin:30px auto 6px; max-width:440px;
+      }
+      .route .dot{ width:9px; height:9px; border-radius:50%; background:var(--rose); flex:none; box-shadow:0 0 0 4px rgba(184,58,94,.15); }
+      .route .seg{ flex:1; border-top:2px dotted var(--gold); opacity:.65; }
+      .route .heart{ color:var(--rose); font-size:18px; flex:none; padding:0 2px; }
+      .cities{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:20px 0 6px; }
+      .cities span{
+        font-family:"Noto Serif SC",serif; font-size:14.5px; padding:6px 14px; border-radius:999px;
+        background:var(--bg-soft); color:var(--ink); border:1px solid var(--line);
+      }
+      .cities-label{ font-size:12.5px; color:var(--ink-soft); letter-spacing:.2em; margin-top:16px; }
+      .meta{ display:flex; gap:10px; justify-content:center; margin:26px 0 30px; flex-wrap:wrap; }
+      .meta div{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 18px; }
+      .meta b{ font-family:"Noto Serif SC",serif; font-size:19px; color:var(--rose-deep); display:block; }
+      .meta small{ color:var(--ink-soft); font-size:12px; }
+      .btn{
+        appearance:none; border:none; cursor:pointer; font-family:inherit;
+        min-height:52px; padding:14px 42px; border-radius:999px; font-size:17px; font-weight:700; letter-spacing:.08em;
+        transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn-primary{ background:var(--rose); color:#fff; box-shadow:0 12px 28px rgba(184,58,94,.32); }
+      .btn-primary:hover{ background:var(--rose-deep); transform:translateY(-1px); }
+      .btn-ghost{ background:transparent; color:var(--rose-deep); border:1.5px solid var(--rose); }
+      .btn-ghost:hover{ background:rgba(184,58,94,.07); }
+      .fineprint{ margin-top:26px; font-size:12.5px; color:var(--ink-soft); line-height:1.8; }
+
+      /* ---------- 答题 ---------- */
+      .quiz-top{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+      .quiz-top .count{ font-family:"Noto Serif SC",serif; font-size:15px; color:var(--ink-soft); }
+      .quiz-top .count b{ font-size:24px; color:var(--rose-deep); }
+      .quiz-top .tag{ font-size:12.5px; color:var(--gold); letter-spacing:.25em; }
+      .progress{ height:8px; border-radius:99px; background:var(--bg-soft); overflow:hidden; border:1px solid var(--line); }
+      .progress i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--gold),var(--rose)); border-radius:99px; transition:width .4s ease; }
+      .qcard{
+        margin-top:22px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+        padding:30px 26px 26px; box-shadow:var(--shadow);
+      }
+      .qcard.enter{ animation:qIn .38s ease both; }
+      @keyframes qIn{ from{ opacity:0; transform:translateX(26px);} to{ opacity:1; transform:none;} }
+      .qcard.leave{ animation:qOut .22s ease both; }
+      @keyframes qOut{ from{ opacity:1;} to{ opacity:0; transform:translateX(-18px);} }
+      .qtext{ font-family:"Noto Serif SC",serif; font-weight:700; font-size:clamp(20px,5.4vw,24px); line-height:1.55; margin:0 0 22px; }
+      .opts{ display:grid; gap:12px; }
+      .opt{
+        display:flex; align-items:center; gap:14px; text-align:left; width:100%;
+        background:var(--bg); border:1.5px solid var(--line); border-radius:14px;
+        padding:15px 16px; font-size:15.5px; line-height:1.6; color:var(--ink); cursor:pointer; font-family:inherit;
+        min-height:56px; transition:border-color .15s ease, background .15s ease, transform .12s ease;
+      }
+      .opt:hover{ border-color:var(--rose); transform:translateY(-1px); }
+      .opt .letter{
+        flex:none; width:30px; height:30px; border-radius:50%; border:1.5px solid var(--gold);
+        color:var(--gold); display:flex; align-items:center; justify-content:center;
+        font-family:"Noto Serif SC",serif; font-weight:700; font-size:14px;
+      }
+      .opt.picked{ background:var(--rose); border-color:var(--rose); color:#fff; }
+      .opt.picked .letter{ border-color:#fff; color:#fff; }
+      .quiz-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:20px; }
+      .backbtn{
+        background:none; border:none; color:var(--ink-soft); font-size:14.5px; cursor:pointer; font-family:inherit;
+        padding:10px 14px; min-height:44px; border-radius:10px;
+      }
+      .backbtn:hover{ color:var(--rose-deep); }
+      .backbtn:disabled{ opacity:.35; cursor:default; }
+      .hint{ font-size:12.5px; color:var(--ink-soft); }
+
+      /* ---------- 推演 ---------- */
+      .calc{ text-align:center; padding-top:16vh; }
+      .calc .pin{ font-size:44px; color:var(--rose); animation:bob 1.1s ease-in-out infinite; display:inline-block; }
+      @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-9px);} }
+      .calc h2{ font-family:"Noto Serif SC",serif; font-size:24px; margin:20px 0 10px; }
+      .calc p{ color:var(--ink-soft); font-size:14.5px; min-height:1.6em; }
+      .calc .dots span{ display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--rose); margin:14px 4px 0; animation:blink 1s infinite; }
+      .calc .dots span:nth-child(2){ animation-delay:.18s; } .calc .dots span:nth-child(3){ animation-delay:.36s; }
+      @keyframes blink{ 0%,100%{ opacity:.25; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+
+      /* ---------- 结果海报 ---------- */
+      .poster{
+        position:relative; background:var(--card); border:1px solid var(--gold-soft); border-radius:10px;
+        padding:14px; box-shadow:var(--shadow);
+      }
+      .poster-inner{
+        border:1.5px solid var(--gold); border-radius:6px; padding:34px 26px 28px; position:relative; overflow:hidden;
+      }
+      .poster-inner::before{
+        content:""; position:absolute; inset:6px; border:1px solid var(--gold-soft); border-radius:4px; pointer-events:none;
+      }
+      .seal{
+        position:absolute; top:22px; right:22px; width:46px; height:46px; border-radius:8px;
+        background:var(--rose); color:#fff; font-family:"Noto Serif SC",serif; font-weight:900; font-size:21px;
+        display:flex; align-items:center; justify-content:center; transform:rotate(6deg);
+        box-shadow:0 4px 12px rgba(184,58,94,.35); letter-spacing:0;
+      }
+      .poster .from{ text-align:center; font-size:13px; letter-spacing:.45em; color:var(--ink-soft); margin:2px 0 4px; }
+      .poster .city{
+        text-align:center; font-family:"Noto Serif SC",serif; font-weight:900;
+        font-size:clamp(58px,17vw,84px); line-height:1.12; margin:0; color:var(--city-accent,var(--rose-deep));
+      }
+      .poster .pinyin{ text-align:center; letter-spacing:.55em; font-size:12px; color:var(--gold); margin:6px 0 0; text-transform:uppercase; }
+      .poster .matchline{ text-align:center; margin-top:14px; font-size:14px; color:var(--ink-soft); }
+      .poster .matchline b{ font-family:"Noto Serif SC",serif; font-size:21px; color:var(--rose-deep); }
+      .tagline{
+        font-family:"Noto Serif SC",serif; font-size:clamp(17.5px,5vw,20.5px); font-weight:700; line-height:1.75;
+        text-align:center; margin:20px auto 4px; max-width:24em; color:var(--ink);
+      }
+      .tagline::before,.tagline::after{ content:""; display:block; width:44px; border-top:1px solid var(--gold); margin:12px auto; }
+      .kw{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:12px 0 2px; }
+      .kw span{ font-size:12.5px; border:1px solid var(--line); background:var(--bg-soft); border-radius:999px; padding:4px 12px; color:var(--ink-soft); }
+      .sec{ margin-top:24px; }
+      .sec h3{
+        font-family:"Noto Serif SC",serif; font-size:16.5px; margin:0 0 8px; color:var(--rose-deep);
+        display:flex; align-items:center; gap:10px;
+      }
+      .sec h3::after{ content:""; flex:1; border-top:1px dashed var(--line); }
+      .sec p{ margin:0; font-size:15px; line-height:1.95; color:var(--ink); }
+      .chart{ margin-top:6px; display:grid; gap:9px; }
+      .chart .row{ display:grid; grid-template-columns:64px 1fr 34px; align-items:center; gap:10px; font-size:13px; }
+      .chart .row .nm{ color:var(--ink-soft); }
+      .chart .bar{ height:8px; background:var(--bg-soft); border-radius:99px; overflow:hidden; }
+      .chart .bar i{ display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--rose)); border-radius:99px; width:0; transition:width .8s ease; }
+      .chart .row .vl{ text-align:right; font-family:"Noto Serif SC",serif; color:var(--rose-deep); font-weight:700; }
+      .near{ margin-top:22px; text-align:center; font-size:13.5px; color:var(--ink-soft); line-height:1.9; }
+      .near b{ color:var(--ink); font-family:"Noto Serif SC",serif; }
+      .poster .foot{ margin-top:24px; text-align:center; font-size:11.5px; letter-spacing:.3em; color:var(--ink-soft); }
+      .actions{ display:flex; gap:12px; justify-content:center; margin-top:26px; flex-wrap:wrap; }
+      .actions .btn{ padding:13px 30px; font-size:15.5px; min-height:50px; }
+      .sharehint{ text-align:center; color:var(--ink-soft); font-size:13px; margin-top:16px; line-height:1.8; }
+      .toast{
+        position:fixed; left:50%; bottom:30px; transform:translateX(-50%) translateY(20px);
+        background:var(--ink); color:var(--bg); padding:11px 22px; border-radius:999px; font-size:14px;
+        opacity:0; pointer-events:none; transition:all .3s ease; z-index:50; white-space:nowrap;
+      }
+      .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+      @media (max-width:480px){
+        .wrap{ padding:20px 13px 44px; }
+        .qcard{ padding:24px 18px 20px; }
+        .poster-inner{ padding:28px 18px 22px; }
+        .seal{ width:40px; height:40px; font-size:18px; top:16px; right:16px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <!-- 首页 -->
+      <section class="screen active" id="screen-home">
+        <div class="home">
+          <span class="kicker">趣 味 测 试</span>
+          <h1>你的<span class="accent">宿命恋人</span><br />来自哪个城市</h1>
+          <p class="sub">没有一道地理题，只有二十道生活题。<br />凭直觉选完，我们帮你算一算：那个对的人，正带着哪座城市的口音和脾气，向你走来。</p>
+          <div class="route" aria-hidden="true">
+            <span class="dot"></span><span class="seg"></span><span class="heart">♥</span><span class="seg"></span><span class="dot"></span>
+          </div>
+          <p class="cities-label">候 选 城 市</p>
+          <div class="cities">
+            <span>成都</span><span>重庆</span><span>大理</span><span>上海</span><span>北京</span><span>厦门</span><span>长沙</span>
+          </div>
+          <div class="meta">
+            <div><b>20 题</b><small>生活场景单选</small></div>
+            <div><b>约 3 分钟</b><small>凭直觉别纠结</small></div>
+            <div><b>7 座城市</b><small>总有一座在等你</small></div>
+          </div>
+          <button class="btn btn-primary" id="btn-start" type="button">开始测试</button>
+          <p class="fineprint">本测试为趣味娱乐，不是专业心理诊断。<br />结果仅供一笑，适合截图分享。</p>
+        </div>
+      </section>
+
+      <!-- 答题 -->
+      <section class="screen" id="screen-quiz">
+        <div class="quiz-top">
+          <span class="count">第 <b id="q-num">1</b> / 20 题</span>
+          <span class="tag" id="q-tag">心动瞬间</span>
+        </div>
+        <div class="progress"><i id="q-bar"></i></div>
+        <div class="qcard" id="q-card">
+          <p class="qtext" id="q-text"></p>
+          <div class="opts" id="q-opts"></div>
+        </div>
+        <div class="quiz-nav">
+          <button class="backbtn" id="btn-back" type="button">← 上一题</button>
+          <span class="hint">选完自动进入下一题</span>
+        </div>
+      </section>
+
+      <!-- 推演 -->
+      <section class="screen" id="screen-calc">
+        <div class="calc">
+          <span class="pin">♥</span>
+          <h2>正在翻开城市名册…</h2>
+          <p id="calc-text">把你的答案折成一封信</p>
+          <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+      </section>
+
+      <!-- 结果 -->
+      <section class="screen" id="screen-result">
+        <div class="poster" id="poster">
+          <div class="poster-inner">
+            <div class="seal">缘</div>
+            <p class="from">我 的 宿 命 恋 人 来 自</p>
+            <h2 class="city" id="r-city">成都</h2>
+            <p class="pinyin" id="r-pinyin">CHENGDU</p>
+            <p class="matchline">与你的契合度 <b id="r-match">92%</b></p>
+            <p class="tagline" id="r-tagline"></p>
+            <div class="kw" id="r-kw"></div>
+            <div class="sec">
+              <h3>这位恋人的性格画像</h3>
+              <p id="r-portrait"></p>
+            </div>
+            <div class="sec">
+              <h3>你们为什么相配</h3>
+              <p id="r-why"></p>
+            </div>
+            <div class="sec">
+              <h3>相处彩蛋</h3>
+              <p id="r-egg"></p>
+            </div>
+            <div class="sec">
+              <h3>你的情感图谱</h3>
+              <div class="chart" id="r-chart"></div>
+            </div>
+            <p class="near" id="r-near"></p>
+            <p class="foot">你 的 宿 命 恋 人 来 自 哪 个 城 市 · 趣 味 测 试</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="btn-copy" type="button">复制结果文案</button>
+          <button class="btn btn-ghost" id="btn-again" type="button">重新测试</button>
+        </div>
+        <p class="sharehint">截图上方这张卡片，分享到小红书或朋友圈，<br />看看朋友们测出的，是不是同一座城市。</p>
+      </section>
+
+    </main>
+    <div class="toast" id="toast">已复制，去分享吧</div>
+
+<script>
+/*DATA-START*/
+var DIMS = [
+  { k: "passion",    n: "热烈度" },
+  { k: "tenderness", n: "温柔度" },
+  { k: "humor",      n: "幽默感" },
+  { k: "prag",       n: "务实度" },
+  { k: "romance",    n: "浪漫度" },
+  { k: "cling",      n: "黏人指数" },
+  { k: "freedom",    n: "自由感" }
+];
+
+var QUESTIONS = [
+  { tag: "相处模式", q: "周末终于空出来，你最想和喜欢的人怎么过？", opts: [
+    { t: "一起去菜市场买菜，回家做一顿热乎饭", s: { prag: 2, tenderness: 1 } },
+    { t: "说走就走，去没去过的街区乱逛吃小吃", s: { passion: 2, humor: 1 } },
+    { t: "找个能看晚霞的地方坐着，发呆也行", s: { romance: 2, freedom: 1 } },
+    { t: "窝在沙发上看一部老电影，零食管够", s: { cling: 2, tenderness: 1 } }
+  ]},
+  { tag: "心动瞬间", q: "什么瞬间最容易让你心动？", opts: [
+    { t: "对方记得你随口提过的一件小事", s: { tenderness: 2, romance: 1 } },
+    { t: "对方笑起来特别好看，还总能逗笑你", s: { humor: 2, passion: 1 } },
+    { t: "对方做事靠谱，答应的事从不落空", s: { prag: 2, tenderness: 1 } },
+    { t: "对方眼里有光，聊起热爱的事滔滔不绝", s: { passion: 2, freedom: 1 } }
+  ]},
+  { tag: "约会偏好", q: "你理想中的约会是？", opts: [
+    { t: "钻进烟火气的小馆子，吃到扶墙出", s: { humor: 2, prag: 1 } },
+    { t: "提前订好餐厅和花，仪式感拉满", s: { romance: 2, prag: 1 } },
+    { t: "夜市从头吃到尾，边走边聊不停", s: { passion: 2, cling: 1 } },
+    { t: "骑车沿着河边吹风，走到哪算哪", s: { freedom: 2, romance: 1 } }
+  ]},
+  { tag: "情绪表达", q: "吵架之后，你最希望对方怎么哄你？", opts: [
+    { t: "先抱一下，什么都不用说", s: { cling: 2, tenderness: 1 } },
+    { t: "心平气和讲道理，把问题说开", s: { prag: 2, freedom: 1 } },
+    { t: "想办法逗你笑，气着气着就笑了", s: { humor: 2, passion: 1 } },
+    { t: "带你去吃顿好的，吃饱了再说", s: { tenderness: 2, prag: 1 } }
+  ]},
+  { tag: "生活习惯", q: "你平时发消息的风格更接近？", opts: [
+    { t: "秒回型，有事没事都想聊两句", s: { cling: 2, passion: 1 } },
+    { t: "有事说事，但句句都有回应", s: { prag: 2, tenderness: 1 } },
+    { t: "随缘回复，但见面时话特别多", s: { freedom: 2, humor: 1 } },
+    { t: "语音和表情包齐飞，聊天气氛热闹", s: { humor: 2, passion: 1 } }
+  ]},
+  { tag: "恋爱观", q: "恋爱里你最看重什么？", opts: [
+    { t: "安稳踏实，日子能长久过下去", s: { prag: 2, tenderness: 1 } },
+    { t: "心动和新鲜感，别太平淡", s: { passion: 2, romance: 1 } },
+    { t: "被偏爱、被坚定选择的感觉", s: { cling: 2, romance: 1 } },
+    { t: "彼此独立，又互相欣赏", s: { freedom: 2, prag: 1 } }
+  ]},
+  { tag: "约会偏好", q: "出去旅行，你希望旅伴是哪种？", opts: [
+    { t: "做好攻略，车票酒店都安排妥当", s: { prag: 2, tenderness: 1 } },
+    { t: "随性派，睡到自然醒再决定去哪", s: { freedom: 2, romance: 1 } },
+    { t: "负责找好吃的，跟着吃就行", s: { humor: 2, cling: 1 } },
+    { t: "一路拍照打卡，仪式感不能少", s: { romance: 2, passion: 1 } }
+  ]},
+  { tag: "情绪表达", q: "对方哪种表达爱意的方式最戳你？", opts: [
+    { t: "默默把你的事放在心上，行动派", s: { tenderness: 2, prag: 1 } },
+    { t: "大大方方说出来，从不吝啬夸你", s: { passion: 2, humor: 1 } },
+    { t: "准备小惊喜，纪念日从不缺席", s: { romance: 2, cling: 1 } },
+    { t: "尊重你的空间，从不查岗不黏人", s: { freedom: 2, tenderness: 1 } }
+  ]},
+  { tag: "生活习惯", q: "你心目中完美的同居日常是？", opts: [
+    { t: "一起做饭洗碗，烟火气满满", s: { prag: 2, tenderness: 1 } },
+    { t: "各忙各的，晚上交换一天的故事", s: { freedom: 2, romance: 1 } },
+    { t: "像室友也像玩伴，家里笑声不断", s: { humor: 2, cling: 1 } },
+    { t: "睡到自然醒，下午茶配一下午闲聊", s: { tenderness: 2, romance: 1 } }
+  ]},
+  { tag: "情绪表达", q: "心情低落时，你最希望对方怎么做？", opts: [
+    { t: "陪在身边，不说话也行", s: { cling: 2, tenderness: 1 } },
+    { t: "带你出门散心，吃点好的", s: { passion: 2, humor: 1 } },
+    { t: "帮你分析问题，给出办法", s: { prag: 2, freedom: 1 } },
+    { t: "先给你空间，等你好了再聊", s: { freedom: 2, tenderness: 1 } }
+  ]},
+  { tag: "心动瞬间", q: "你更容易被哪种人吸引？", opts: [
+    { t: "幽默风趣，在一起永远不无聊", s: { humor: 2, passion: 1 } },
+    { t: "温柔体贴，情绪特别稳定", s: { tenderness: 2, prag: 1 } },
+    { t: "有主见有闯劲，活得热气腾腾", s: { passion: 2, freedom: 1 } },
+    { t: "松弛随和，没什么脾气", s: { freedom: 2, tenderness: 1 } }
+  ]},
+  { tag: "约会偏好", q: "纪念日你更想怎么过？", opts: [
+    { t: "在家做一顿大餐，两个人就够了", s: { cling: 2, prag: 1 } },
+    { t: "去第一次见面的地方重温一遍", s: { romance: 2, tenderness: 1 } },
+    { t: "热热闹闹，约上朋友一起庆祝", s: { humor: 2, passion: 1 } },
+    { t: "来一场短途旅行，说走就走", s: { freedom: 2, passion: 1 } }
+  ]},
+  { tag: "相处模式", q: "你对「黏人」的态度是？", opts: [
+    { t: "越黏越好，喜欢被需要", s: { cling: 2, romance: 1 } },
+    { t: "适度就好，各留一点空间", s: { freedom: 2, prag: 1 } },
+    { t: "开心时黏，忙起来各干各的", s: { humor: 2, freedom: 1 } },
+    { t: "平时不黏，但关键时刻必须在", s: { tenderness: 2, prag: 1 } }
+  ]},
+  { tag: "生活习惯", q: "吃到好吃的，你的第一反应是？", opts: [
+    { t: "夹一筷子给对方尝尝", s: { tenderness: 2, cling: 1 } },
+    { t: "立刻安利给所有朋友", s: { humor: 2, passion: 1 } },
+    { t: "记下店名，下次带重要的人来", s: { romance: 2, prag: 1 } },
+    { t: "默默吃完，下次自己再来", s: { freedom: 2, prag: 1 } }
+  ]},
+  { tag: "恋爱观", q: "你希望恋爱关系的节奏是？", opts: [
+    { t: "细水长流，慢慢来", s: { tenderness: 2, freedom: 1 } },
+    { t: "热烈直接，喜欢就大方靠近", s: { passion: 2, cling: 1 } },
+    { t: "像朋友一样轻松，没负担", s: { humor: 2, freedom: 1 } },
+    { t: "稳步推进，早点规划未来", s: { prag: 2, romance: 1 } }
+  ]},
+  { tag: "相处模式", q: "对方过生日，你会怎么准备？", opts: [
+    { t: "提前一个月悄悄准备惊喜", s: { romance: 2, tenderness: 1 } },
+    { t: "直接问想要什么，买对最重要", s: { prag: 2, humor: 1 } },
+    { t: "组个局，热热闹闹过一天", s: { passion: 2, humor: 1 } },
+    { t: "写一封长信，把不好意思说的都写下来", s: { romance: 2, cling: 1 } }
+  ]},
+  { tag: "恋爱观", q: "如果异地恋，你觉得自己会是哪种状态？", opts: [
+    { t: "很难，没有陪伴就没有安全感", s: { cling: 2, tenderness: 1 } },
+    { t: "可以接受，各自成长也很好", s: { freedom: 2, prag: 1 } },
+    { t: "靠每天视频和分享日常续命", s: { cling: 2, humor: 1 } },
+    { t: "看感情基础，靠谱的人距离不是问题", s: { prag: 2, tenderness: 1 } }
+  ]},
+  { tag: "情绪表达", q: "你最受不了恋爱里的哪一点？", opts: [
+    { t: "冷暴力，有话不直说", s: { passion: 2, prag: 1 } },
+    { t: "太黏人，一点自己的空间都没有", s: { freedom: 2, humor: 1 } },
+    { t: "不靠谱，承诺总是落空", s: { prag: 2, tenderness: 1 } },
+    { t: "太平淡，一点浪漫都没有", s: { romance: 2, passion: 1 } }
+  ]},
+  { tag: "心动瞬间", q: "你心中最理想的告白场景是？", opts: [
+    { t: "烟火气十足的夜市，TA笑着说「跟我走吧」", s: { passion: 2, humor: 1 } },
+    { t: "安静的湖边或海边，认真又温柔", s: { romance: 2, tenderness: 1 } },
+    { t: "没有刻意安排，散步时自然而然", s: { freedom: 2, tenderness: 1 } },
+    { t: "吃完一顿TA做的饭，平平淡淡最真实", s: { prag: 2, cling: 1 } }
+  ]},
+  { tag: "恋爱观", q: "想象十年后的你们，最动人的画面是？", opts: [
+    { t: "还在为同一件小事笑出声", s: { humor: 2, cling: 1 } },
+    { t: "把小日子过成了想要的样子", s: { prag: 2, tenderness: 1 } },
+    { t: "还会手牵手去看没看过的风景", s: { romance: 2, freedom: 1 } },
+    { t: "吵吵闹闹，但谁也离不开谁", s: { passion: 2, cling: 1 } }
+  ]}
+];
+
+var CITIES = [
+  { id: "chengdu", name: "成都", pinyin: "Chengdu", accent: "#b4652a",
+    profile: { tenderness: 3, humor: 3, prag: 2, cling: 2, romance: 1, passion: 1, freedom: 1 },
+    tagline: "TA会在玉林路的小酒馆等你，也会在下雨天，提前到你公司楼下送伞。",
+    kw: ["巴适得板", "火锅投喂官", "慢生活哲学家"],
+    portrait: "慢悠悠但从不敷衍，幽默感是天生的，爱吃、会吃、更会照顾人。情绪稳定得像成都的天气——阴天再多，也不冷。TA的爱不挂在嘴边，全藏在一日三餐和「你慢慢来，我等你」里。",
+    why: "你向往的是松弛又有烟火气的关系，怕无聊，更怕被冷落。成都恋人刚好两者都占：能把日子过成段子逗你笑，也能把你照顾成小孩。你们的日常不会惊天动地，但会越过越上瘾。",
+    egg: "在一起后体重涨五斤起步——先别怪幸福，那是TA投喂的。还有，TA说「要得」的时候，就是已经在为你安排了。"
+  },
+  { id: "chongqing", name: "重庆", pinyin: "Chongqing", accent: "#b3372f",
+    profile: { passion: 3, prag: 2, tenderness: 2, cling: 2, humor: 1, freedom: 1, romance: 1 },
+    tagline: "TA的爱像重庆火锅，端上来就是滚烫的，从不给你上清汤。",
+    kw: ["耿直天花板", "护短狂魔", "行动派本派"],
+    portrait: "直来直去，爱得坦荡，恨得也坦荡。嘴上可能凶巴巴，但你一出事，第一个挡在你前面的就是TA。山城养出的人，爬坡上坎都不怕，认准了你，就一条路走到黑。",
+    why: "你最受不了猜来猜去和冷暴力，重庆恋人刚好有话直说、有爱就吼出来。TA的热烈能融化你的所有试探，你的坦率也正对TA的胃口——你们是那种吵得热闹、爱得更热闹的组合。",
+    egg: "吵架从不过夜，因为TA会先低头，然后理直气壮地问你：吃不吃小面？认错和投喂，在TA那里是同一个动作。"
+  },
+  { id: "dali", name: "大理", pinyin: "Dali", accent: "#3e7d8c",
+    profile: { freedom: 3, romance: 3, tenderness: 2, humor: 2, passion: 1, prag: 0, cling: 0 },
+    tagline: "TA会带你去看洱海的月亮，也会在你想独处时，安安静静地走开。",
+    kw: ["风花雪月", "松弛感本人", "不占有主义"],
+    portrait: "松弛、浪漫、带点文艺，像大理的风，来去自由却不凉薄。TA不催你、不绑你、不查岗，但你回头的时候，TA永远在。TA的爱是陪你发呆一下午，是把最好的日落留给你。",
+    why: "你既需要浪漫，又受不了窒息的爱。大理恋人刚好懂：陪伴不是占有，心动也不必声张。你们的关系像风和海——各自辽阔，又彼此呼应，越相处越觉得自由且心安。",
+    egg: "你们的纪念日可能谁都记不清，但别担心：一起看过的每一次日出日落，在TA那里都算数，而且一次都没落下。"
+  },
+  { id: "shanghai", name: "上海", pinyin: "Shanghai", accent: "#5b6fa6",
+    profile: { prag: 3, romance: 3, freedom: 2, tenderness: 0, passion: 1, humor: 1, cling: 0 },
+    tagline: "TA的浪漫是准时接你下班，和永远记得你的咖啡要三分糖。",
+    kw: ["细节控", "分寸感大师", "体面又靠谱"],
+    portrait: "精致、清醒、有分寸感。不说满话、不画大饼，但答应你的事，一件都不会落空。TA的爱是体面，也是细节：是提前订好的餐厅，是你随口一提就被记进备忘录的小愿望。",
+    why: "你欣赏靠谱，也珍惜边界感，最怕黏糊糊没分寸的关系。上海恋人刚好把浪漫做进了日常的秩序里——不打扰、不失控，但处处周到。你们的相处，是成年人之间最高级的舒服。",
+    egg: "TA不会说一百句情话，但你的喜好TA列了备忘录，认真程度超过工作笔记。被TA爱上，是被「放在心上」四个字的实证。"
+  },
+  { id: "beijing", name: "北京", pinyin: "Beijing", accent: "#8c6a3f",
+    profile: { prag: 3, tenderness: 2, passion: 1, cling: 1, humor: 1, freedom: 1, romance: 0 },
+    tagline: "TA不善甜言蜜语，但你三年前随口说的话，TA到现在都记得。",
+    kw: ["局气担当", "认定就不松手", "闷声干大事"],
+    portrait: "稳重、踏实、有担当，话不多，但句句算数。像北京的冬天：外面看着冷，进了屋暖气足得让人想赖着不走。TA不轻易承诺，可一旦认定了你，就是一辈子的规划里都有你。",
+    why: "你要的不是一时的心动，而是能过日子的确定性。北京恋人刚好是那种「说得少、做得多」的人：你的事TA件件有着落，你的未来TA早早就留了位置。和TA在一起，安心是每天的标配。",
+    egg: "TA表达爱的方式很北京：你提过一次想吃的东西，下周就会出现在餐桌上，还假装是「顺路买的」。别拆穿，TA脸皮薄。"
+  },
+  { id: "xiamen", name: "厦门", pinyin: "Xiamen", accent: "#4a90a4",
+    profile: { tenderness: 3, romance: 3, cling: 3, passion: 1, humor: 2, prag: 1, freedom: 0 },
+    tagline: "TA会陪你把海边的晚霞看完，再牵着手，慢慢走回家。",
+    kw: ["温柔本柔", "黏人小甜心", "偏爱批发商"],
+    portrait: "温柔、细腻、黏人又懂事，像厦门的海风，软乎乎地围着你。TA会撒娇，也会照顾人；会把「想你」挂在嘴边，也会把你的情绪放在第一位。恋爱在TA那里，是甜而不腻的每一天。",
+    why: "你渴望被偏爱、被惦记，受不了一点点冷淡。厦门恋人刚好是热烈回应的高手：你发的每条消息TA都认真回，你的每个小情绪TA都接得住。你们在一起，空气里都是甜的。",
+    egg: "在一起后，你的相册会多出一半偷拍照——全是TA觉得「你这个瞬间好好看」的证据。被TA爱着的人，很难不自信。"
+  },
+  { id: "changsha", name: "长沙", pinyin: "Changsha", accent: "#c25e2e",
+    profile: { humor: 3, passion: 3, cling: 2, freedom: 2, romance: 1, tenderness: 1, prag: 0 },
+    tagline: "和TA在一起，你的笑声会比茶颜悦色的队伍排得还长。",
+    kw: ["气氛组组长", "夜宵召唤师", "快乐永动机"],
+    portrait: "热情、好玩、自带气氛组，朋友成群，夜生活丰富，和TA在一起永远不会冷场。TA的爱热烈又直接，开心要分享，难过先带你吃顿好的——没有什么是一顿夜宵解决不了的。",
+    why: "你最怕无聊和平淡，长沙恋人刚好是行走的快乐源泉。你的偶尔丧气，TA一顿小龙虾加一肚子段子就能治好；TA的热闹劲儿，也正需要你这样会接梗、懂捧场的另一半。",
+    egg: "TA哄人的方式独一份：先带你吃顿好的，再陪你把不开心的事从头笑一遍。跟TA生气，难度系数极高。"
+  }
+];
+/*DATA-END*/
+</script>
+<script>
+(function () {
+  var answers = [];
+  var current = 0;
+  var lastResult = null;
+  var LETTERS = ["A", "B", "C", "D"];
+
+  var screens = {
+    home: document.getElementById("screen-home"),
+    quiz: document.getElementById("screen-quiz"),
+    calc: document.getElementById("screen-calc"),
+    result: document.getElementById("screen-result")
+  };
+  var qNum = document.getElementById("q-num");
+  var qTag = document.getElementById("q-tag");
+  var qBar = document.getElementById("q-bar");
+  var qCard = document.getElementById("q-card");
+  var qText = document.getElementById("q-text");
+  var qOpts = document.getElementById("q-opts");
+  var btnBack = document.getElementById("btn-back");
+
+  function show(name) {
+    for (var k in screens) screens[k].classList.remove("active");
+    screens[name].classList.add("active");
+    window.scrollTo(0, 0);
+  }
+
+  function renderQuestion() {
+    var q = QUESTIONS[current];
+    qNum.textContent = current + 1;
+    qTag.textContent = q.tag;
+    qBar.style.width = (current / QUESTIONS.length * 100) + "%";
+    qText.textContent = q.q;
+    qOpts.innerHTML = "";
+    q.opts.forEach(function (opt, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt";
+      var letter = document.createElement("span");
+      letter.className = "letter";
+      letter.textContent = LETTERS[i];
+      var txt = document.createElement("span");
+      txt.textContent = opt.t;
+      b.appendChild(letter);
+      b.appendChild(txt);
+      b.addEventListener("click", function () { pick(i, b); });
+      qOpts.appendChild(b);
+    });
+    btnBack.disabled = current === 0;
+    qCard.classList.remove("leave");
+    qCard.classList.remove("enter");
+    void qCard.offsetWidth;
+    qCard.classList.add("enter");
+  }
+
+  function pick(i, btn) {
+    var picked = qOpts.querySelector(".picked");
+    if (picked) return;
+    btn.classList.add("picked");
+    answers[current] = i;
+    setTimeout(function () {
+      if (current < QUESTIONS.length - 1) {
+        current++;
+        renderQuestion();
+      } else {
+        qBar.style.width = "100%";
+        finish();
+      }
+    }, 280);
+  }
+
+  btnBack.addEventListener("click", function () {
+    if (current > 0) { current--; renderQuestion(); }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (!screens.quiz.classList.contains("active")) return;
+    var idx = ["1", "2", "3", "4"].indexOf(e.key);
+    if (idx >= 0) {
+      var btns = qOpts.querySelectorAll(".opt");
+      if (btns[idx]) btns[idx].click();
+    }
+    if (e.key === "Backspace") { e.preventDefault(); btnBack.click(); }
+  });
+
+  function score() {
+    var u = {};
+    DIMS.forEach(function (d) { u[d.k] = 0; });
+    answers.forEach(function (ai, qi) {
+      var s = QUESTIONS[qi].opts[ai].s;
+      for (var k in s) u[k] += s[k];
+    });
+    var scored = CITIES.map(function (city) {
+      var dot = 0, nu = 0, nc = 0;
+      DIMS.forEach(function (d) {
+        var uv = u[d.k], cv = city.profile[d.k] || 0;
+        dot += uv * cv; nu += uv * uv; nc += cv * cv;
+      });
+      var cos = (nu && nc) ? dot / Math.sqrt(nu * nc) : 0;
+      return { city: city, raw: dot, cos: cos };
+    });
+    scored.sort(function (a, b) { return b.cos - a.cos || b.raw - a.raw; });
+    return { u: u, ranked: scored };
+  }
+
+  function finish() {
+    show("calc");
+    var msgs = ["把你的答案折成一封信", "沿着地图一寸寸找", "闻到一丝熟悉的烟火气", "找到了——就是这座城"];
+    var el = document.getElementById("calc-text");
+    var step = 0;
+    el.textContent = msgs[0];
+    var timer = setInterval(function () {
+      step++;
+      if (step < msgs.length) { el.textContent = msgs[step]; }
+      else {
+        clearInterval(timer);
+        renderResult();
+        show("result");
+      }
+    }, 620);
+  }
+
+  function renderResult() {
+    var res = score();
+    var top = res.ranked[0];
+    var city = top.city;
+    var pct = Math.max(76, Math.min(98, Math.round(72 + top.cos * 27)));
+    lastResult = { city: city, pct: pct };
+
+    var poster = document.getElementById("poster");
+    poster.style.setProperty("--city-accent", city.accent);
+    document.getElementById("r-city").textContent = city.name;
+    document.getElementById("r-pinyin").textContent = city.pinyin;
+    document.getElementById("r-match").textContent = pct + "%";
+    document.getElementById("r-tagline").textContent = city.tagline;
+    document.getElementById("r-portrait").textContent = city.portrait;
+    document.getElementById("r-why").textContent = city.why;
+    document.getElementById("r-egg").textContent = city.egg;
+
+    var kw = document.getElementById("r-kw");
+    kw.innerHTML = "";
+    city.kw.forEach(function (w) {
+      var s = document.createElement("span");
+      s.textContent = "#" + w;
+      kw.appendChild(s);
+    });
+
+    var sorted = DIMS.map(function (d) { return { n: d.n, v: res.u[d.k] }; })
+      .sort(function (a, b) { return b.v - a.v; });
+    var topDims = sorted.slice(0, 5);
+    var maxV = topDims[0].v || 1;
+    var chart = document.getElementById("r-chart");
+    chart.innerHTML = "";
+    topDims.forEach(function (d) {
+      var row = document.createElement("div");
+      row.className = "row";
+      var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = d.n;
+      var bar = document.createElement("div"); bar.className = "bar";
+      var fill = document.createElement("i");
+      bar.appendChild(fill);
+      var vl = document.createElement("span"); vl.className = "vl"; vl.textContent = d.v;
+      row.appendChild(nm); row.appendChild(bar); row.appendChild(vl);
+      chart.appendChild(row);
+      requestAnimationFrame(function () {
+        setTimeout(function () { fill.style.width = Math.round(d.v / maxV * 100) + "%"; }, 60);
+      });
+    });
+
+    var near = res.ranked.slice(1, 3).map(function (r) { return r.city.name; });
+    document.getElementById("r-near").innerHTML =
+      "擦肩而过的城市：<b>" + near[0] + "</b> 与 <b>" + near[1] + "</b>——缘分也很深，只是宿命抢先了一步。";
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(function () { t.classList.remove("show"); }, 2200);
+  }
+
+  document.getElementById("btn-start").addEventListener("click", function () {
+    answers = []; current = 0;
+    show("quiz");
+    renderQuestion();
+  });
+
+  document.getElementById("btn-again").addEventListener("click", function () {
+    answers = []; current = 0; lastResult = null;
+    show("home");
+  });
+
+  document.getElementById("btn-copy").addEventListener("click", function () {
+    if (!lastResult) return;
+    var c = lastResult.city;
+    var text = "【你的宿命恋人来自哪个城市】\n我的宿命恋人来自 " + c.name + "，契合度 " + lastResult.pct + "%。\n" +
+      c.tagline + "\n相处彩蛋：" + c.egg + "\n你也来测测，你的宿命恋人在哪座城市等你。";
+    function done() { showToast("结果文案已复制，去分享吧"); }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); }
+      catch (e) { showToast("复制失败，截图分享也一样出片"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>

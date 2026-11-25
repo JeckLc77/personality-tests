@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>测你骨子里是南方还是北方人格</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+      * { box-sizing: border-box; }
+      :root {
+        --bg: #f6ead6;
+        --bg-deep: #efd9b8;
+        --paper: #fffaf0;
+        --ink: #2b1c10;
+        --ink-soft: #6d5741;
+        --line: #d9c39c;
+        --north: #b3351f;
+        --north-deep: #8c2413;
+        --north-soft: #f7ddd2;
+        --south: #1f7a5c;
+        --south-deep: #14563f;
+        --south-soft: #d6ecdf;
+        --gold: #c8912a;
+        --card-shadow: 0 18px 40px rgba(90, 52, 14, .18);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1d130b;
+          --bg-deep: #150d07;
+          --paper: #2a1d11;
+          --ink: #f3e6d2;
+          --ink-soft: #c4a97f;
+          --line: #54402a;
+          --north: #e0684b;
+          --north-deep: #f0855f;
+          --north-soft: #47231a;
+          --south: #4cb894;
+          --south-deep: #6fcfa9;
+          --south-soft: #17382c;
+          --gold: #e0aa4a;
+          --card-shadow: 0 18px 40px rgba(0, 0, 0, .5);
+          color-scheme: dark;
+        }
+      }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(1100px 500px at 85% -10%, rgba(179, 53, 31, .14), transparent 60%),
+          radial-gradient(900px 480px at 8% 110%, rgba(31, 122, 92, .14), transparent 60%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+        color: var(--ink);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 660px; margin: 0 auto; padding: 22px 16px 48px; }
+      .serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+
+      /* ---------- screens ---------- */
+      .screen { display: none; }
+      .screen.active { display: block; animation: fadeUp .38s ease both; }
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        .screen.active { animation: none; }
+        * { transition: none !important; }
+      }
+
+      /* ---------- home ---------- */
+      .duel { display: flex; border-radius: 14px; overflow: hidden; border: 2px solid var(--ink); box-shadow: var(--card-shadow); }
+      .duel .side { flex: 1; padding: 20px 16px 16px; color: #fff8ec; position: relative; }
+      .duel .n { background: linear-gradient(150deg, #c9401f, #8c2413); }
+      .duel .s { background: linear-gradient(150deg, #23906c, #14563f); text-align: right; }
+      .duel .big { font-family: "Noto Serif SC", serif; font-size: 44px; font-weight: 900; line-height: 1; }
+      .duel .small { font-size: 12.5px; opacity: .88; margin-top: 8px; line-height: 1.6; }
+      .duel-wrap .vs {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        width: 46px; height: 46px; border-radius: 50%; background: var(--paper); color: var(--ink);
+        border: 2px solid var(--ink); display: flex; align-items: center; justify-content: center;
+        font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 17px; z-index: 2;
+      }
+      .duel-wrap { position: relative; }
+      h1.title { font-family: "Noto Serif SC", serif; font-weight: 900; font-size: clamp(30px, 7.4vw, 44px); line-height: 1.22; margin: 26px 0 10px; text-align: center; }
+      h1.title .hl-n { color: var(--north); }
+      h1.title .hl-s { color: var(--south); }
+      .subtitle { text-align: center; color: var(--ink-soft); font-size: 15px; line-height: 1.75; margin: 0 auto 20px; max-width: 30em; }
+      .meta-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+      .meta-chip { font-size: 12.5px; font-weight: 700; border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 6px 13px; color: var(--ink-soft); }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border: none; cursor: pointer; font-family: inherit; font-weight: 900;
+        border-radius: 12px; padding: 15px 30px; font-size: 17px; min-height: 52px;
+        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn-main { background: var(--ink); color: var(--bg); width: 100%; box-shadow: 0 10px 24px rgba(43, 28, 16, .28); letter-spacing: .06em; }
+      .btn-main:hover { transform: translateY(-2px); }
+      .btn-ghost { background: var(--paper); color: var(--ink); border: 1.5px solid var(--line); font-size: 15px; padding: 12px 22px; min-height: 48px; }
+      .btn-ghost:hover { border-color: var(--ink); }
+      .spoiler { margin-top: 28px; background: var(--paper); border: 1.5px dashed var(--line); border-radius: 14px; padding: 16px 18px; }
+      .spoiler h3 { margin: 0 0 10px; font-size: 13px; letter-spacing: .14em; color: var(--ink-soft); }
+      .spoiler .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+      .spoiler .tag { font-size: 13.5px; font-weight: 700; padding: 6px 12px; border-radius: 8px; }
+      .tag.tn { background: var(--north-soft); color: var(--north-deep); }
+      .tag.ts { background: var(--south-soft); color: var(--south-deep); }
+      .tag.tm { background: rgba(200, 145, 42, .16); color: var(--gold); }
+      .fineprint { text-align: center; color: var(--ink-soft); font-size: 12px; margin-top: 18px; line-height: 1.7; }
+
+      /* ---------- quiz ---------- */
+      .quiz-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+      .back-btn {
+        background: var(--paper); border: 1.5px solid var(--line); color: var(--ink);
+        border-radius: 10px; padding: 8px 14px; font-size: 14px; font-weight: 700; cursor: pointer;
+        font-family: inherit; min-height: 40px; flex: none;
+      }
+      .back-btn:disabled { opacity: .35; cursor: default; }
+      .progress-meta { font-size: 13px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+      .progress-track { height: 10px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 99px; overflow: hidden; margin-bottom: 26px; }
+      .progress-fill { height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--south) 0%, var(--gold) 52%, var(--north) 100%); transition: width .45s cubic-bezier(.6, 0, .2, 1); }
+      .q-cat { display: inline-block; font-size: 12px; font-weight: 900; letter-spacing: .12em; color: var(--gold); border: 1.5px solid var(--gold); padding: 4px 10px; border-radius: 6px; margin-bottom: 14px; }
+      .q-text { font-family: "Noto Serif SC", serif; font-size: clamp(21px, 5.4vw, 27px); font-weight: 900; line-height: 1.45; margin: 0 0 8px; }
+      .q-hint { color: var(--ink-soft); font-size: 13.5px; margin: 0 0 22px; }
+      .options { display: grid; gap: 12px; }
+      .opt {
+        text-align: left; background: var(--paper); border: 2px solid var(--line); border-radius: 14px;
+        padding: 16px 18px; font-size: 16px; line-height: 1.55; cursor: pointer; font-family: inherit;
+        color: var(--ink); display: flex; gap: 12px; align-items: flex-start; min-height: 56px;
+        transition: border-color .15s ease, background .15s ease, transform .15s ease;
+      }
+      .opt:hover { border-color: var(--ink); transform: translateX(3px); }
+      .opt .letter {
+        flex: none; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line);
+        display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; margin-top: 1px;
+      }
+      .opt.picked { border-color: var(--north); background: var(--north-soft); }
+      .opt.picked .letter { background: var(--north); border-color: var(--north); color: #fff; }
+      .q-card { animation: fadeUp .3s ease both; }
+
+      /* ---------- calculating ---------- */
+      .calc { text-align: center; padding: 90px 10px; }
+      .calc .pot { font-size: 58px; animation: bob 1s ease-in-out infinite; display: inline-block; }
+      @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-10px) rotate(4deg); } }
+      @media (prefers-reduced-motion: reduce) { .calc .pot { animation: none; } }
+      .calc p { font-family: "Noto Serif SC", serif; font-size: 20px; font-weight: 900; margin: 18px 0 6px; }
+      .calc small { color: var(--ink-soft); font-size: 13.5px; }
+
+      /* ---------- result poster ---------- */
+      .poster {
+        background: var(--paper); border: 2.5px solid var(--ink); border-radius: 18px;
+        box-shadow: var(--card-shadow); padding: 8px; position: relative;
+      }
+      .poster-inner { border: 1.5px solid var(--line); border-radius: 12px; padding: 26px 22px 24px; position: relative; overflow: hidden; }
+      .poster-inner::before {
+        content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+        background: radial-gradient(420px 200px at 100% 0%, var(--poster-glow, rgba(200,145,42,.16)), transparent 65%);
+      }
+      .poster-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; position: relative; }
+      .poster-kicker { font-size: 12px; letter-spacing: .22em; font-weight: 900; color: var(--ink-soft); }
+      .stamp {
+        flex: none; width: 74px; height: 74px; border-radius: 10px; transform: rotate(7deg);
+        border: 2.5px solid var(--stamp, var(--gold)); color: var(--stamp, var(--gold));
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        font-family: "Noto Serif SC", serif; font-weight: 900; line-height: 1.25; font-size: 15px;
+        background: color-mix(in srgb, var(--stamp, var(--gold)) 8%, transparent);
+      }
+      .stamp small { font-size: 10px; letter-spacing: .18em; font-family: "Noto Sans SC", sans-serif; }
+      .result-name { font-family: "Noto Serif SC", serif; font-weight: 900; font-size: clamp(32px, 8.6vw, 46px); line-height: 1.18; margin: 12px 0 6px; position: relative; }
+      .result-slogan { font-size: 16.5px; font-weight: 700; line-height: 1.6; margin: 0 0 20px; position: relative; }
+      .result-slogan::before { content: "「"; color: var(--gold); }
+      .result-slogan::after { content: "」"; color: var(--gold); }
+
+      .gauge-box { position: relative; background: rgba(127, 96, 50, .07); border: 1.5px solid var(--line); border-radius: 12px; padding: 16px 16px 13px; margin-bottom: 20px; }
+      .gauge-nums { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+      .gauge-nums .g-side { font-size: 13px; font-weight: 900; }
+      .gauge-nums .g-n { color: var(--north); text-align: left; }
+      .gauge-nums .g-s { color: var(--south); text-align: right; }
+      .gauge-nums .pct { font-family: "Noto Serif SC", serif; font-size: 30px; font-weight: 900; display: block; line-height: 1.1; }
+      .gauge-track { height: 16px; border-radius: 99px; background: linear-gradient(90deg, var(--south) 0%, #9db98a 38%, var(--gold) 50%, #d98a4e 62%, var(--north) 100%); position: relative; }
+      .gauge-marker {
+        position: absolute; top: 50%; width: 26px; height: 26px; border-radius: 50%;
+        background: var(--paper); border: 3px solid var(--ink); transform: translate(-50%, -50%);
+        box-shadow: 0 3px 8px rgba(0,0,0,.25); transition: left 1s cubic-bezier(.5, 0, .2, 1);
+      }
+      .gauge-scale { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-soft); margin-top: 7px; font-weight: 700; }
+
+      .dims { position: relative; margin-bottom: 6px; }
+      .dims h4, .sec h4 { font-size: 13px; letter-spacing: .16em; color: var(--ink-soft); margin: 20px 0 10px; font-weight: 900; }
+      .dim-row { display: grid; grid-template-columns: 64px 1fr 40px; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 13.5px; }
+      .dim-row .d-name { font-weight: 700; }
+      .dim-row .d-val { text-align: right; font-weight: 900; font-variant-numeric: tabular-nums; }
+      .dim-track { height: 9px; border-radius: 99px; background: rgba(127, 96, 50, .14); overflow: hidden; }
+      .dim-fill { height: 100%; border-radius: 99px; width: 0%; transition: width .9s cubic-bezier(.5, 0, .2, 1); }
+      .sec { position: relative; }
+      .sec p { margin: 0; font-size: 15px; line-height: 1.85; }
+      .trait-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+      .trait-list li { font-size: 15px; line-height: 1.65; padding-left: 22px; position: relative; }
+      .trait-list li::before { content: "◆"; position: absolute; left: 2px; top: 0; font-size: 11px; color: var(--gold); }
+      .egg-box { position: relative; margin-top: 20px; border: 1.5px dashed var(--gold); border-radius: 12px; padding: 14px 16px; background: rgba(200, 145, 42, .08); }
+      .egg-box .egg-title { font-weight: 900; font-size: 13px; letter-spacing: .14em; color: var(--gold); margin-bottom: 5px; }
+      .egg-box p { margin: 0; font-size: 14.5px; line-height: 1.75; }
+      .poster-foot { position: relative; margin-top: 20px; padding-top: 14px; border-top: 1.5px solid var(--line); display: flex; justify-content: space-between; gap: 8px; font-size: 11.5px; color: var(--ink-soft); font-weight: 700; letter-spacing: .06em; }
+      .result-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+      .result-actions .btn-main { flex: 1; min-width: 150px; }
+      .result-actions .btn-ghost { flex: 1; min-width: 130px; }
+      .copied-tip { text-align: center; font-size: 13px; font-weight: 700; color: var(--south); min-height: 20px; margin-top: 10px; }
+      .share-hint { text-align: center; color: var(--ink-soft); font-size: 12.5px; margin-top: 4px; }
+      @media (max-width: 480px) {
+        .duel .big { font-size: 36px; }
+        .poster-inner { padding: 20px 15px 18px; }
+        .stamp { width: 62px; height: 62px; font-size: 13px; }
+        .result-actions .btn-main, .result-actions .btn-ghost { min-width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ============ HOME ============ -->
+      <section class="screen active" id="screen-home">
+        <div class="duel-wrap">
+          <div class="duel">
+            <div class="side n">
+              <div class="big serif">北</div>
+              <div class="small">暖气烧得旺<br />饺子蘸蒜泥<br />有话当面整</div>
+            </div>
+            <div class="side s">
+              <div class="big serif">南</div>
+              <div class="small">煲汤先上桌<br />买菜论个挑<br />说话糯叽叽</div>
+            </div>
+          </div>
+          <div class="vs">VS</div>
+        </div>
+
+        <h1 class="title">测你骨子里是<br /><span class="hl-s">南方</span>还是<span class="hl-n">北方</span>人格</h1>
+        <p class="subtitle">户口本上的地址不算数，骨子里的地址才算。<br />20 道生活题，从豆浆甜咸测到秋裤穿不穿，看看你的灵魂到底在哪边落的户。</p>
+
+        <div class="meta-row">
+          <span class="meta-chip">共 20 道题</span>
+          <span class="meta-chip">约 2 分钟</span>
+          <span class="meta-chip">7 种人格结果</span>
+          <span class="meta-chip">南北浓度 %</span>
+        </div>
+
+        <button class="btn btn-main" id="btn-start">开始落户 →</button>
+
+        <div class="spoiler">
+          <h3>结果抢先看 · 你可能是其中之一</h3>
+          <div class="tags">
+            <span class="tag tn">纯血北方人</span>
+            <span class="tag tn">北方本色</span>
+            <span class="tag tn">外北内南</span>
+            <span class="tag tm">秦岭淮河混血儿</span>
+            <span class="tag ts">外南内北</span>
+            <span class="tag ts">南方本色</span>
+            <span class="tag ts">纯血南方人</span>
+          </div>
+        </div>
+
+        <p class="fineprint">趣味人格测试，图一乐呵，不是专业心理诊断。<br />测出跟你老家不一样？别慌，骨子里的事，户口本说了不算。</p>
+      </section>
+
+      <!-- ============ QUIZ ============ -->
+      <section class="screen" id="screen-quiz">
+        <div class="quiz-top">
+          <button class="back-btn" id="btn-back">← 上一题</button>
+          <span class="progress-meta" id="progress-meta">第 1 / 20 题</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="q-card" id="q-card">
+          <span class="q-cat" id="q-cat">饮食口味</span>
+          <h2 class="q-text" id="q-text"></h2>
+          <p class="q-hint">凭第一反应选，别让理智抢答。</p>
+          <div class="options" id="options"></div>
+        </div>
+      </section>
+
+      <!-- ============ CALCULATING ============ -->
+      <section class="screen" id="screen-calc">
+        <div class="calc">
+          <span class="pot" aria-hidden="true">🧭</span>
+          <p id="calc-line">正在称你的骨头……</p>
+          <small>秦岭淮河定位中，请稍候</small>
+        </div>
+      </section>
+
+      <!-- ============ RESULT ============ -->
+      <section class="screen" id="screen-result">
+        <div class="poster" id="poster">
+          <div class="poster-inner" id="poster-inner">
+            <div class="poster-head">
+              <div>
+                <div class="poster-kicker">骨子里的人格鉴定</div>
+                <h2 class="result-name" id="r-name"></h2>
+              </div>
+              <div class="stamp" id="r-stamp"><span id="r-stamp-text"></span><small>鉴定章</small></div>
+            </div>
+            <p class="result-slogan" id="r-slogan"></p>
+
+            <div class="gauge-box">
+              <div class="gauge-nums">
+                <div class="g-side g-s">南方浓度<span class="pct" id="r-south-pct">0%</span></div>
+                <div class="g-side g-n">北方浓度<span class="pct" id="r-north-pct">0%</span></div>
+              </div>
+              <div class="gauge-track"><div class="gauge-marker" id="gauge-marker" style="left:50%"></div></div>
+              <div class="gauge-scale"><span>纯南 · 0%</span><span>秦岭淮河线 · 50%</span><span>纯北 · 100%</span></div>
+            </div>
+
+            <div class="dims">
+              <h4>五 维 人 格 图 谱</h4>
+              <div id="dim-list"></div>
+            </div>
+
+            <div class="sec">
+              <h4>性 格 特 点</h4>
+              <ul class="trait-list" id="r-traits"></ul>
+            </div>
+            <div class="sec">
+              <h4>为 什 么 是 你</h4>
+              <p id="r-reason"></p>
+            </div>
+            <div class="sec">
+              <h4>隐 藏 优 势</h4>
+              <p id="r-advantage"></p>
+            </div>
+
+            <div class="egg-box">
+              <div class="egg-title">🎲 趣 味 彩 蛋</div>
+              <p id="r-egg"></p>
+            </div>
+
+            <div class="poster-foot">
+              <span>测你骨子里是南方还是北方人格</span>
+              <span id="r-date"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-main" id="btn-copy">复制结果文案</button>
+          <button class="btn btn-ghost" id="btn-restart">再测一次</button>
+        </div>
+        <div class="copied-tip" id="copied-tip"></div>
+        <p class="share-hint">长按或截图上方海报卡，发小红书 / 朋友圈，看看朋友们都是哪边的人。</p>
+      </section>
+
+    </div>
+
+<script>
+/* ================= 数据：维度 =================
+hao 豪爽度 / jing 精细度 / dong 耐寒值 / zhi 直爽度 / jiang 讲究度
+n = 北方分（正北负南） */
+var DIMS = [
+{ key: "hao", name: "豪爽度", color: "#b3351f"},
+{ key: "jing", name: "精细度", color: "#1f7a5c"},
+{ key: "dong", name: "耐寒值", color: "#3d6e9e"},
+{ key: "zhi", name: "直爽度", color: "#c8912a"},
+{ key: "jiang", name: "讲究度", color: "#8a5a2b"}
+];
+
+/* ================= 数据：20 道题 ================= */
+var QUESTIONS = [
+{ cat: "饮食口味", q: "早餐摊老板问你：豆浆要甜的还是咸的？", opts: [
+{ t: "咸豆腐脑！再来根油条，咸香才是早餐的魂", n: 3, d: { zhi: 2, jiang: 1}},
+{ t: "甜豆浆，甜甜蜜蜜开启一天", n: -2, d: { jing: 2}},
+{ t: "都行，老板你看着上，我不挑", n: 0, d: { hao: 2}},
+{ t: "豆浆先放放，我早餐一般吃汤粉或者肠粉", n: -1, d: { jing: 2, jiang: 1}}
+]},
+{ cat: "饮食口味", q: "一顿饭要是没吃上你的主食命根子，你会？", opts: [
+{ t: "没吃面 = 没吃饭，馒头花卷面条必须有一样", n: 3, d: { dong: 1, zhi: 1}},
+{ t: "没吃米饭总觉得胃里空落落的，像没吃一样", n: -3, d: { jing: 1}},
+{ t: "米面都是碳水，哪个顺手吃哪个", n: 1, d: { hao: 1}},
+{ t: "主食不重要，菜好吃才是正经事", n: -1, d: { jiang: 2}}
+]},
+{ cat: "饮食口味", q: "吃饺子，你的蘸料是哪一派？", opts: [
+{ t: "蒜泥！必须现捣的蒜泥，醋只是配角", n: 3, d: { zhi: 2, hao: 1}},
+{ t: "就一碟醋，清清爽爽解腻就行", n: 1, d: { jiang: 1}},
+{ t: "酱油加一点点辣椒油，刚刚好", n: -1, d: { jing: 2}},
+{ t: "饺子？我们过年吃汤圆和年糕比较多", n: -3, d: { jing: 1, jiang: 1}}
+]},
+{ cat: "饮食口味", q: "朋友请你吃火锅，点锅底时你站哪边？", opts: [
+{ t: "麻辣牛油拉满，吃火锅不冒汗等于白来", n: 3, d: { hao: 2, dong: 1}},
+{ t: "清汤或番茄，食材新鲜最重要，别抢味", n: -3, d: { jing: 2, jiang: 1}},
+{ t: "鸳鸯锅吧，照顾一下不能吃辣的朋友", n: 1, d: { hao: 1, jing: 1}},
+{ t: "粥底火锅了解一下，先喝粥再涮菜，养生", n: -1, d: { jiang: 2}}
+]},
+{ cat: "饮食口味", q: "去菜市场买西瓜，你的画风是？", opts: [
+{ t: "整个抱走！回家用勺挖着吃，这才过瘾", n: 3, d: { hao: 3}},
+{ t: "买半个，保鲜膜包好，够吃就行不浪费", n: -1, d: { jing: 2}},
+{ t: "买切好的果切盒，回家不用洗不用切", n: -3, d: { jing: 2, jiang: 1}},
+{ t: "先拍一拍听声，再问老板甜不甜，不甜不要", n: 1, d: { jiang: 2, zhi: 1}}
+]},
+{ cat: "洗澡习惯", q: "说到洗澡，你的真实状态是？", opts: [
+{ t: "搓澡巾是本体，不搓出点什么来等于没洗", n: 3, d: { dong: 1, jiang: 1}},
+{ t: "大澡堂子泡一泡再搓一搓，出来一身轻", n: 2, d: { hao: 2}},
+{ t: "每天冲个凉就行，讲究效率，十分钟搞定", n: -2, d: { jing: 1}},
+{ t: "一天不洗浑身难受，出汗多的时候一天洗两遍", n: -3, d: { jing: 2, jiang: 1}}
+]},
+{ cat: "过冬习惯", q: "冬天在室内，你的续命神器是？", opts: [
+{ t: "暖气！穿着短袖吃冰棍，你没体验过不懂", n: 3, d: { dong: 2}},
+{ t: "没暖气怎么活？哦我们那儿……确实没暖气", n: -1, d: { dong: 1}},
+{ t: "空调加电热毯，再抱个热水袋，层层叠甲", n: -2, d: { jing: 2}},
+{ t: "靠抖和一身正气，实在不行就多穿两件", n: 0, d: { dong: 2, hao: 1}}
+]},
+{ cat: "过冬习惯", q: "天一冷，秋裤这件事你怎么看？", opts: [
+{ t: "不用我妈说，我自己主动穿，还想加条毛裤", n: 2, d: { dong: 3}},
+{ t: "我妈觉得我冷，于是我穿了", n: 1, d: { jiang: 1}},
+{ t: "秋裤是什么？我们冬天最冷也就十几度", n: -3, d: { dong: 1}},
+{ t: "宁可冻得优雅，也不要穿得臃肿", n: 0, d: { jiang: 2, jing: 1}}
+]},
+{ cat: "气候反应", q: "连下半个月的雨，空气潮得能拧出水，你？", opts: [
+{ t: "受不了！衣服晾不干，被子都是潮的，人要发霉", n: 3, d: { dong: 1, zhi: 1}},
+{ t: "习惯了，除湿机一开，照样该干嘛干嘛", n: -3, d: { jing: 2}},
+{ t: "下雨天适合在家煲汤，听雨声还挺治愈", n: -2, d: { jiang: 2}},
+{ t: "我们那儿一下雪就是半米，雨算什么", n: 2, d: { dong: 2, hao: 1}}
+]},
+{ cat: "气候反应", q: "零下十五度还刮着大风，你要出门，内心 OS 是？", opts: [
+{ t: "这天儿就适合猫冬，没事谁出门啊", n: 1, d: { dong: 1}},
+{ t: "全副武装裹成熊，该出门还得出门，习惯了", n: 3, d: { dong: 3}},
+{ t: "零下十五度？！那得多穿多少件，我想都不敢想", n: -3, d: { jing: 1}},
+{ t: "我们冬天最冷也就零度左右，知足了", n: -1, d: { jing: 1, jiang: 1}}
+]},
+{ cat: "说话方式", q: "朋友问你「这事儿咋整」，你最可能的回答是？", opts: [
+{ t: "「整！必须整」——话不多说，先干为敬", n: 3, d: { zhi: 3, hao: 1}},
+{ t: "「让我先想想」——谋定而后动，不打无准备之仗", n: -2, d: { jing: 2}},
+{ t: "「问题不大」——语气淡定，内心已经在列方案", n: -1, d: { jing: 1, jiang: 1}},
+{ t: "「你说咋整就咋整」——都行，我随大流", n: 0, d: { hao: 2}}
+]},
+{ cat: "说话方式", q: "在街边小店买东西，你张口管老板叫什么？", opts: [
+{ t: "哥 / 姐，喊得亲热，事儿好办", n: 2, d: { hao: 2, zhi: 1}},
+{ t: "老板，最稳妥，不出错", n: 0, d: { jiang: 1}},
+{ t: "靓仔 / 靓女！喊得老板心花怒放", n: -3, d: { jing: 1, jiang: 1}},
+{ t: "帅哥 / 美女，嘴甜一点不吃亏", n: 1, d: { jing: 2}}
+]},
+{ cat: "说话方式", q: "跟朋友微信聊天，你的画风更像哪种？", opts: [
+{ t: "60 秒语音方阵，有话一口气说完", n: 3, d: { zhi: 2, hao: 1}},
+{ t: "能打字绝不语音，还怕吵到别人", n: -3, d: { jing: 3}},
+{ t: "表情包开路，文字只是辅助", n: 0, d: { hao: 1}},
+{ t: "打字前先在心里组织一下语言，标点都讲究", n: 0, d: { jiang: 2, jing: 1}}
+]},
+{ cat: "社交豪爽", q: "一桌朋友吃完饭，到了买单环节，你是？", opts: [
+{ t: "趁上厕所的功夫已经把单买了，别抢，抢就是不给面子", n: 3, d: { hao: 3}},
+{ t: "AA 最公平，我先垫上，回头发群里大家转我", n: -3, d: { jing: 3}},
+{ t: "这次你请下次我请，心里有本账，礼尚往来", n: -1, d: { jiang: 2, jing: 1}},
+{ t: "抢着买单！抢不过就下次我做东，安排得明明白白", n: 1, d: { hao: 2, zhi: 1}}
+]},
+{ cat: "社交豪爽", q: "朋友聚会点菜，你属于哪种点菜手？", opts: [
+{ t: "硬菜先上：肘子、排骨、大盘鸡，量大管饱", n: 3, d: { hao: 2, dong: 1}},
+{ t: "荤素搭配还要有汤，凉菜热菜都得齐活", n: -1, d: { jiang: 3}},
+{ t: "先问大家忌口，再慢慢研究菜单", n: -2, d: { jing: 2, jiang: 1}},
+{ t: "招牌菜全来一遍，吃不完打包，不丢人", n: 0, d: { hao: 2}}
+]},
+{ cat: "社交豪爽", q: "亲戚突然说要来你家住几天，你的第一反应？", opts: [
+{ t: "来呗！床一铺酒一摆，住几天都行", n: 3, d: { hao: 3}},
+{ t: "欢迎是欢迎，但得先问清楚住几天、几个人", n: -1, d: { jing: 2}},
+{ t: "热情接待，不过会默默把作息表在心里排好", n: -1, d: { jing: 1, jiang: 2}},
+{ t: "住我家不太方便，我帮他们订个附近的酒店", n: -1, d: { jing: 2, jiang: 1}}
+]},
+{ cat: "消费精细", q: "买一件大衣，你的决策过程是？", opts: [
+{ t: "看上就买，犹豫就会败北，千金难买我乐意", n: 2, d: { hao: 2, zhi: 2}},
+{ t: "三家比价、看评价、算满减，功课做满才下单", n: -2, d: { jing: 3}},
+{ t: "先放购物车晾几天，冷静下来还想买再说", n: 1, d: { jing: 2}},
+{ t: "面料成分表先看一遍，羊毛含量不够直接 pass", n: -1, d: { jiang: 3}}
+]},
+{ cat: "消费精细", q: "超市大促销，你的购物车会变成什么样？", opts: [
+{ t: "纸巾洗衣液先囤半年的，家里有粮心里不慌", n: 3, d: { dong: 1, hao: 1, jiang: 1}},
+{ t: "按清单买，多一件都不拿，克制是美德", n: -3, d: { jing: 3}},
+{ t: "小包装新鲜买，东西放久了不新鲜", n: -1, d: { jing: 2, jiang: 1}},
+{ t: "凑满减凑到深夜，省下的钱够吃顿好的", n: 1, d: { jing: 2, jiang: 1}}
+]},
+{ cat: "生活讲究", q: "吃饭前，你有个雷打不动的小习惯？", opts: [
+{ t: "先喝汤！饭前喝汤，胜过药方", n: -3, d: { jiang: 3}},
+{ t: "餐具先用热水烫一遍，烫完才安心", n: -1, d: { jiang: 2, jing: 1}},
+{ t: "没那么多讲究，菜一上桌直接开整", n: 3, d: { zhi: 2, hao: 1}},
+{ t: "先给长辈盛饭夹菜，规矩不能丢", n: 1, d: { jiang: 2}}
+]},
+{ cat: "终极一题", q: "最后一题：过年回家，你最期待桌上出现什么？", opts: [
+{ t: "热气腾腾的饺子，一家人围着边包边聊", n: 3, d: { hao: 1, dong: 1, jiang: 1}},
+{ t: "软糯香甜的汤圆，年年有余的整鱼也要有", n: -3, d: { jing: 1, jiang: 2}},
+{ t: "饺子和汤圆都得有，我家餐桌搞南北大团结", n: 0, d: { hao: 2, jiang: 1}},
+{ t: "吃什么都行，人齐了就是年", n: 0, d: { hao: 2, jing: 1}}
+]}
+];
+
+/* ================= 数据：7 种结果 ================= */
+var RESULTS = {
+pureNorth: {
+name: "纯血北方人", stamp: "纯血<br />北方", color: "#b3351f", glow: "rgba(179,53,31,.16)",
+slogan: "暖气一开，天下我有；蒜泥一蘸，谁与争锋。",
+traits: [
+"说话办事不绕弯，心里想什么嘴上就说什么",
+"对朋友掏心掏肺，请客买单永远冲在第一个",
+"抗冻能力点满，零下二十度照样敢出门遛弯",
+"主食即正义：没吃上面食，这顿饭等于没吃"
+],
+reason: "你的答案里写满了大开大合：咸豆腐脑配蒜泥、整个西瓜抱回家、买单抢到差点跟朋友急眼。你的豪爽度和直爽度双双拉满，生活半径里就没有「扭捏」两个字。",
+advantage: "天生的场面掌控者。饭局冷场你能救，朋友有难你先到，这种「有事真上」的靠谱感，是行走的人缘外挂。",
+egg: "据说纯血北方人有个统一暗号：把「行」说成「整」——整一个、整挺好、咋整都行。你要是全中，恭喜，组织找到你了。"
+},
+northCore: {
+name: "北方本色", stamp: "北方<br />本色", color: "#b3351f", glow: "rgba(179,53,31,.13)",
+slogan: "不整虚的，日子就得过得热乎、实在、敞亮。",
+traits: [
+"性格底色是爽快，但该细心的时候也不含糊",
+"认准的主食和口味，十年如一日不轻易叛变",
+"社交讲究礼尚往来，人情账心里门儿清",
+"过冬经验丰富，秋裤和暖气都是生活智慧"
+],
+reason: "你的北方浓度稳稳过线：面食是命、说话直接、待人热络。但你又不是一味的粗线条——点菜会照顾忌口，买东西也知道比比价，是粗中有细的北方本色。",
+advantage: "进退有度型选手。能用豪爽打开局面，也能用分寸守住关系，走到哪儿都容易被当成「自己人」。",
+egg: "你的手机里大概率存着至少三个「有事说话」的朋友——不是客套，是他们真的会在半夜给你打电话。"
+},
+outerNorth: {
+name: "外北内南", stamp: "外北<br />内南", color: "#c8912a", glow: "rgba(200,145,42,.16)",
+slogan: "长着一张北方的脸，揣着一颗南方的心。",
+traits: [
+"外表大大咧咧，内心细腻得能绣花",
+"嗓门和气场是北方的，菜单研究得比谁都细",
+"请客时抢着买单，转头默默记好这笔人情账",
+"能吃蒜泥蘸饺子，也坚持饭前先喝一碗汤"
+],
+reason: "你的北方浓度明明不低，精细度却高得离谱：说话办事一副北方做派，消费和饮食却处处透着南方式的精打细算。你是披着豪爽外衣的细节控，本质是南北缝合怪。",
+advantage: "全场最难被看透的人。别人以为你好说话，其实你心里有杆秤；别人以为你粗枝大叶，你连满减都算到了小数点后两位。",
+egg: "你的经典场面：用最豪迈的语气说「随便点」，然后在心里飞速计算哪道菜性价比最高。别装了，我们都看见了。"
+},
+mix: {
+name: "秦岭淮河混血儿", stamp: "秦岭<br />淮河", color: "#c8912a", glow: "rgba(200,145,42,.18)",
+slogan: "一半是暖气的热乎，一半是江水的温柔。",
+traits: [
+"米饭面条无缝切换，胃口的包容度堪比自助餐",
+"能豪爽也能精细，全看场合和心情",
+"甜咸之争里永远保持中立，是饭桌上的和平大使",
+"南北两边的生活技能，你都偷偷学了个遍"
+],
+reason: "你的答案均匀地摊在秦岭淮河两侧：饺子汤圆都要有，搓澡和煲汤全不耽误。你的性格没有明显的南北站队，两种生活哲学在你身上达成了罕见的动态平衡。",
+advantage: "适应力天花板。把你空投到任何一座城市，你都能在三天内找到好吃的早餐摊，一周内混进本地朋友圈。",
+egg: "你的过年餐桌是南北和谈现场：左手饺子右手汤圆。你妈说你没立场，你说这叫格局。"
+},
+outerSouth: {
+name: "外南内北", stamp: "外南<br />内北", color: "#c8912a", glow: "rgba(31,122,92,.15)",
+slogan: "说话轻声细语，出手快准狠辣。",
+traits: [
+"表面温温柔柔，骨子里比谁都有主意",
+"买菜会精挑细选，但朋友有事第一个站出来",
+"口味偏清淡，做事却带着一股不服输的劲儿",
+"看着好商量，底线问题上寸步不让"
+],
+reason: "你的南方浓度占了上风，饮食起居都是精细温润的路子，可豪爽度和直爽度偏偏冲得老高：买单不含糊、说话不绕弯。你是温柔皮相下藏着的北方芯，典型的扮猪吃老虎。",
+advantage: "反差感拉满的社交杀器。大家先被你的温和降低防备，再被你的果断和义气彻底圈粉，信任来得又快又稳。",
+egg: "你最容易被低估的瞬间：轻声细语地说完一句话，全桌人都照办了。等大家反应过来，你已经把汤都盛好了。"
+},
+southCore: {
+name: "南方本色", stamp: "南方<br />本色", color: "#1f7a5c", glow: "rgba(31,122,92,.13)",
+slogan: "日子要过得精细，汤要煲得用心，话要说得体面。",
+traits: [
+"生活讲究新鲜和分寸，买东西宁缺毋滥",
+"说话做事留余地，不把话说满，不把事做绝",
+"对气候敏感，潮气和冷风都是天敌",
+"煲汤、喝茶、烫餐具——仪式感是刻在骨子里的"
+],
+reason: "你的南方浓度稳稳占优：饭前喝汤、买菜论个挑、聊天能打字绝不发语音。你的精细度和讲究度组成了生活的主旋律，日子被你过出了秩序和香气。",
+advantage: "细节里的魔鬼本鬼。别人忽略的小事你都照顾到了，跟你相处像被温水慢慢泡开，舒服，还上瘾。",
+egg: "你的冰箱大概率分区明确：蔬菜、熟食、饮品各就各位。谁要是把剩菜直接塞进保鲜层，你的血压会当场表演一个起飞。"
+},
+pureSouth: {
+name: "纯血南方人", stamp: "纯血<br />南方", color: "#1f7a5c", glow: "rgba(31,122,92,.16)",
+slogan: "一日三餐有汤喝，四季如春慢慢过。",
+traits: [
+"米饭是信仰，一天不吃就觉得少了点什么",
+"精细度爆表：比价、挑鲜、烫碗，一样不能少",
+"说话轻声慢语，但绵里藏针，自有分量",
+"怕冷又怕潮，冬天靠一身装备和满腔毅力硬撑"
+],
+reason: "从甜豆浆到肠粉，从一天两洗到饭前喝汤，你的每个答案都写着大写的「南方」。你的生活哲学很明确：新鲜、精细、有汤喝，日子就要这样不慌不忙地过。",
+advantage: "把日子过成诗的本事。你的生活质感自带滤镜，朋友去你家吃顿饭，回家能回味三天，还想偷师你的煲汤配方。",
+egg: "据说纯血南方人过冬全靠抖，抖着抖着就开春了。你要是再解锁「用嘴哈气暖手」技能包，那就是满级南方人认证。"
+}
+};
+
+/* ================= 逻辑 ================= */
+var answers = [];
+var current = 0;
+var picked = false;
+
+var $ = function (id) { return document.getElementById(id);};
+var screens = { home: $("screen-home"), quiz: $("screen-quiz"), calc: $("screen-calc"), result: $("screen-result")};
+
+function show(name) {
+Object.keys(screens).forEach(function (k) { screens[k].classList.toggle("active", k === name);});
+window.scrollTo(0, 0);
+}
+
+/* 归一化基准 */
+var maxNorthPos = 0, maxNorthNeg = 0, dimMax = {};
+DIMS.forEach(function (d) { dimMax[d.key] = 0;});
+QUESTIONS.forEach(function (q) {
+var pos = 0, neg = 0;
+q.opts.forEach(function (o) { if (o.n > pos) pos = o.n; if (o.n < neg) neg = o.n;});
+maxNorthPos += pos; maxNorthNeg += Math.abs(neg);
+DIMS.forEach(function (d) {
+var m = 0;
+q.opts.forEach(function (o) { var v = (o.d && o.d[d.key]) || 0; if (v > m) m = v;});
+dimMax[d.key] += m;
+});
+});
+
+function renderQuestion() {
+picked = false;
+var q = QUESTIONS[current];
+$("progress-meta").textContent = "第 " + (current + 1) + " / " + QUESTIONS.length + " 题";
+$("progress-fill").style.width = (current / QUESTIONS.length * 100) + "%";
+$("btn-back").disabled = current === 0;
+$("q-cat").textContent = q.cat;
+$("q-text").textContent = q.q;
+var box = $("options");
+box.innerHTML = "";
+var letters = ["A", "B", "C", "D"];
+q.opts.forEach(function (o, i) {
+var b = document.createElement("button");
+b.className = "opt";
+b.type = "button";
+var letter = document.createElement("span");
+letter.className = "letter";
+letter.textContent = letters[i];
+var txt = document.createElement("span");
+txt.textContent = o.t;
+b.appendChild(letter);
+b.appendChild(txt);
+b.addEventListener("click", function () { pick(i, b);});
+box.appendChild(b);
+});
+var card = $("q-card");
+card.style.animation = "none";
+void card.offsetWidth;
+card.style.animation = "";
+}
+
+function pick(i, btn) {
+if (picked) return;
+picked = true;
+answers[current] = i;
+btn.classList.add("picked");
+$("progress-fill").style.width = ((current + 1) / QUESTIONS.length * 100) + "%";
+setTimeout(function () {
+current++;
+if (current < QUESTIONS.length) {
+renderQuestion();
+} else {
+finish();
+}
+}, 340);
+}
+
+function compute() {
+var total = 0, dimScore = {};
+DIMS.forEach(function (d) { dimScore[d.key] = 0;});
+answers.forEach(function (ai, qi) {
+var o = QUESTIONS[qi].opts[ai];
+total += o.n;
+DIMS.forEach(function (d) { dimScore[d.key] += (o.d && o.d[d.key]) || 0;});
+});
+var pct = total >= 0
+? Math.round(50 + 50 * total / maxNorthPos)
+: Math.round(50 + 50 * total / maxNorthNeg);
+pct = Math.max(1, Math.min(99, pct));
+var dims = {};
+DIMS.forEach(function (d) {
+dims[d.key] = Math.max(5, Math.min(98, Math.round(dimScore[d.key] / dimMax[d.key] * 100)));
+});
+return { northPct: pct, dims: dims};
+}
+
+function pickType(r) {
+var p = r.northPct;
+if (p >= 86) return "pureNorth";
+if (p <= 14) return "pureSouth";
+if (p >= 56 && r.dims.jing >= 55) return "outerNorth";
+if (p <= 44 && r.dims.hao >= 55) return "outerSouth";
+if (p > 42 && p < 58) return "mix";
+if (p >= 58) return "northCore";
+return "southCore";
+}
+
+var CALC_LINES = ["正在称你的骨头……", "正在测你的蒜泥含量……", "秦岭淮河定位中……", "正在翻你的秋裤存货……"];
+var lastResult = null;
+
+function finish() {
+show("calc");
+var li = 0;
+$("calc-line").textContent = CALC_LINES[0];
+var timer = setInterval(function () {
+li = (li + 1) % CALC_LINES.length;
+$("calc-line").textContent = CALC_LINES[li];
+}, 480);
+setTimeout(function () {
+clearInterval(timer);
+var r = compute();
+var type = pickType(r);
+lastResult = { r: r, type: type};
+renderResult(r, RESULTS[type]);
+show("result");
+requestAnimationFrame(function () {
+setTimeout(function () {
+$("gauge-marker").style.left = r.northPct + "%";
+document.querySelectorAll(".dim-fill").forEach(function (el) {
+el.style.width = el.getAttribute("data-w") + "%";
+});
+}, 60);
+});
+}, 1500);
+}
+
+function renderResult(r, res) {
+$("poster-inner").style.setProperty("--poster-glow", res.glow);
+$("r-stamp").style.setProperty("--stamp", res.color);
+$("r-stamp-text").innerHTML = res.stamp;
+$("r-name").textContent = res.name;
+$("r-name").style.color = res.color;
+$("r-slogan").textContent = res.slogan;
+$("r-north-pct").textContent = r.northPct + "%";
+$("r-south-pct").textContent = (100 - r.northPct) + "%";
+$("gauge-marker").style.left = "50%";
+
+var dl = $("dim-list");
+dl.innerHTML = "";
+DIMS.forEach(function (d) {
+var row = document.createElement("div");
+row.className = "dim-row";
+var nm = document.createElement("span"); nm.className = "d-name"; nm.textContent = d.name;
+var track = document.createElement("div"); track.className = "dim-track";
+var fill = document.createElement("div"); fill.className = "dim-fill";
+fill.style.background = d.color;
+fill.setAttribute("data-w", r.dims[d.key]);
+track.appendChild(fill);
+var val = document.createElement("span"); val.className = "d-val"; val.textContent = r.dims[d.key];
+row.appendChild(nm); row.appendChild(track); row.appendChild(val);
+dl.appendChild(row);
+});
+
+var tl = $("r-traits");
+tl.innerHTML = "";
+res.traits.forEach(function (t) {
+var li = document.createElement("li");
+li.textContent = t;
+tl.appendChild(li);
+});
+$("r-reason").textContent = res.reason;
+$("r-advantage").textContent = res.advantage;
+$("r-egg").textContent = res.egg;
+var now = new Date();
+$("r-date").textContent = now.getFullYear() + "." + (now.getMonth() + 1) + "." + now.getDate() + " 鉴定";
+}
+
+/* ================= 事件 ================= */
+$("btn-start").addEventListener("click", function () {
+answers = [];
+current = 0;
+show("quiz");
+renderQuestion();
+});
+
+$("btn-back").addEventListener("click", function () {
+if (current > 0) {
+current--;
+renderQuestion();
+}
+});
+
+$("btn-restart").addEventListener("click", function () {
+answers = [];
+current = 0;
+lastResult = null;
+$("copied-tip").textContent = "";
+show("home");
+});
+
+$("btn-copy").addEventListener("click", function () {
+if (!lastResult) return;
+var res = RESULTS[lastResult.type];
+var r = lastResult.r;
+var text = "\n"
++ "我的鉴定结果：" + res.name + "\n"
++ "北方浓度 " + r.northPct + "% · 南方浓度 " + (100 - r.northPct) + "%\n"
++ "专属文案：" + res.slogan + "\n"
++ "豪爽度 " + r.dims.hao + " / 精细度 " + r.dims.jing + " / 耐寒值 " + r.dims.dong
++ " / 直爽度 " + r.dims.zhi + " / 讲究度 " + r.dims.jiang + "\n"
++ "你也来测测，你骨子里到底是哪边的人？";
+function done() { $("copied-tip").textContent = "已复制！粘贴到小红书 / 朋友圈，喊朋友一起来测。";}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = text;
+ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();}
+catch (e) { $("copied-tip").textContent = "复制失败，截图上方海报卡分享也一样出片。";}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, fallback);
+} else {
+fallback();
+}
+});
+</script>
+</body>
+</html>

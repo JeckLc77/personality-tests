@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<link rel="icon" href="data:,"/>
+<title>你的天赋适合什么赛道</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#FAF6EF; --card:#FFFFFF; --ink:#1C1E26; --muted:#6B6F7A; --line:#E8E0D1;
+--accent:#E4572E; --accent2:#0F766E; --gold:#C9A227;
+--radius:20px;
+}
+@media (prefers-color-scheme: dark){
+:root{ --bg:#12141A; --card:#1E2029; --ink:#F2EFE8; --muted:#A8ABB5; --line:#2E303C;}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;min-height:44px}
+.wrap{max-width:720px;margin:0 auto;padding:20px 18px 48px}
+.hidden{display:none!important}
+
+/* HOME */
+.hero{text-align:center;padding:28px 6px 8px}
+.badge{display:inline-block;font-size:12px;letter-spacing:.18em;font-weight:700;color:var(--accent2);border:1px solid var(--line);background:var(--card);padding:7px 14px;border-radius:999px}
+h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:clamp(34px,8vw,52px);line-height:1.15;margin:18px 0 12px;letter-spacing:.02em}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--muted);font-size:16px;line-height:1.7;max-width:520px;margin:0 auto}
+.meta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0 6px}
+.meta span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:500}
+.track-preview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0;text-align:left}
+@media(min-width:560px){.track-preview{grid-template-columns:1fr 1fr 1fr 1fr}}
+.tp{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px}
+.tp b{display:block;font-size:14px}
+.tp i{font-style:normal;font-size:12px;color:var(--muted);line-height:1.5;display:block;margin-top:4px}
+.cta{width:100%;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:16px 20px;font-size:17px;font-weight:900;letter-spacing:.06em;margin-top:8px}
+.cta:active{transform:scale(.99)}
+.note{font-size:12px;color:var(--muted);text-align:center;line-height:1.7;margin-top:14px}
+.how{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-top:20px;text-align:left}
+.how h3{margin:0 0 10px;font-size:15px}
+.how p{margin:6px 0;color:var(--muted);font-size:14px;line-height:1.7}
+
+/* QUIZ */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.back{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:0 16px;font-weight:700;font-size:14px}
+.qcount{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.progress{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:10px 0 22px}
+.progress i{display:block;height:100%;background:var(--accent);border-radius:999px;transition:width.45s ease}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 20px 20px;animation:slideIn.35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.qcard{animation:none}.progress i{transition:none}}
+.qtag{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.14em}
+.qtext{font-family:"Noto Serif SC",serif;font-size:22px;line-height:1.5;font-weight:900;margin:10px 0 20px}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:15px 16px;font-size:15px;line-height:1.6;display:flex;gap:12px;align-items:flex-start;transition:border-color.15s, background.15s;width:100%}
+.opt:hover{border-color:var(--ink)}
+.opt.sel{border-color:var(--accent);background:#FFF1EA}
+@media (prefers-color-scheme: dark){.opt.sel{background:#2A2320}}
+.opt.letter{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;font-weight:900;font-size:13px;margin-top:1px}
+.opt.sel.letter{background:var(--accent);color:#fff;border-color:var(--accent)}
+.hint{text-align:center;color:var(--muted);font-size:13px;margin-top:14px}
+
+/* RESULT POSTER */
+.poster{border-radius:28px;overflow:hidden;color:#fff;position:relative}
+.poster-inner{padding:30px 24px 26px;position:relative;z-index:1}
+.poster.kicker{font-size:12px;letter-spacing:.22em;font-weight:700;opacity:.85}
+.poster h2{font-family:"Noto Serif SC",serif;font-size:clamp(32px,7vw,44px);line-height:1.2;margin:10px 0 8px;font-weight:900}
+.tagline{font-size:17px;line-height:1.6;font-weight:700;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);padding:12px 14px;border-radius:14px}
+.jobs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.jobs span{background:#fff;color:#111;padding:7px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.section{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin-top:14px}
+.section h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.section p{margin:0;color:var(--muted);line-height:1.85;font-size:15px}
+.section p strong{color:var(--ink)}
+.bar-row{display:grid;grid-template-columns:74px 1fr 34px;align-items:center;gap:10px;margin:10px 0;font-size:13px}
+.bar{height:9px;background:var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px}
+.actions{display:grid;gap:10px;margin-top:18px}
+@media(min-width:520px){.actions{grid-template-columns:1fr 1fr}}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:999px;padding:15px;font-size:16px;font-weight:900}
+.btn-ghost{background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:15px;font-size:16px;font-weight:700}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#111;color:#fff;padding:12px 20px;border-radius:999px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:20;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.egg{background:#FFF8E1;border:1px dashed #D9A441;color:#5C4A12}
+@media (prefers-color-scheme: dark){.egg{background:#2A2517;color:#E8D9A0;border-color:#6B5A2A}}
+.egg p{color:inherit}
+footer{text-align:center;color:var(--muted);font-size:12px;line-height:1.7;margin-top:28px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<div id="screen-home">
+<div class="hero">
+<span class="badge">趣味人格测试 · 人格天赋类</span>
+<h1>你的天赋<br>适合什么<em>赛道</em>？</h1>
+<p class="lead">不问学历，不问专业。只看你怎么做事、怎么学东西、压力来了怎么扛——20 道生活题，帮你找到那条越走越顺的天赋赛道。</p>
+<div class="meta"><span>📝 20 道单选题</span><span>⏱ 约 3 分钟</span><span>🎯 8 条赛道 · 8 个维度</span></div>
+</div>
+<div class="track-preview">
+<div class="tp"><b>✍️ 内容创作</b><i>写、拍、讲，把感受变成作品</i></div>
+<div class="tp"><b>💻 产品技术</b><i>想逻辑、做产品、解难题</i></div>
+<div class="tp"><b>🚀 商业创业</b><i>嗅机会、做买卖、带团队</i></div>
+<div class="tp"><b>🌿 教育治愈</b><i>陪人成长，帮人变好</i></div>
+<div class="tp"><b>🎨 设计审美</b><i>让一切变好看、变高级</i></div>
+<div class="tp"><b>🔬 研究钻研</b><i>深挖到底，成为专家</i></div>
+<div class="tp"><b>⚙️ 运营操盘</b><i>把一摊事盘活、盘大</i></div>
+<div class="tp"><b>🔨 手艺匠人</b><i>靠手艺和成品说话</i></div>
+</div>
+<button class="cta" id="btn-start">开始测试 →</button>
+<p class="note">趣味测试，不是职业测评，也不是心理诊断。<br>凭第一直觉选，别想太多——想太多的答案，往往不是你。</p>
+<div class="how">
+<h3>它是怎么测的？</h3>
+<p>每道题的选项都对应 <strong>逻辑分析、创意表达、共情沟通、执行落地、商业嗅觉、审美感知、钻研探索、领导组织</strong> 八个天赋维度。答完后系统会算出你的天赋组合，再匹配到最适合你的那条赛道，并给出能直接上手的第一步。</p>
+</div>
+</div>
+
+<!-- QUIZ -->
+<div id="screen-quiz" class="hidden">
+<div class="topbar">
+<button class="back" id="btn-back">← 上一题</button>
+<span class="qcount" id="qcount">第 1 / 20 题</span>
+</div>
+<div class="progress"><i id="progress-bar" style="width:5%"></i></div>
+<div class="qcard" id="qcard">
+<div class="qtag" id="qtag">做事方式</div>
+<div class="qtext" id="qtext"></div>
+<div class="opts" id="opts"></div>
+<p class="hint">选完自动进入下一题 · 凭直觉，别纠结</p>
+</div>
+</div>
+
+<!-- RESULT -->
+<div id="screen-result" class="hidden">
+<div class="poster" id="poster">
+<div class="poster-inner">
+<div class="kicker">我的天赋赛道是</div>
+<h2 id="r-name"></h2>
+<div class="tagline" id="r-tagline"></div>
+<div class="jobs" id="r-jobs"></div>
+</div>
+</div>
+
+<div class="section">
+<h3>💡 为什么适合你</h3>
+<p id="r-why"></p>
+</div>
+
+<div class="section">
+<h3>🧬 你的天赋组合</h3>
+<div id="r-bars"></div>
+<p id="r-combo" style="margin-top:10px"></p>
+</div>
+
+<div class="section">
+<h3>✨ 你的隐藏优势</h3>
+<p id="r-hidden"></p>
+</div>
+
+<div class="section">
+<h3>👣 上手第一步（本周就能做）</h3>
+<p id="r-step"></p>
+</div>
+
+<div class="section egg">
+<h3>🥚 趣味彩蛋</h3>
+<p id="r-egg"></p>
+</div>
+
+<div class="actions">
+<button class="btn-primary" id="btn-copy">📋 复制结果文案</button>
+<button class="btn-ghost" id="btn-retest">↺ 重新测试</button>
+</div>
+<p class="note">截图保存上方海报卡，分享到小红书 / 朋友圈<br>看看朋友们都是什么赛道 👀</p>
+</div>
+
+<footer>《你的天赋适合什么赛道》· 趣味人格测试<br>结果仅供娱乐和自我探索参考，不构成职业建议</footer>
+</div>
+<div class="toast" id="toast">已复制，去粘贴分享吧 🎉</div>
+
+<script>
+var DIMS = {
+logic:{name:"逻辑分析", color:"#2563EB"},
+create:{name:"创意表达", color:"#E4572E"},
+empathy:{name:"共情沟通", color:"#DB2777"},
+execute:{name:"执行落地", color:"#0F766E"},
+biz:{name:"商业嗅觉", color:"#B45309"},
+aesthetic:{name:"审美感知", color:"#7C3AED"},
+research:{name:"钻研探索", color:"#0369A1"},
+lead:{name:"领导组织", color:"#15803D"}
+};
+
+var QUESTIONS = [
+{tag:"日常习惯", q:"周末突然空出半天，没人约你，你最可能干什么？", opts:[
+{t:"刷到一个冷门话题，一头扎进去查到底，越查越上头", s:{research:3, logic:1}},
+{t:"拿起手机拍点东西，剪个小视频自己玩", s:{create:2, aesthetic:2}},
+{t:"约朋友出来坐坐，听听他们最近怎么样", s:{empathy:3, lead:1}},
+{t:"把拖了很久的衣柜收拾了，分门别类贴上标签", s:{execute:3, aesthetic:1}}]},
+{tag:"团队角色", q:"小组合作时，你总会自然地站到哪个位置？", opts:[
+{t:"定框架、拆任务的那个人", s:{lead:3, logic:1}},
+{t:"想点子、活跃气氛的那个人", s:{create:3, empathy:1}},
+{t:"闷头把最难的那一块啃下来的那个人", s:{research:2, execute:2}},
+{t:"盯进度、催交付、兜底收尾的那个人", s:{execute:3, biz:1}}]},
+{tag:"成就感来源", q:"下面哪件事，最能让你有成就感？", opts:[
+{t:"一个难题，被我彻底想通了", s:{logic:3, research:1}},
+{t:"我做的东西被人转发、被夸好看", s:{create:2, aesthetic:2}},
+{t:"有人跟我说：多亏有你，我好多了", s:{empathy:3, lead:1}},
+{t:"一个想法真的落地了，还赚到了钱", s:{biz:3, execute:1}}]},
+{tag:"学习偏好", q:"学一个新东西时，你更喜欢哪种方式？", opts:[
+{t:"先看原理，搞懂底层逻辑再动手", s:{logic:2, research:2}},
+{t:"直接上手试，边做边学，错了再改", s:{execute:3, create:1}},
+{t:"找个好老师或博主，跟着学最省心", s:{empathy:2, research:1, execute:1}},
+{t:"拆大神的作品，学人家的审美和套路", s:{aesthetic:3, create:1}}]},
+{tag:"压力反应", q:"deadline 压顶、大家都有点慌时，你的第一反应是？", opts:[
+{t:"列个清单，一件一件划掉", s:{execute:2, logic:2}},
+{t:"先稳住大家的情绪：别慌，能搞定", s:{empathy:2, lead:2}},
+{t:"先躲起来想清楚，再出来干", s:{research:3, logic:1}},
+{t:"脑子反而更活，临场想个新招出来", s:{create:3, biz:1}}]},
+{tag:"日常习惯", q:"刷手机时，哪种内容最容易让你停下来？", opts:[
+{t:"测评、数据对比、避坑指南", s:{logic:2, biz:2}},
+{t:"好看的穿搭、家居、摄影作品", s:{aesthetic:3, create:1}},
+{t:"冷知识、历史故事、科学未解之谜", s:{research:3, logic:1}},
+{t:"普通人逆袭、搞钱翻身的故事", s:{biz:3, lead:1}}]},
+{tag:"做事方式", q:"朋友开了家小店请你帮忙，你最想负责哪块？", opts:[
+{t:"算成本、定价格、想怎么赚钱", s:{biz:3, logic:1}},
+{t:"设计 Logo、搞装修、拍宣传图", s:{aesthetic:3, create:1}},
+{t:"写文案、拍短视频、做推广", s:{create:3, empathy:1}},
+{t:"管进货、排班、盯日常运营", s:{execute:2, lead:2}}]},
+{tag:"日常习惯", q:"你的收藏夹 / 相册里，最多的是哪类东西？", opts:[
+{t:"截图存下来的资料、笔记和教程", s:{research:2, logic:2}},
+{t:"觉得好看的图片、配色和版式", s:{aesthetic:3, create:1}},
+{t:"好笑的梗图和想发朋友圈的文案", s:{create:2, empathy:2}},
+{t:"购物链接、比价截图和优惠信息", s:{biz:3, execute:1}}]},
+{tag:"做事方式", q:"做事时，下面哪种情况最让你受不了？", opts:[
+{t:"逻辑不通，说半天没重点", s:{logic:3, execute:1}},
+{t:"东西丑、排版乱、毫无质感", s:{aesthetic:3, create:1}},
+{t:"气氛冷场，没人说话，尴尬到抠脚", s:{empathy:3, lead:1}},
+{t:"计划总变、说了不算、拖拖拉拉", s:{execute:3, lead:1}}]},
+{tag:"成就感来源", q:"突然给你一笔小钱让你随便折腾，你会拿去？", opts:[
+{t:"摆个小摊 / 开个小店，试试水", s:{biz:3, execute:1}},
+{t:"买套设备，学一门手艺慢慢练", s:{execute:2, aesthetic:2}},
+{t:"报个课，系统学一个新领域", s:{research:3, logic:1}},
+{t:"组个小团队，一起做个小项目", s:{lead:3, create:1}}]},
+{tag:"团队角色", q:"别人最常夸你的，是哪一句？", opts:[
+{t:"脑子清楚、靠谱、能拿主意", s:{logic:2, lead:2}},
+{t:"有想法、有品味、跟别人不一样", s:{create:2, aesthetic:2}},
+{t:"情商高，跟你聊天特别舒服", s:{empathy:3, lead:1}},
+{t:"动手能力强，什么都能修、能做出来", s:{execute:3, research:1}}]},
+{tag:"日常习惯", q:"出去旅行做攻略时，你是哪种风格？", opts:[
+{t:"表格拉满，时间精确到分钟", s:{logic:2, execute:2}},
+{t:"主要看哪里出片、哪里好看", s:{aesthetic:3, create:1}},
+{t:"随缘派，走到哪算哪，重在感受", s:{empathy:2, create:2}},
+{t:"先研究当地历史典故，像去寻宝", s:{research:3, logic:1}}]},
+{tag:"学习偏好", q:"遇到一个完全不懂的领域，你通常会？", opts:[
+{t:"先找书和长视频，从头系统啃", s:{research:3, logic:1}},
+{t:"找懂行的人聊聊，听听经验", s:{empathy:2, lead:2}},
+{t:"先模仿高手的作品，拆着学", s:{aesthetic:2, create:2}},
+{t:"先做个最小版本，跑起来再说", s:{execute:2, biz:2}}]},
+{tag:"做事方式", q:"哪种工作状态，让你觉得最舒服？", opts:[
+{t:"一个人安安静静钻研，不被打扰", s:{research:3, logic:1}},
+{t:"一群人头脑风暴，越聊越兴奋", s:{create:2, lead:2}},
+{t:"面对面帮人解决问题，看对方笑", s:{empathy:3, execute:1}},
+{t:"自己说了算，节奏完全自己定", s:{lead:2, biz:2}}]},
+{tag:"日常习惯", q:"买东西（衣服、手机都算），你最看重什么？", opts:[
+{t:"参数、性价比、耐不耐用", s:{logic:2, biz:2}},
+{t:"颜值、质感、上身 / 上手效果", s:{aesthetic:3, create:1}},
+{t:"口碑，身边人用着都说好", s:{empathy:2, biz:2}},
+{t:"能不能自己改造、搭配出新花样", s:{create:2, execute:2}}]},
+{tag:"成就感来源", q:"如果让你经营一个小账号，你最想做哪种？", opts:[
+{t:"知识科普，把复杂的东西讲简单", s:{logic:2, create:2}},
+{t:"日常分享、陪伴治愈型", s:{empathy:3, create:1}},
+{t:"好物推荐、测评带货型", s:{biz:3, aesthetic:1}},
+{t:"手作过程、改造前后对比型", s:{execute:2, aesthetic:2}}]},
+{tag:"团队角色", q:"开会讨论时，你最常做的一件事是？", opts:[
+{t:"抓重点、理逻辑，帮大家对齐", s:{logic:2, lead:2}},
+{t:"抛新点子，让讨论不冷场", s:{create:3, empathy:1}},
+{t:"注意谁还没说话，照顾到每个人", s:{empathy:3, lead:1}},
+{t:"记下来谁做什么、什么时候交", s:{execute:3, biz:1}}]},
+{tag:"成就感来源", q:"下面哪句话，最戳中你？", opts:[
+{t:"这事，还真只有你能搞定", s:{execute:2, research:2}},
+{t:"你做的东西，一看就是你的风格", s:{aesthetic:2, create:2}},
+{t:"跟你聊完，心里敞亮多了", s:{empathy:3, logic:1}},
+{t:"这事要是你来带，肯定能成", s:{lead:3, biz:1}}]},
+{tag:"日常习惯", q:"日常生活里，你最像下面哪一种？", opts:[
+{t:"东西必须分类收好，有自己的系统", s:{logic:2, execute:2}},
+{t:"随手记灵感，备忘录全是碎碎念", s:{create:3, research:1}},
+{t:"喜欢捣鼓小物件，修修补补很有乐趣", s:{execute:2, aesthetic:2}},
+{t:"总在琢磨：什么能卖、什么有机会", s:{biz:3, lead:1}}]},
+{tag:"向往的生活", q:"理想的一天结束时，你最希望自己是？", opts:[
+{t:"学到了新东西，脑子满满的", s:{research:3, logic:1}},
+{t:"做出了一件看得见的作品 / 成品", s:{create:2, execute:2}},
+{t:"帮到了人，是被人需要着的", s:{empathy:3, lead:1}},
+{t:"离自己的小目标 / 小生意又近了一步", s:{biz:3, execute:1}}]}
+];
+
+var TRACKS = {
+content:{ name:"内容创作赛道", emoji:"✍️", bg:"linear-gradient(135deg,#E4572E,#C2410C)", tagline:"「你脑子里那些没处安放的表达欲，就是你的印钞机。」",
+jobs:["短视频博主 / UP主","公众号·小红书创作者","文案 / 编剧 / 直播策划"],
+why:"你的<strong>创意表达</strong>和<strong>共情沟通</strong>同时在线：你不光有想法，还天生知道别人想听什么、会被什么打动。别人发朋友圈要憋半小时，你随手就是一条爆款文案——这种能力放到内容行业，就是稀缺的生产力。",
+comboText:"表达欲负责生产，共情力负责传播，审美负责不翻车。这套组合做内容，起号速度通常比纯技术型选手快一截。",
+hidden:"你的隐藏优势是<strong>网感</strong>：你对“什么会火、什么会让人想转发”的直觉，比数据分析来得还快，而且很难被教会。",
+step:"本周内选一个你最有话说的主题，连发 3 条内容（图文或短视频都行），别管数据。先完成“从 0 到 1 的公开表达”，赛道的大门只为动手的人开。",
+egg:"彩蛋：你收藏夹里那些“以后能用上”的梗图和文案，就是你未来的素材库——你早就开始上班了，只是还没开始领钱。"},
+product:{ name:"产品技术赛道", emoji:"💻", bg:"linear-gradient(135deg,#1D4ED8,#0F766E)", tagline:"「别人看到的是问题，你看到的是解法和结构。」",
+jobs:["产品经理","程序员 / 工程师","数据分析师"],
+why:"你的<strong>逻辑分析</strong>拉满，<strong>钻研探索</strong>紧随其后：遇到乱成一团的事，你本能地想拆结构、找规律、定规则。你享受的不是热闹，而是“把复杂系统想通”的那一瞬间——这正是产品和技术岗的核心快感。",
+comboText:"逻辑负责搭骨架，钻研负责挖深度，执行力负责把它做出来。这套组合最擅长把模糊需求，变成清晰可用的产品。",
+hidden:"你的隐藏优势是<strong>预判力</strong>：你总能提前想到“这里以后会出问题”，这种对系统漏洞的敏感，在团队里是救命级的存在。",
+step:"挑一个你天天用、又天天想吐槽的 App，写一篇 500 字的产品拆解：它哪里不好用、你会怎么改。写完发出去——这就是你进入这条赛道的第一份作品集。",
+egg:"彩蛋：你小时候大概率拆过家里的电器/玩具，还装不回去。别不好意思，产品技术赛道的人，童年都干过这事。"},
+business:{ name:"商业创业赛道", emoji:"🚀", bg:"linear-gradient(135deg,#B45309,#92400E)", tagline:"「你看什么都像生意，这不是俗，这是天赋。」",
+jobs:["创业者 / 个体户主理人","电商·私域操盘手","商务 BD / 销售负责人"],
+why:"你的<strong>商业嗅觉</strong>天生灵敏，<strong>领导组织</strong>又跟得上：别人逛街看热闹，你逛街看客流、看定价、看这家店能活多久。你不怕不确定，反而在“没人保证能成”的事情里最兴奋——这是创业者才有的体质。",
+comboText:"商业嗅觉负责发现机会，领导力负责聚人成事，再加一点执行力负责落地。这套组合不适合一眼望到头的生活，适合自己开局。",
+hidden:"你的隐藏优势是<strong>算账直觉</strong>：不用打开计算器，你心里已经大概知道这事赚不赚钱、值不值得干，快且准。",
+step:"本周做一次最小成本试水：闲鱼挂一件东西、二手平台倒一次货、或者摆一次摊，预算控制在 100 元内。目的不是赚钱，是完整跑通一次“进货—定价—成交”的闭环。",
+egg:"彩蛋：你和朋友吃饭时是不是总忍不住估算这家店一天流水多少？恭喜，这种“职业病”，就是你上赛道的入场券。"},
+healing:{ name:"教育治愈赛道", emoji:"🌿", bg:"linear-gradient(135deg,#0F766E,#15803D)", tagline:"「你的温柔不是软弱，是能帮人变好的专业能力。」",
+jobs:["教师 / 培训师","心理咨询·情感陪伴类博主","社群主理人 / 教练"],
+why:"你的<strong>共情沟通</strong>是八维里最突出的：你总能第一时间察觉别人的情绪，知道什么话该说、什么话说出来会伤人。加上你的耐心和钻研劲儿，你带给别人的不只是安慰，还有实实在在的成长——这正是教育和治愈类工作的核心。",
+comboText:"共情负责走进人心，钻研负责给出真东西，表达负责把道理讲得让人听得进去。这套组合，天生适合“靠影响人”吃饭。",
+hidden:"你的隐藏优势是<strong>信任感</strong>：认识不久的人也愿意跟你说真心话。这种让人卸下防备的能力，是这条赛道最贵的门票。",
+step:"本周帮一个人解决一个具体的小问题：讲懂一道题、疏导一次情绪、带新手入个门都行，并把过程整理成一条内容发出来。你会发现，“教别人”就是你最好的学习方式。",
+egg:"彩蛋：朋友失恋、和爸妈吵架、职场受气，第一个想打的电话总是你——你其实早就在这条赛道上岗了，只是没挂牌营业。"},
+design:{ name:"设计审美赛道", emoji:"🎨", bg:"linear-gradient(135deg,#7C3AED,#DB2777)", tagline:"「你对美的较真，就是别人付费的理由。」",
+jobs:["视觉 / 平面设计师","穿搭·家居·美学博主","摄影师 / 品牌视觉顾问"],
+why:"你的<strong>审美感知</strong>几乎是出厂满格，<strong>创意表达</strong>又能把品味落成作品：排版歪一点、配色脏一点，你浑身难受；别人说“都行、随便”，你脑子里已经有三个更好的方案。在颜值即正义的时代，这种较真就是生产力。",
+comboText:"审美负责判断什么是好，创意负责做出新东西，执行力负责不让作品烂尾。这套组合做出来的东西，自带“高级感”标签。",
+hidden:"你的隐藏优势是<strong>品味稳定性</strong>：流行什么你都不会跟风翻车，因为你靠的不是追热点，而是自己那套审美标准。",
+step:"本周挑一样你天天看不顺眼的东西——自己的头像、房间一角、朋友圈封面——亲手改造到满意，拍下前后对比图发出来。审美这东西，晒出来才算数。",
+egg:"彩蛋：你给朋友拍照永远是被夸的那个，朋友给你拍照永远是被你嫌弃的那个。没办法，眼睛太毒，也是种天赋。"},
+research:{ name:"研究钻研赛道", emoji:"🔬", bg:"linear-gradient(135deg,#0369A1,#1E3A5F)", tagline:"「你不是慢热，你只是在把一件事挖到别人挖不到的深度。」",
+jobs:["行业研究员 / 分析师","专业领域顾问·考证讲师","科普作者 / 深度内容主笔"],
+why:"你的<strong>钻研探索</strong>远超常人，<strong>逻辑分析</strong>又帮你把知识织成体系：别人对一件事的兴趣止于“知道”，你的兴趣是“搞懂、搞透、搞到能讲给别人听”。在一个什么都浅尝辄止的时代，能沉下去的人，最终都会变成稀缺的专家。",
+comboText:"钻研负责深度，逻辑负责体系，表达负责把深的东西讲浅。这套组合的终点，是成为某个领域里“绕不开的那个人”。",
+hidden:"你的隐藏优势是<strong>长线耐心</strong>：你能忍受很长一段时间没有反馈，默默积累。多数人死在半路上，你死不了，你只会越挖越兴奋。",
+step:"选一个你已经比身边人懂得多的领域，本周写一篇 1000 字的“新手避坑指南”发出去。专家的第一步，永远是先帮小白少走一步弯路。",
+egg:"彩蛋：你买东西前看测评能看三天，还越看越开心——别人叫选择困难症，你这叫：职业级的信息处理能力，提前上线了。"},
+operation:{ name:"运营操盘赛道", emoji:"⚙️", bg:"linear-gradient(135deg,#334155,#0F766E)", tagline:"「你不是打杂的，你是让一摊事转起来的那个人。」",
+jobs:["运营负责人 / 项目操盘手","电商·活动运营","社群·用户运营主理人"],
+why:"你的<strong>执行落地</strong>强到离谱，<strong>商业嗅觉</strong>和<strong>领导组织</strong>又同时在线：再好的想法落不了地都是空话，而你恰好是那个能把想法拆成步骤、盯着进度、兜住烂摊子的人。所有老板最缺的，就是你这种“交给他就放心”的人。",
+comboText:"执行负责落地，商业嗅觉负责判断值不值得做，领导力负责调动人手。这套组合，就是天生的操盘手配置。",
+hidden:"你的隐藏优势是<strong>兜底能力</strong>：计划崩了、有人掉链子了、时间不够了——越是这种时刻，你越冷静，越能收拾残局。",
+step:"本周主动操盘一件小事：组织一次聚会、运营一个小群、帮朋友的店搞一次小活动都行，全程你来定流程、盯节点。操盘这件事，手感比理论重要一百倍。",
+egg:"彩蛋：每次集体活动，最后订餐厅、收钱、发通知的人都是你吧？你以为这是命苦，其实这是市场在反复告诉你：你适合吃操盘这碗饭。"},
+craft:{ name:"手艺匠人赛道", emoji:"🔨", bg:"linear-gradient(135deg,#92400E,#78350F)", tagline:"「你不靠嘴赢，你靠作品说话。」",
+jobs:["手作主理人（烘焙·木作·陶艺等）","摄影·剪辑·修图等技能手艺人","厨师 / 花艺师 / 改造达人"],
+why:"你的<strong>执行落地</strong>和<strong>审美感知</strong>罕见地长在了一起：你不光动手能力强，做出来的东西还好看、有质感。你享受那种“从无到有、亲手做成一件成品”的踏实感——AI 时代越往后走，这种能交付真实成品的手艺，反而越值钱。",
+comboText:"执行负责做出来，审美负责做得好看，钻研负责把手艺练到别人模仿不来。这套组合的护城河，就叫“手感”。",
+hidden:"你的隐藏优势是<strong>细节强迫症</strong>：差一点点你就忍不住重来。用户愿意为手艺人多付的钱，付的正是这份“较真”。",
+step:"本周完整做出一件成品：做一道菜、改造一个旧物、完成一次手作都行，拍下全过程和成品图。记住：匠人赛道的第一块招牌，就是第一件拿得出手的成品。",
+egg:"彩蛋：你的手大概率闲不住——剥蒜、拼图、修东西、捏泥巴，总得干点什么。别治了，这双手就是你的生产工具。"}
+};
+
+var current = 0;
+var answers = new Array(QUESTIONS.length).fill(-1);
+var lastResult = null;
+
+function $(id){ return document.getElementById(id);}
+function show(id){
+["screen-home","screen-quiz","screen-result"].forEach(function(s){ $(s).classList.add("hidden");});
+$(id).classList.remove("hidden");
+window.scrollTo({top:0});
+}
+function renderQuestion(){
+var item = QUESTIONS[current];
+$("qcount").textContent = "第 " + (current+1) + " / " + QUESTIONS.length + " 题";
+$("progress-bar").style.width = ((current+1)/QUESTIONS.length*100) + "%";
+$("qtag").textContent = item.tag;
+$("qtext").textContent = item.q;
+$("btn-back").style.visibility = current === 0? "hidden": "visible";
+var box = $("opts"); box.innerHTML = "";
+var letters = ["A","B","C","D"];
+item.opts.forEach(function(opt, idx){
+var btn = document.createElement("button");
+btn.className = "opt" + (answers[current] === idx? " sel": "");
+btn.innerHTML = '<span class="letter">' + letters[idx] + '</span><span></span>';
+btn.querySelectorAll("span")[1].textContent = opt.t;
+btn.addEventListener("click", function(){ pick(idx);});
+box.appendChild(btn);
+});
+var card = $("qcard");
+card.style.animation = "none"; void card.offsetWidth; card.style.animation = "";
+}
+function pick(idx){
+answers[current] = idx;
+renderSelection(idx);
+setTimeout(function(){
+if (current < QUESTIONS.length - 1){ current++; renderQuestion();}
+else { showResult();}
+}, 220);
+}
+function renderSelection(idx){
+var nodes = document.querySelectorAll(".opt");
+nodes.forEach(function(n,i){ n.classList.toggle("sel", i===idx);});
+}
+function computeScores(){
+var scores = {};
+Object.keys(DIMS).forEach(function(k){ scores[k]=0;});
+answers.forEach(function(ans, qi){
+if (ans < 0) return;
+var s = QUESTIONS[qi].opts[ans].s;
+Object.keys(s).forEach(function(k){ scores[k] += s[k];});
+});
+return scores;
+}
+function pickTrack(scores){
+var t = {
+content: scores.create*1.9 + scores.empathy*1.1 + scores.aesthetic*0.4,
+product: scores.logic*1.9 + scores.execute*0.8 + scores.research*0.4 + Math.min(scores.logic, scores.execute)*0.9,
+business: scores.biz*2.1 + scores.lead*1.4 + scores.create*0.4,
+healing: scores.empathy*1.9 + scores.research*0.8 + scores.logic*0.3 + Math.min(scores.empathy, scores.research)*0.6,
+design: scores.aesthetic*2.0 + scores.create*1.4,
+research: scores.research*2.3 + scores.logic*1.0 + Math.min(scores.research, scores.logic)*0.5,
+operation: scores.execute*1.7 + scores.biz*1.0 + scores.lead*1.0,
+craft: scores.execute*1.3 + scores.aesthetic*1.3 + Math.min(scores.execute, scores.aesthetic)*1.1
+};
+var best = "content", bestVal = -1;
+Object.keys(t).forEach(function(k){ if (t[k] > bestVal){ bestVal = t[k]; best = k;}});
+return best;
+}
+function showResult(){
+var scores = computeScores();
+var key = pickTrack(scores);
+var track = TRACKS[key];
+lastResult = { key:key, track:track, scores:scores};
+
+$("poster").style.background = track.bg;
+$("r-name").textContent = track.emoji + " " + track.name;
+$("r-tagline").textContent = track.tagline;
+var jobs = $("r-jobs"); jobs.innerHTML = "";
+track.jobs.forEach(function(j){ var s=document.createElement("span"); s.textContent=j; jobs.appendChild(s);});
+$("r-why").innerHTML = track.why;
+$("r-combo").innerHTML = track.comboText;
+$("r-hidden").innerHTML = track.hidden;
+$("r-step").innerHTML = track.step;
+$("r-egg").innerHTML = track.egg;
+
+var sorted = Object.keys(scores).sort(function(a,b){ return scores[b]-scores[a];});
+var max = Math.max.apply(null, Object.keys(scores).map(function(k){ return scores[k];})) || 1;
+var bars = $("r-bars"); bars.innerHTML = "";
+sorted.slice(0,4).forEach(function(k){
+var row = document.createElement("div"); row.className = "bar-row";
+var pct = Math.round(scores[k]/max*100);
+row.innerHTML = '<span></span><span class="bar"><i></i></span><b></b>';
+row.children[0].textContent = DIMS[k].name;
+var bar = row.querySelector(".bar i");
+bar.style.width = pct + "%"; bar.style.background = DIMS[k].color;
+row.querySelector("b").textContent = scores[k] + "分";
+bars.appendChild(row);
+});
+show("screen-result");
+}
+function copyResult(){
+if (!lastResult) return;
+var t = lastResult.track;
+var sorted = Object.keys(lastResult.scores).sort(function(a,b){ return lastResult.scores[b]-lastResult.scores[a];});
+var combo = sorted.slice(0,3).map(function(k){ return DIMS[k].name;}).join(" + ");
+var text = "我的天赋赛道是\n" + t.tagline + "\n天赋组合：" + combo + "\n适合方向：" + t.jobs.join("、") + "\n——《你的天赋适合什么赛道》趣味测试，你也来测测你适合哪条赛道？";
+function done(){ var toast=$("toast"); toast.classList.add("show"); setTimeout(function(){ toast.classList.remove("show");}, 2200);}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).then(done).catch(function(){ fallback();});
+} else { fallback();}
+function fallback(){
+var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select();
+try{ document.execCommand("copy");}catch(e){}
+document.body.removeChild(ta); done();
+}
+}
+$("btn-start").addEventListener("click", function(){ current=0; answers=new Array(QUESTIONS.length).fill(-1); show("screen-quiz"); renderQuestion();});
+$("btn-back").addEventListener("click", function(){ if (current>0){ current--; renderQuestion();}});
+$("btn-retest").addEventListener("click", function(){ current=0; answers=new Array(QUESTIONS.length).fill(-1); lastResult=null; show("screen-home");});
+$("btn-copy").addEventListener("click", copyResult);
+</script>
+</body>
+</html>

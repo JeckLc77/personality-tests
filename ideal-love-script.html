@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>你的理想恋爱剧本</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+    </style>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #faf2ea;
+        --bg-soft: #f3e4d8;
+        --ink: #37262e;
+        --ink-soft: #7a6470;
+        --accent: #a62b4a;
+        --accent-strong: #8c1f3c;
+        --accent-soft: #f6dde2;
+        --gold: #b9822e;
+        --gold-soft: #f0e2c4;
+        --card: #fffaf4;
+        --card-line: #e8d5c6;
+        --option-bg: #fffdf9;
+        --option-line: #e3cfc0;
+        --shadow: 0 18px 44px rgba(120, 52, 66, .16);
+        --poster-bg: linear-gradient(160deg, #fff8ef 0%, #fbe9dd 55%, #f7dcd2 100%);
+        --poster-ink: #3d2430;
+        --hole: rgba(140, 60, 80, .28);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #1c1218;
+          --bg-soft: #261820;
+          --ink: #f2e3e6;
+          --ink-soft: #b99aa4;
+          --accent: #e58aa5;
+          --accent-strong: #f0a3ba;
+          --accent-soft: #3d2430;
+          --gold: #d9b26a;
+          --gold-soft: #3a2f1c;
+          --card: #2a1a22;
+          --card-line: #472c39;
+          --option-bg: #2e1d27;
+          --option-line: #4a2f3e;
+          --shadow: 0 18px 44px rgba(0, 0, 0, .5);
+          --poster-bg: linear-gradient(160deg, #33202b 0%, #2a1822 55%, #241219 100%);
+          --poster-ink: #f6e7ea;
+          --hole: rgba(229, 138, 165, .35);
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        background:
+          radial-gradient(720px 420px at 12% -6%, var(--accent-soft) 0%, transparent 60%),
+          radial-gradient(640px 400px at 96% 4%, var(--gold-soft) 0%, transparent 55%),
+          var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      .serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+      .wrap { max-width: 660px; margin: 0 auto; padding: 28px 18px 56px; }
+      .screen { display: none; }
+      .screen.active { display: block; animation: screenIn .45s ease both; }
+      @keyframes screenIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+      /* ---------- 首页 ---------- */
+      .hero { text-align: center; padding: 34px 6px 6px; }
+      .hero .kicker {
+        display: inline-block; font-size: 12.5px; letter-spacing: .42em; text-indent: .42em;
+        color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 6px 14px 6px 16px;
+      }
+      .hero h1 {
+        font-family: "Noto Serif SC", serif; font-weight: 900;
+        font-size: clamp(38px, 9.4vw, 56px); line-height: 1.18; margin: 22px 0 6px; letter-spacing: .02em;
+      }
+      .hero h1 .accent { color: var(--accent); }
+      .hero .sub { font-size: 15.5px; color: var(--ink-soft); line-height: 1.9; margin: 12px auto 0; max-width: 30em; }
+      .hero .meta { margin-top: 16px; font-size: 13px; color: var(--ink-soft); letter-spacing: .12em; }
+      .hero .meta b { color: var(--accent); font-weight: 700; }
+      .ticket {
+        margin: 30px auto 0; max-width: 520px; background: var(--card); border: 1px solid var(--card-line);
+        border-radius: 14px; box-shadow: var(--shadow); padding: 20px 22px; text-align: left; position: relative;
+      }
+      .ticket::before, .ticket::after {
+        content: ""; position: absolute; top: 50%; width: 22px; height: 22px; border-radius: 50%;
+        background: var(--bg); transform: translateY(-50%);
+      }
+      .ticket::before { left: -12px; border-right: 1px solid var(--card-line); }
+      .ticket::after { right: -12px; border-left: 1px solid var(--card-line); }
+      .ticket h2 { font-family: "Noto Serif SC", serif; font-size: 17px; margin: 0 0 10px; }
+      .ticket p { margin: 0; font-size: 14px; line-height: 1.95; color: var(--ink-soft); }
+      .script-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 26px auto 0; max-width: 540px; }
+      .script-chips span {
+        font-size: 12.5px; padding: 6px 12px; border-radius: 999px; border: 1px dashed var(--option-line);
+        color: var(--ink-soft); background: var(--option-bg);
+      }
+      .script-chips .q { border-style: solid; color: var(--accent); border-color: var(--accent); font-weight: 700; }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border: none; cursor: pointer; font-family: inherit; font-weight: 700; border-radius: 999px;
+        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn-primary {
+        background: var(--accent); color: #fff; font-size: 17px; padding: 15px 46px; min-height: 52px;
+        box-shadow: 0 12px 26px rgba(166, 43, 74, .32); letter-spacing: .14em;
+      }
+      .btn-primary:hover { background: var(--accent-strong); transform: translateY(-2px); }
+      .btn-ghost {
+        background: transparent; color: var(--ink); border: 1px solid var(--option-line);
+        font-size: 14.5px; padding: 11px 26px; min-height: 44px;
+      }
+      .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+      .start-row { text-align: center; margin-top: 32px; }
+      .fineprint { text-align: center; font-size: 12px; color: var(--ink-soft); margin-top: 18px; line-height: 1.8; }
+
+      /* ---------- 答题 ---------- */
+      .quiz-head { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+      .btn-back {
+        flex: 0 0 auto; background: var(--card); border: 1px solid var(--card-line); color: var(--ink-soft);
+        border-radius: 999px; padding: 8px 16px; font-size: 13.5px; cursor: pointer; font-family: inherit; min-height: 38px;
+      }
+      .btn-back:hover { color: var(--accent); border-color: var(--accent); }
+      .btn-back[hidden] { visibility: hidden; display: block; }
+      .progress-track { flex: 1; height: 8px; border-radius: 99px; background: var(--bg-soft); overflow: hidden; }
+      .progress-fill {
+        height: 100%; width: 0%; border-radius: 99px;
+        background: linear-gradient(90deg, var(--gold), var(--accent));
+        transition: width .45s cubic-bezier(.4, 0, .2, 1);
+      }
+      .q-count { font-size: 13px; color: var(--ink-soft); white-space: nowrap; letter-spacing: .06em; }
+      .q-count b { color: var(--accent); font-size: 16px; }
+      .q-card {
+        margin-top: 26px; background: var(--card); border: 1px solid var(--card-line); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 30px 26px 26px;
+      }
+      .q-card.slide { animation: qIn .38s ease both; }
+      @keyframes qIn { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+      .q-card.slide-back { animation: qInBack .38s ease both; }
+      @keyframes qInBack { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
+      .q-scene { font-size: 12px; letter-spacing: .3em; color: var(--gold); margin-bottom: 12px; }
+      .q-text { font-family: "Noto Serif SC", serif; font-weight: 700; font-size: clamp(20px, 5.4vw, 24px); line-height: 1.55; margin: 0 0 24px; }
+      .options { display: grid; gap: 12px; }
+      .option {
+        display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer;
+        background: var(--option-bg); border: 1.5px solid var(--option-line); border-radius: 14px;
+        padding: 15px 16px; font-family: inherit; font-size: 15.5px; line-height: 1.6; color: var(--ink);
+        min-height: 56px; transition: border-color .15s ease, background .15s ease, transform .15s ease;
+      }
+      .option:hover { border-color: var(--accent); transform: translateY(-1px); }
+      .option .letter {
+        flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+        border: 1.5px solid var(--option-line); font-size: 13.5px; font-weight: 700; color: var(--ink-soft);
+        transition: all .15s ease;
+      }
+      .option.picked { border-color: var(--accent); background: var(--accent-soft); }
+      .option.picked .letter { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .quiz-tip { text-align: center; font-size: 12.5px; color: var(--ink-soft); margin-top: 18px; }
+
+      /* ---------- 结果海报 ---------- */
+      .poster-wrap { padding-top: 8px; }
+      .poster {
+        position: relative; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow);
+        background: var(--poster-bg); color: var(--poster-ink);
+        border: 1px solid var(--card-line);
+      }
+      .poster::before, .poster::after {
+        content: ""; position: absolute; top: 0; bottom: 0; width: 16px;
+        background-image: radial-gradient(circle at 8px 12px, var(--hole) 4.2px, transparent 4.8px);
+        background-size: 16px 26px; background-repeat: repeat-y;
+      }
+      .poster::before { left: 0; border-right: 1px dashed var(--card-line); }
+      .poster::after { right: 0; border-left: 1px dashed var(--card-line); }
+      .poster-inner { padding: 34px 40px 30px; }
+      .poster .p-kicker { text-align: center; font-size: 11.5px; letter-spacing: .5em; text-indent: .5em; color: var(--gold); }
+      .poster .p-type { text-align: center; font-size: 12.5px; color: var(--ink-soft); margin-top: 10px; letter-spacing: .18em; }
+      .poster h2 {
+        font-family: "Noto Serif SC", serif; font-weight: 900; text-align: center;
+        font-size: clamp(30px, 8vw, 42px); line-height: 1.3; margin: 14px 0 4px; color: var(--accent);
+      }
+      .poster .p-en { text-align: center; font-size: 11px; letter-spacing: .34em; color: var(--ink-soft); text-transform: uppercase; }
+      .poster .p-tagline {
+        font-family: "Noto Serif SC", serif; font-weight: 700; text-align: center;
+        font-size: clamp(16.5px, 4.6vw, 19px); line-height: 1.7; margin: 20px auto 4px; max-width: 24em;
+      }
+      .poster .divider { display: flex; align-items: center; gap: 12px; margin: 22px 0 6px; color: var(--gold); }
+      .poster .divider::before, .poster .divider::after { content: ""; flex: 1; height: 1px; background: var(--card-line); }
+      .poster .divider span { font-size: 13px; }
+      .p-section { margin-top: 18px; }
+      .p-section h3 {
+        font-family: "Noto Serif SC", serif; font-size: 15px; margin: 0 0 8px; color: var(--accent);
+        display: flex; align-items: center; gap: 8px;
+      }
+      .p-section h3::after { content: ""; flex: 1; height: 1px; background: var(--card-line); }
+      .p-section p { margin: 0; font-size: 14.5px; line-height: 2; }
+      .trait-list { display: flex; flex-wrap: wrap; gap: 8px; }
+      .trait-list span {
+        font-size: 13px; padding: 6px 13px; border-radius: 999px; background: var(--accent-soft); color: var(--accent);
+        font-weight: 500;
+      }
+      .egg-box {
+        margin-top: 20px; border: 1.5px dashed var(--gold); border-radius: 12px; padding: 14px 16px;
+        background: var(--gold-soft); font-size: 14px; line-height: 1.95;
+      }
+      .egg-box b { color: var(--gold); font-family: "Noto Serif SC", serif; }
+      .fingerprint { margin-top: 20px; }
+      .fp-row { display: flex; align-items: center; gap: 10px; font-size: 12.5px; margin-top: 8px; }
+      .fp-row .fp-name { flex: 0 0 74px; color: var(--ink-soft); letter-spacing: .06em; }
+      .fp-track { flex: 1; height: 7px; border-radius: 99px; background: var(--bg-soft); overflow: hidden; }
+      .fp-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--gold), var(--accent)); width: 0; transition: width .9s ease .2s; }
+      .fp-row .fp-val { flex: 0 0 34px; text-align: right; color: var(--accent); font-weight: 700; }
+      .poster .p-foot { text-align: center; margin-top: 26px; font-size: 11px; letter-spacing: .3em; color: var(--ink-soft); }
+      .result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+      .toast {
+        position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px);
+        background: var(--ink); color: var(--bg); font-size: 14px; padding: 11px 22px; border-radius: 999px;
+        opacity: 0; pointer-events: none; transition: all .3s ease; z-index: 50; white-space: nowrap;
+      }
+      .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      @media (max-width: 480px) {
+        .wrap { padding: 20px 14px 44px; }
+        .poster-inner { padding: 28px 30px 24px; }
+        .q-card { padding: 24px 18px 20px; }
+        .btn-primary { width: 100%; }
+        .result-actions .btn { flex: 1 1 140px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .screen.active, .q-card.slide, .q-card.slide-back { animation: none; }
+        .fp-fill, .progress-fill { transition: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <!-- 首页 -->
+      <section class="screen active" id="screen-home">
+        <div class="hero">
+          <span class="kicker">趣 味 人 格 测 试</span>
+          <h1>你的理想<br /><span class="accent">恋爱剧本</span></h1>
+          <p class="sub">每个人心里都藏着一部没开拍的爱情片。<br />20 道生活小题，测出属于你的那一部——<br />是日久生情，还是闪电心动？</p>
+          <p class="meta">共 <b>20</b> 题 · 约 <b>2</b> 分钟 · <b>8</b> 种剧本结局</p>
+        </div>
+        <div class="ticket">
+          <h2>观影须知</h2>
+          <p>没有对错，凭第一直觉选。每道题都是一帧生活画面：初遇、心动、吵架、攒钱、异地……你的每个选择，都会悄悄写进剧本的结局里。</p>
+        </div>
+        <div class="script-chips" aria-hidden="true">
+          <span>青梅竹马</span><span>欢喜冤家</span><span>一见钟情</span><span>久别重逢</span>
+          <span>双向暗恋</span><span>并肩奋斗</span><span>先婚后爱</span><span>养成系</span>
+          <span class="q">你的结局是哪一个？</span>
+        </div>
+        <div class="start-row">
+          <button class="btn btn-primary" id="btn-start" type="button">开 拍</button>
+        </div>
+        <p class="fineprint">本测试仅供娱乐，不是专业心理诊断。<br />结果不许赖账，心动可以。</p>
+      </section>
+
+      <!-- 答题 -->
+      <section class="screen" id="screen-quiz">
+        <div class="quiz-head">
+          <button class="btn-back" id="btn-back" type="button" hidden>← 上一题</button>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+          <div class="q-count">第 <b id="q-now">1</b> / 20 题</div>
+        </div>
+        <div class="q-card" id="q-card">
+          <div class="q-scene" id="q-scene">第 一 幕</div>
+          <p class="q-text" id="q-text"></p>
+          <div class="options" id="options"></div>
+        </div>
+        <p class="quiz-tip">凭第一直觉选，改答案不如信感觉。</p>
+      </section>
+
+      <!-- 结果 -->
+      <section class="screen" id="screen-result">
+        <div class="poster-wrap">
+          <div class="poster" id="poster">
+            <div class="poster-inner">
+              <div class="p-kicker">你 的 理 想 恋 爱 剧 本</div>
+              <div class="p-type" id="p-type"></div>
+              <h2 id="p-title"></h2>
+              <div class="p-en" id="p-en"></div>
+              <p class="p-tagline" id="p-tagline"></p>
+              <div class="divider"><span>❦</span></div>
+              <div class="p-section">
+                <h3>剧本梗概</h3>
+                <p id="p-synopsis"></p>
+              </div>
+              <div class="p-section">
+                <h3>主角设定 · 你的性格特点</h3>
+                <div class="trait-list" id="p-traits"></div>
+              </div>
+              <div class="p-section">
+                <h3>选角理由 · 为什么是这部</h3>
+                <p id="p-reason"></p>
+              </div>
+              <div class="fingerprint">
+                <div class="p-section" style="margin-top:0">
+                  <h3>情感指纹</h3>
+                </div>
+                <div id="p-fingerprint"></div>
+              </div>
+              <div class="egg-box" id="p-egg"></div>
+              <div class="p-foot">截 图 分 享 · 看 看 朋 友 是 哪 一 部</div>
+            </div>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-ghost" id="btn-copy" type="button">复制结果文案</button>
+          <button class="btn btn-primary" id="btn-restart" type="button" style="padding:12px 34px; min-height:48px; font-size:15.5px;">再测一次</button>
+        </div>
+        <p class="fineprint">本测试仅供娱乐，不是专业心理诊断。</p>
+      </section>
+
+    </main>
+    <div class="toast" id="toast"></div>
+
+<script>
+// 维度：xin 心动阈值 / lang 浪漫度 / xian 现实度 / man 慢热度 / xi 戏剧性 / an 安定需求 / dong 主动度
+var DIMS = [
+{ key: "xin", name: "心动阈值"},
+{ key: "lang", name: "浪漫度"},
+{ key: "xian", name: "现实度"},
+{ key: "man", name: "慢热度"},
+{ key: "xi", name: "戏剧性"},
+{ key: "an", name: "安定需求"},
+{ key: "dong", name: "主动度"}
+];
+
+var QUESTIONS = [
+{ scene: "初 遇", text: "哪种初遇最让你心动？", options: [
+{ t: "雨天躲进同一把伞下，衣袖不小心蹭到一起", s: { xin: 3, lang: 2, xi: 1}},
+{ t: "活动上意见不合吵了起来，吵完发现对方在偷笑", s: { xi: 3, dong: 2, xin: 1}},
+{ t: "多年后回到老地方，TA 还站在原来的位置", s: { lang: 3, man: 2, xi: 1}},
+{ t: "没什么特别，就是每天一起走那段下班的路", s: { man: 3, an: 2, xian: 1}}
+]},
+{ scene: "日 常", text: "休息日，你最想和喜欢的人怎么过？", options: [
+{ t: "窝在家里做一桌菜，看一部老电影", s: { an: 3, lang: 1, man: 1}},
+{ t: "临时起意，去一座从没去过的城市", s: { xi: 2, xin: 2, lang: 1}},
+{ t: "一起把拖了很久的计划推进一大步", s: { xian: 3, dong: 2, an: 1}},
+{ t: "逛市集、淘小玩意儿，边走边聊", s: { lang: 2, man: 1, an: 1}}
+]},
+{ scene: "心 动 瞬 间", text: "对方哪句话最容易戳中你？", options: [
+{ t: "“我好像，从很久以前就喜欢你了”", s: { man: 2, lang: 2, an: 1}},
+{ t: "“就你这水平……算了，我陪你练”", s: { xi: 3, dong: 1}},
+{ t: "“以后的事，我们一起扛”", s: { xian: 3, an: 2}},
+{ t: "“路过花店，觉得这束像你，就买了”", s: { lang: 3, xin: 1}}
+]},
+{ scene: "心 动 法 则", text: "你更相信哪一种心动？", options: [
+{ t: "第一眼，就知道是 TA", s: { xin: 3, lang: 1}},
+{ t: "相处了很久，某天突然发现心跳漏了一拍", s: { man: 3, xin: 1, an: 1}},
+{ t: "分开多年重逢，发现自己从来没忘掉", s: { lang: 2, xi: 2, man: 1}},
+{ t: "吵着吵着，发现谁也离不开谁", s: { xi: 3, an: 1}}
+]},
+{ scene: "约 会 基 金", text: "约会基金只有三百块，你会怎么花？", options: [
+{ t: "全砸氛围：一顿有烛光的晚餐", s: { lang: 3, xi: 1}},
+{ t: "一起摆个小摊，赚到了再花", s: { xian: 2, dong: 2, xi: 1}},
+{ t: "先存起来，留给以后更重要的事", s: { xian: 3, an: 2}},
+{ t: "随缘，路边摊吃到撑也很开心", s: { an: 2, xin: 1}}
+]},
+{ scene: "相 处 底 色", text: "你希望恋爱的日常底色是？", options: [
+{ t: "平淡里总有不期而遇的小惊喜", s: { an: 2, lang: 2}},
+{ t: "斗嘴不断，笑料不断", s: { xi: 3, dong: 1}},
+{ t: "互相打气，一起升级打怪", s: { xian: 2, dong: 2, an: 1}},
+{ t: "浓烈深刻，像电影里的主角", s: { xi: 2, xin: 2, lang: 1}}
+]},
+{ scene: "异 地 考 验", text: "如果要异地一年，你的状态更像？", options: [
+{ t: "攒满思念，等重逢那天一次说完", s: { lang: 2, man: 2, xi: 1}},
+{ t: "每天视频，先斗三句嘴再说正事", s: { xi: 2, an: 1, dong: 1}},
+{ t: "专心搞事业，站稳了再谈以后", s: { xian: 3, an: 1}},
+{ t: "需要很多确认感，不然容易胡思乱想", s: { xin: 2, an: 1, lang: 1}}
+]},
+{ scene: "浪 漫 定 义", text: "你觉得最浪漫的画面是？", options: [
+{ t: "人海茫茫，一眼认出对方的背影", s: { xin: 3, lang: 2}},
+{ t: "对方记得你随口提过的一件小事", s: { man: 2, an: 2, lang: 1}},
+{ t: "从一无所有，到并肩站上领奖台", s: { xian: 2, lang: 1, dong: 1}},
+{ t: "一粥一饭，把普通日子过成诗", s: { an: 3, lang: 1}}
+]},
+{ scene: "吵 架 之 后", text: "吵架之后，你通常是？", options: [
+{ t: "嘴上说不在乎，先低头哄人的却是自己", s: { xi: 2, dong: 1, xin: 1}},
+{ t: "吵完就忘，转头问对方晚上吃啥", s: { xi: 2, an: 1}},
+{ t: "冷静下来，把问题摊开讲清楚", s: { xian: 3, dong: 1}},
+{ t: "需要一个拥抱，抱完什么都好说", s: { an: 2, lang: 2, xin: 1}}
+]},
+{ scene: "心 动 对 象", text: "你最容易被哪种人吸引？", options: [
+{ t: "认识很多年、最懂你的人", s: { man: 3, an: 2}},
+{ t: "表面不对付，关键时刻总帮你的人", s: { xi: 3, xin: 1}},
+{ t: "目标清晰、能和你并肩作战的人", s: { xian: 3, dong: 1}},
+{ t: "只见过一面，却总在脑子里出现的人", s: { xin: 3, lang: 1}}
+]},
+{ scene: "仪 式 感", text: "关于仪式感，你的态度是？", options: [
+{ t: "纪念日一个都不能少，必须拉满", s: { lang: 3, xi: 1}},
+{ t: "嘴上说麻烦，心里偷偷期待", s: { lang: 2, xin: 1, man: 1}},
+{ t: "不必刻意，天天都是好日子", s: { an: 2, xian: 1}},
+{ t: "平时随意，偶尔来一次大的", s: { lang: 2, xi: 1}}
+]},
+{ scene: "告 白 现 场", text: "你理想中的告白场景是？", options: [
+{ t: "烟花升起时，心里话脱口而出", s: { xin: 2, xi: 2, lang: 1}},
+{ t: "憋了好多年，借着玩笑说出真话", s: { man: 3, xin: 1}},
+{ t: "在彼此的“庆功宴”上，顺势表白", s: { xian: 2, dong: 2}},
+{ t: "没有告白，某天牵手就自然在一起了", s: { man: 2, an: 2}}
+]},
+{ scene: "不 确 定", text: "面对一段不确定的感情，你会？", options: [
+{ t: "喜欢就冲，赌一把不后悔", s: { dong: 3, xin: 2}},
+{ t: "先观望，等信号明确了再行动", s: { man: 2, xian: 1}},
+{ t: "不说破，用行动慢慢证明", s: { man: 2, an: 1, dong: 1}},
+{ t: "走一步看一步，有点患得患失", s: { xin: 2, lang: 1}}
+]},
+{ scene: "长 久 之 道", text: "你觉得长久的恋爱最靠什么？", options: [
+{ t: "心动的感觉一直都在", s: { xin: 3, lang: 1}},
+{ t: "信任和安稳，比什么都重要", s: { an: 3, xian: 1}},
+{ t: "势均力敌，一起变好", s: { xian: 3, dong: 1}},
+{ t: "说不清的契合，像命中注定", s: { lang: 2, xi: 2}}
+]},
+{ scene: "朋 友 评 价", text: "朋友眼里，你在感情中是？", options: [
+{ t: "一上头就全力以赴型", s: { xin: 2, dong: 2}},
+{ t: "慢热长情、后知后觉型", s: { man: 3, an: 1}},
+{ t: "理性冷静、规划清晰型", s: { xian: 3}},
+{ t: "嘴硬心软、口是心非型", s: { xi: 3}}
+]},
+{ scene: "电 影 结 局", text: "哪种电影结局最对你胃口？", options: [
+{ t: "兜兜转转，最后还是那个人", s: { lang: 2, man: 2, xi: 1}},
+{ t: "欢喜冤家，终成眷属", s: { xi: 3, dong: 1}},
+{ t: "白手起家，相伴到老", s: { xian: 2, an: 2}},
+{ t: "一眼万年，命中注定", s: { xin: 3, lang: 2}}
+]},
+{ scene: "攒 钱 目 标", text: "让你选一个攒钱目标，你选？", options: [
+{ t: "一次难忘的双人旅行", s: { lang: 2, xin: 1}},
+{ t: "两个人的小家首付", s: { xian: 3, an: 2}},
+{ t: "不设目标，开心最重要", s: { xin: 1, xi: 1}},
+{ t: "一个保密的惊喜基金", s: { lang: 3, xi: 1}}
+]},
+{ scene: "味 觉 隐 喻", text: "如果恋爱是一道菜，你希望它是？", options: [
+{ t: "小火慢炖的老火汤", s: { man: 3, an: 2}},
+{ t: "麻辣火锅，越吃越上头", s: { xi: 3, xin: 1}},
+{ t: "营养均衡的家常菜", s: { xian: 2, an: 2}},
+{ t: "一口惊艳的慕斯甜品", s: { xin: 2, lang: 2}}
+]},
+{ scene: "最 怕 什 么", text: "你最怕感情里出现什么？", options: [
+{ t: "平淡到没了感觉", s: { xin: 2, xi: 1}},
+{ t: "错过之后，多年都放不下的遗憾", s: { lang: 2, man: 1, xi: 1}},
+{ t: "现实压力把感情一点点磨没", s: { xian: 2, an: 1}},
+{ t: "猜来猜去、反复内耗", s: { an: 2, xin: 1}}
+]},
+{ scene: "爱 情 信 条", text: "最后一题，你的爱情信条是？", options: [
+{ t: "日久生情，最经得起时间", s: { man: 3, an: 2}},
+{ t: "心动就是答案，别想太多", s: { xin: 3, dong: 1}},
+{ t: "并肩同行，比风花雪月长久", s: { xian: 3, an: 1}},
+{ t: "缘分自有安排，兜兜转转会重逢", s: { lang: 3, xi: 1}}
+]}
+];
+
+// 剧本库：profile 为七维目标画像（0-10）
+var SCRIPTS = [
+{
+id: "qingmei", title: "青梅竹马 · 日久生情", en: "Childhood Sweethearts",
+type: "都市情感 · 生活流长剧 · 全 80 集",
+tagline: "「全世界都看出来了，只有你们俩最后知道。」",
+synopsis: "你们的故事，从小巷口那家小卖部开始。他替你挨过骂，你帮他抄过作业；长大后各自忙碌，却总在最难的时候第一个想到对方。没有惊天动地的告白，只是一个再普通不过的傍晚，走在回家的路上，他忽然说：“要不，以后也一起走吧。”",
+traits: ["念旧长情", "慢热但坚定", "安全感制造机", "浪漫都藏在行动里"],
+reason: "你的答案里，“长久”和“安稳”的分量远远压过“刺激”。比起一见钟情的烟花，你更相信被时间筛过的人——你的心动阈值并不低，但一旦认定，就是一辈子的份额。",
+egg: "你们的定情信物大概率不是戒指，而是一把伞、一本旧书，或者小卖部里最后一根同款冰棍。",
+profile: { xin: 3, lang: 5, xian: 5, man: 10, xi: 1, an: 10, dong: 2 }
+},
+{
+id: "huanxi", title: "欢喜冤家 · 互怼生情", en: "Love-Hate Relationship",
+type: "都市轻喜剧 · 高糖互怼 · 全 40 集",
+tagline: "「吵了九十九次架，第一百次是求婚。」",
+synopsis: "初见就互看不顺眼，偏偏命运总把你们绑在一起：同组、同桌、同一个项目。他毒舌你三句，你必回敬五句，身边人全把你们当连续剧追。直到某个加班的深夜，你默默放下一杯热咖啡——他盯着杯子说：“别对我这么好，我会当真的。”",
+traits: ["嘴硬心软", "越喜欢越爱抬杠", "情绪来得快去得快", "占有欲藏在玩笑里"],
+reason: "你的戏剧性和主动度都很高，平平淡淡的相处反而让你没感觉。你享受棋逢对手的火花——斗嘴是你的语言，互怼是你的情书，吵吵闹闹才是你的岁月静好。",
+egg: "结婚那天，司仪问新郎有什么想说的，他大概率会先损你一句，再红着眼眶把正经话说完。",
+profile: { xin: 6, lang: 4, xian: 3, man: 2, xi: 10, an: 4, dong: 9 }
+},
+{
+id: "yijian", title: "一见钟情 · 闪电心动", en: "Love at First Sight",
+type: "都市爱情片 · 高浓度心动 · 片长 118 分钟",
+tagline: "「心动只需要一秒，认出你只用了一眼。」",
+synopsis: "那天的场景其实很普通：书店、地铁口、朋友组的饭局。但你就是在人群里多看了他一眼，然后整个世界都慢了半拍。你不是冲动，你只是相信身体比大脑诚实——后来所有的故事，都从那一眼开始倒叙。",
+traits: ["心动阈值低但眼光毒", "相信直觉", "热烈直接", "认定了就不回头"],
+reason: "你的心动和主动两项得分都冲在最前面。对你来说，感觉从来不是需要论证的东西：先心动，再了解，才是你打开爱情的顺序。理性在你这里，永远排在心跳后面。",
+egg: "你对 TA 的第一印象，多年后会被反复讲起，而且每讲一次，细节都会自动美化三分。",
+profile: { xin: 10, lang: 8, xian: 2, man: 1, xi: 7, an: 3, dong: 8}
+},
+{
+id: "chongfeng", title: "久别重逢 · 破镜重圆", en: "Reunion After Years",
+type: "情感剧 · 意难平专场 · 全 36 集",
+tagline: "「兜兜转转，原来你还在这里。」",
+synopsis: "年少时因为一句没说出口的话、一次阴差阳错的误会，你们走散在人海。各自经历了几年的人间烟火，又在某个城市的转角再次相遇——这一次，谁都没有再松开手。有些故事的暂停不是结束，只是中场休息。",
+traits: ["长情念旧", "记恩也记遗憾", "错过比失败更让你难受", "二次心动比初恋更浓"],
+reason: "你的浪漫度和慢热度都很突出，你对“缘分”和“没说完的故事”毫无抵抗力。在你心里，一句没说完的再见，比心动本身更有分量；错过，是你最不愿意认领的结局。",
+egg: "你们重逢的地点大概率非常普通——便利店、地铁站、老同学的婚礼。命运这位编剧，从不挑大场面下手。",
+profile: { xin: 6, lang: 9, xian: 1, man: 7, xi: 10, an: 3, dong: 3 }
+},
+{
+id: "anlian", title: "双向暗恋 · 修成正果", en: "Mutual Secret Crush",
+type: "青春甜剧 · 暧昧拉满 · 全 24 集",
+tagline: "「你偷看他的第 10086 次，他刚好也在看你。」",
+synopsis: "全办公室、全班都看出来了，只有两位当事人还在演独角戏。他记得你不吃香菜，你收藏了他随手分享的歌；暧昧的泡泡飘了三年，直到某个契机，有人先红着脸递出那句憋了很久的话——原来，双向的暗恋是世界上最甜的误会。",
+traits: ["心思细腻", "暗恋续航能力极强", "不动声色的体贴", "万事俱备只差被推一把"],
+reason: "你的慢热和心动都很突出，主动度却偏低：你不是不喜欢，是太珍惜，怕一开口连朋友都没得做。好消息是——在你的剧本里，对方也在等你先开口。",
+egg: "在一起之后翻旧账，第一条永远是：“那次你明明也喜欢我，为什么不说！”然后两个人一起笑场。",
+profile: { xin: 8, lang: 6, xian: 3, man: 9, xi: 2, an: 5, dong: 0 }
+},
+{
+id: "huoban", title: "并肩奋斗 · 合伙人式恋爱", en: "Partners in Life",
+type: "都市励志情感剧 · 先搞钱后恋爱 · 全 48 集",
+tagline: "「先做彼此的合伙人，再做彼此的爱人。」",
+synopsis: "你们的相遇不在花前月下，在会议室、路演现场和加班的深夜。他懂你的野心，你懂他的疲惫；先一起搞钱，再一起生活。当别人还在纠结仪式感时，你们已经把对方写进了人生规划的每一页——这份感情，比任何情话都抗跌。",
+traits: ["目标感强", "慕强且自强", "信任建立在能力上", "爱是并肩不是依附"],
+reason: "你的现实度和安定需求都很高，你对“靠谱”的敏感度远超对“浪漫”的需求。能一起扛事、一起把日子越过越好的人，在你这里会自动加上一层滤镜。",
+egg: "你们的纪念日庆祝方式，大概率是认真复盘今年完成了哪些目标——然后把下一年的，一起写完。",
+profile: { xin: 4, lang: 2, xian: 10, man: 6, xi: 2, an: 8, dong: 7 }
+},
+{
+id: "xianhun", title: "先婚后爱 · 契约成真", en: "Marriage First, Love Later",
+type: "都市情感剧 · 细水长流 · 全 60 集",
+tagline: "「先领证，后心动，顺序反了，结局没反。」",
+synopsis: "因为种种阴差阳错，你们先成了法律意义上的“一家人”，再慢慢学着做恋人。从分房睡到留一盏灯，从客气疏离到进门先喊对方的名字——这部剧没有一见钟情的开场，却有细水长流的全部剧情。",
+traits: ["先理性后感性", "责任感强", "相信日久见人心", "爱藏在日常琐碎里"],
+reason: "你的安定需求和慢热度都很突出，你对感情的信任是“过日子过出来的”。先婚后爱式的稳扎稳打，恰好避开了你最怕的不确定性——先确认关系，再慢慢心动，正合你的节奏。",
+egg: "你们的心动时刻来得毫无预兆——多半是某个深夜，他自然而然地把你爱吃的菜，推到你面前。",
+profile: { xin: 2, lang: 4, xian: 9, man: 8, xi: 4, an: 10, dong: 3 }
+},
+{
+id: "yangcheng", title: "养成系 · 先苦后甜", en: "Growing Up Together",
+type: "成长情感剧 · 苦尽甘来 · 全 52 集",
+tagline: "「前半生各自吃苦，后半程一起回甘。」",
+synopsis: "初遇时，你们都还不是“完成版”的自己：他笨拙，你青涩；日子紧巴巴，梦想远在天边。你们陪彼此熬过最难的那几年，看着对方一点点长成想成为的人。多年后回头看，那些苦日子，全是糖的原料。",
+traits: ["陪伴型选手", "能吃苦也懂回甘", "成长型思维", "对“一起变好”上瘾"],
+reason: "你的慢热、浪漫和现实取得了一种微妙的平衡：你既要感情，也要成长。比起现成的完美对象，你更愿意陪一个人从零开始——在你这里，过程本身就是浪漫。",
+egg: "你们会保留一件“苦日子纪念品”：第一间出租屋的钥匙、第一辆电动车，或者那张写满目标的便利贴。",
+profile: { xin: 5, lang: 8, xian: 6, man: 8, xi: 6, an: 6, dong: 6 }
+}
+];
+
+var SCENES = ["第 一 幕", "第 二 幕", "第 三 幕", "第 四 幕", "第 五 幕", "第 六 幕", "第 七 幕", "第 八 幕", "第 九 幕", "第 十 幕",
+"第十一幕", "第十二幕", "第十三幕", "第十四幕", "第十五幕", "第十六幕", "第十七幕", "第十八幕", "第十九幕", "大 结 局 前 夜"];
+
+var state = { idx: 0, answers: [], locked: false, result: null, scores: null};
+
+var $ = function (id) { return document.getElementById(id);};
+var screens = { home: $("screen-home"), quiz: $("screen-quiz"), result: $("screen-result")};
+
+function show(name) {
+Object.keys(screens).forEach(function (k) { screens[k].classList.toggle("active", k === name);});
+window.scrollTo({ top: 0, behavior: "smooth"});
+}
+
+function renderQuestion(dir) {
+var q = QUESTIONS[state.idx];
+$("q-now").textContent = state.idx + 1;
+$("progress-fill").style.width = ((state.idx) / QUESTIONS.length * 100) + "%";
+$("q-scene").textContent = SCENES[state.idx] + " · " + q.scene;
+$("q-text").textContent = q.text;
+$("btn-back").hidden = state.idx === 0;
+var box = $("options");
+box.innerHTML = "";
+var letters = ["A", "B", "C", "D"];
+q.options.forEach(function (opt, i) {
+var btn = document.createElement("button");
+btn.type = "button";
+btn.className = "option" + (state.answers[state.idx] === i? " picked": "");
+var letter = document.createElement("span");
+letter.className = "letter";
+letter.textContent = letters[i];
+var txt = document.createElement("span");
+txt.textContent = opt.t;
+btn.appendChild(letter);
+btn.appendChild(txt);
+btn.addEventListener("click", function () { pick(i, btn);});
+box.appendChild(btn);
+});
+var card = $("q-card");
+card.classList.remove("slide", "slide-back");
+void card.offsetWidth;
+card.classList.add(dir === "back"? "slide-back": "slide");
+}
+
+function pick(i, btn) {
+if (state.locked) return;
+state.locked = true;
+state.answers[state.idx] = i;
+var opts = $("options").children;
+for (var k = 0; k < opts.length; k++) opts[k].classList.toggle("picked", k === i);
+$("progress-fill").style.width = ((state.idx + 1) / QUESTIONS.length * 100) + "%";
+setTimeout(function () {
+state.locked = false;
+if (state.idx < QUESTIONS.length - 1) {
+state.idx++;
+renderQuestion("next");
+} else {
+finish();
+}
+}, 260);
+}
+
+function computeScores() {
+var totals = {}, maxs = {};
+DIMS.forEach(function (d) { totals[d.key] = 0; maxs[d.key] = 0;});
+QUESTIONS.forEach(function (q, qi) {
+DIMS.forEach(function (d) {
+var m = 0;
+q.options.forEach(function (o) { m = Math.max(m, o.s[d.key] || 0);});
+maxs[d.key] += m;
+});
+var ans = q.options[state.answers[qi]];
+if (ans) DIMS.forEach(function (d) { totals[d.key] += ans.s[d.key] || 0;});
+});
+var norm = {};
+DIMS.forEach(function (d) { norm[d.key] = maxs[d.key]? (totals[d.key] / maxs[d.key] * 10): 0;});
+return norm;
+}
+
+function matchScript(norm) {
+// 相关性匹配：比维度形状的相似度，不比绝对分，避免居中画像通吃
+var keys = DIMS.map(function (d) { return d.key; });
+var uMean = keys.reduce(function (a, k) { return a + norm[k]; }, 0) / keys.length;
+var best = null, bestScore = -Infinity;
+SCRIPTS.forEach(function (sc) {
+var pMean = keys.reduce(function (a, k) { return a + sc.profile[k]; }, 0) / keys.length;
+var num = 0, du = 0, dp = 0;
+keys.forEach(function (k) {
+num += (norm[k] - uMean) * (sc.profile[k] - pMean);
+du += (norm[k] - uMean) * (norm[k] - uMean);
+dp += (sc.profile[k] - pMean) * (sc.profile[k] - pMean);
+});
+var score = num / Math.sqrt(du * dp || 1);
+if (score > bestScore) { bestScore = score; best = sc; }
+});
+return best;
+}
+
+function finish() {
+state.scores = computeScores();
+state.result = matchScript(state.scores);
+var sc = state.result;
+$("p-type").textContent = sc.type;
+$("p-title").textContent = sc.title;
+$("p-en").textContent = sc.en;
+$("p-tagline").textContent = sc.tagline;
+$("p-synopsis").textContent = sc.synopsis;
+$("p-reason").textContent = sc.reason;
+var traits = $("p-traits");
+traits.innerHTML = "";
+sc.traits.forEach(function (t) {
+var span = document.createElement("span");
+span.textContent = t;
+traits.appendChild(span);
+});
+$("p-egg").innerHTML = "";
+var eggB = document.createElement("b");
+eggB.textContent = "趣味彩蛋 ｜ ";
+$("p-egg").appendChild(eggB);
+$("p-egg").appendChild(document.createTextNode(sc.egg));
+// 情感指纹：取最高的三个维度
+var sorted = DIMS.slice().sort(function (a, b) { return state.scores[b.key] - state.scores[a.key];}).slice(0, 3);
+var fp = $("p-fingerprint");
+fp.innerHTML = "";
+sorted.forEach(function (d) {
+var row = document.createElement("div");
+row.className = "fp-row";
+var name = document.createElement("span"); name.className = "fp-name"; name.textContent = d.name;
+var track = document.createElement("div"); track.className = "fp-track";
+var fill = document.createElement("div"); fill.className = "fp-fill";
+fill.setAttribute("data-w", Math.round(state.scores[d.key] * 10));
+track.appendChild(fill);
+var val = document.createElement("span"); val.className = "fp-val"; val.textContent = Math.round(state.scores[d.key] * 10) + "%";
+row.appendChild(name); row.appendChild(track); row.appendChild(val);
+fp.appendChild(row);
+});
+show("result");
+requestAnimationFrame(function () {
+requestAnimationFrame(function () {
+var fills = document.querySelectorAll(".fp-fill");
+for (var i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute("data-w") + "%";
+});
+});
+}
+
+function toast(msg) {
+var el = $("toast");
+el.textContent = msg;
+el.classList.add("show");
+clearTimeout(el._timer);
+el._timer = setTimeout(function () { el.classList.remove("show");}, 2200);
+}
+
+function copyResult() {
+if (!state.result) return;
+var sc = state.result;
+var text = "\n我的剧本是：《" + sc.title + "》\n" + sc.tagline + "\n\n梗概：" + sc.synopsis + "\n\n性格特点：" + sc.traits.join("、") + "\n彩蛋：" + sc.egg + "\n\n——趣味人格测试，仅供娱乐";
+function done() { toast("结果文案已复制，去分享吧");}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = text;
+ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();}
+catch (e) { toast("复制失败，截图海报分享吧");}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, fallback);
+} else { fallback();}
+}
+
+$("btn-start").addEventListener("click", function () {
+state.idx = 0; state.answers = []; state.locked = false;
+show("quiz");
+renderQuestion("next");
+});
+$("btn-back").addEventListener("click", function () {
+if (state.locked || state.idx === 0) return;
+state.idx--;
+renderQuestion("back");
+});
+$("btn-restart").addEventListener("click", function () {
+state.idx = 0; state.answers = []; state.locked = false; state.result = null;
+show("quiz");
+renderQuestion("next");
+});
+$("btn-copy").addEventListener("click", copyResult);
+</script>
+</body>
+</html>

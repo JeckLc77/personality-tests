@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>测你的恋爱人格</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"] { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        --bg: #fdf4f0;
+        --bg-soft: #fbe9e2;
+        --card: #fffaf7;
+        --ink: #40262e;
+        --ink-soft: #7a5a63;
+        --ink-faint: #a98a92;
+        --accent: #bf4266;
+        --accent-deep: #9c2f50;
+        --accent-soft: #f7d9de;
+        --line: #efd9d2;
+        --gold: #c99a4a;
+        --shadow: 0 18px 44px rgba(156, 47, 80, .14);
+        --radius: 20px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #221419;
+          --bg-soft: #2e1a21;
+          --card: #2c1b22;
+          --ink: #f6e3e0;
+          --ink-soft: #cfa9ae;
+          --ink-faint: #9c7c83;
+          --accent: #e57d9c;
+          --accent-deep: #eda1b8;
+          --accent-soft: #472631;
+          --line: #462c35;
+          --gold: #d9b06a;
+          --shadow: 0 18px 44px rgba(0, 0, 0, .45);
+        }
+      }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(720px 420px at 12% -6%, var(--bg-soft), transparent 62%),
+          radial-gradient(640px 420px at 96% 4%, var(--accent-soft), transparent 55%),
+          var(--bg);
+        color: var(--ink);
+        font-family: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        line-height: 1.65;
+        min-height: 100vh;
+      }
+      .serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+      .wrap { max-width: 680px; margin: 0 auto; padding: 20px 18px 56px; position: relative; }
+      .view { display: none; }
+      .view.active { display: block; animation: viewIn .45s ease both; }
+      @keyframes viewIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+      /* ---------- floating hearts decor ---------- */
+      .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+      .hearts svg { position: absolute; opacity: .16; animation: floaty 9s ease-in-out infinite; }
+      .hearts svg:nth-child(1) { left: 6%; top: 12%; width: 26px; animation-delay: 0s; }
+      .hearts svg:nth-child(2) { right: 9%; top: 22%; width: 18px; animation-delay: 1.6s; }
+      .hearts svg:nth-child(3) { left: 12%; bottom: 16%; width: 16px; animation-delay: 3s; }
+      .hearts svg:nth-child(4) { right: 14%; bottom: 26%; width: 30px; animation-delay: .8s; }
+      @keyframes floaty { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-14px) rotate(5deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .hearts svg, .view.active, .q-anim { animation: none !important; }
+        * { transition: none !important; }
+      }
+      main { position: relative; z-index: 1; }
+
+      /* ---------- home ---------- */
+      .home-hero { text-align: center; padding: 34px 6px 6px; }
+      .home-kicker { color: var(--accent); font-size: 13px; letter-spacing: .35em; font-weight: 700; margin: 0 0 14px; }
+      .home-title { font-size: clamp(38px, 9.5vw, 56px); font-weight: 900; line-height: 1.18; margin: 0 0 14px; letter-spacing: .02em; }
+      .home-title .hl { color: var(--accent-deep); }
+      .home-sub { color: var(--ink-soft); font-size: 16px; margin: 0 auto 22px; max-width: 30em; }
+      .meta-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+      .chip { border: 1px solid var(--line); background: var(--card); color: var(--ink-soft); border-radius: 999px; padding: 5px 14px; font-size: 13px; }
+      .chip b { color: var(--accent-deep); font-weight: 700; }
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        border: none; cursor: pointer; border-radius: 999px; font-family: inherit;
+        font-size: 17px; font-weight: 700; padding: 14px 42px; min-height: 52px;
+        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 12px 26px rgba(191, 66, 102, .32); }
+      .btn-primary:hover { background: var(--accent-deep); transform: translateY(-1px); }
+      .btn-ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); box-shadow: none; font-size: 15px; padding: 12px 28px; min-height: 48px; }
+      .btn-ghost:hover { border-color: var(--accent); color: var(--accent-deep); }
+      .home-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 22px 22px 8px; margin-top: 34px; text-align: left; }
+      .home-card h2 { font-size: 17px; margin: 0 0 6px; }
+      .scene-list { list-style: none; margin: 10px 0 14px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+      .scene-list li { color: var(--ink-soft); font-size: 14px; padding-left: 16px; position: relative; }
+      .scene-list li::before { content: "♥"; color: var(--accent); font-size: 10px; position: absolute; left: 0; top: 4px; }
+      .type-teaser { margin-top: 26px; text-align: center; }
+      .type-teaser p { color: var(--ink-faint); font-size: 13px; letter-spacing: .2em; margin: 0 0 12px; }
+      .teaser-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+      .teaser-tags span { font-family: "Noto Serif SC", serif; font-weight: 700; font-size: 14px; color: var(--ink-soft); border: 1px dashed var(--line); border-radius: 10px; padding: 6px 12px; background: var(--card); }
+      .disclaimer { text-align: center; color: var(--ink-faint); font-size: 12.5px; margin-top: 30px; }
+
+      /* ---------- quiz ---------- */
+      .quiz-top { display: flex; align-items: center; gap: 14px; margin: 10px 0 18px; }
+      .btn-back { background: var(--card); border: 1px solid var(--line); color: var(--ink-soft); border-radius: 999px; padding: 8px 18px; font-size: 14px; cursor: pointer; font-family: inherit; min-height: 40px; flex: none; }
+      .btn-back:disabled { opacity: .35; cursor: default; }
+      .btn-back:not(:disabled):hover { color: var(--accent-deep); border-color: var(--accent); }
+      .progress-wrap { flex: 1; }
+      .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-faint); margin-bottom: 6px; }
+      .progress-meta b { color: var(--accent-deep); }
+      .progress { height: 8px; background: var(--bg-soft); border-radius: 99px; overflow: hidden; }
+      .progress-bar { height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s ease; width: 0; }
+      .q-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 24px 24px; }
+      .q-anim { animation: qIn .38s ease both; }
+      @keyframes qIn { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+      .q-cat { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .18em; color: var(--accent-deep); background: var(--accent-soft); border-radius: 999px; padding: 4px 12px; margin-bottom: 14px; }
+      .q-text { font-size: clamp(19px, 5vw, 22px); font-weight: 700; line-height: 1.5; margin: 0 0 22px; }
+      .options { display: grid; gap: 12px; }
+      .opt {
+        text-align: left; width: 100%; background: var(--bg); border: 1.5px solid var(--line);
+        border-radius: 14px; padding: 14px 16px; font-size: 15.5px; font-family: inherit; color: var(--ink);
+        cursor: pointer; display: flex; gap: 12px; align-items: flex-start; line-height: 1.55;
+        transition: border-color .15s ease, background .15s ease, transform .15s ease; min-height: 52px;
+      }
+      .opt:hover { border-color: var(--accent); transform: translateY(-1px); }
+      .opt .letter { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--ink-soft); margin-top: 1px; transition: all .15s ease; }
+      .opt.picked { border-color: var(--accent); background: var(--accent-soft); }
+      .opt.picked .letter { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .quiz-hint { text-align: center; color: var(--ink-faint); font-size: 13px; margin-top: 16px; }
+
+      /* ---------- result poster ---------- */
+      .result-head { text-align: center; margin: 8px 0 18px; }
+      .result-head p { color: var(--ink-soft); margin: 0; font-size: 15px; }
+      .poster {
+        --acc: #bf4266;
+        background: var(--card); border: 1px solid var(--line); border-radius: 26px;
+        box-shadow: var(--shadow); overflow: hidden; max-width: 520px; margin: 0 auto;
+      }
+      .poster-top { background: linear-gradient(135deg, var(--acc), color-mix(in srgb, var(--acc) 62%, #f3b8a0)); color: #fff; padding: 26px 26px 22px; position: relative; }
+      .poster-top .p-label { font-size: 12.5px; letter-spacing: .32em; opacity: .85; margin: 0 0 10px; }
+      .poster-type { font-size: clamp(34px, 8.6vw, 44px); font-weight: 900; margin: 0; line-height: 1.2; letter-spacing: .02em; }
+      .poster-tagline { font-size: 16.5px; margin: 12px 0 0; line-height: 1.6; opacity: .96; font-weight: 500; }
+      .seal {
+        position: absolute; right: 22px; top: 22px; width: 52px; height: 52px;
+        border: 2px solid rgba(255,255,255,.85); border-radius: 10px; transform: rotate(7deg);
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 26px; color: #fff;
+        background: rgba(255,255,255,.14);
+      }
+      .poster-tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 26px 0; }
+      .poster-tags span { font-size: 13px; color: var(--acc); border: 1px solid var(--acc); border-radius: 999px; padding: 3px 12px; font-weight: 500; }
+      .poster-body { padding: 8px 26px 26px; }
+      .p-sec { margin-top: 18px; }
+      .p-sec h3 { font-size: 14px; letter-spacing: .22em; color: var(--acc); margin: 0 0 7px; display: flex; align-items: center; gap: 10px; }
+      .p-sec h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+      .p-sec p { margin: 0; font-size: 15px; color: var(--ink); }
+      .p-sec.egg p { color: var(--ink-soft); }
+      .dims { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 9px 22px; }
+      .dim { font-size: 12.5px; color: var(--ink-soft); }
+      .dim .dim-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+      .dim .dim-row b { color: var(--ink); font-weight: 700; }
+      .dim-track { height: 6px; background: var(--bg-soft); border-radius: 99px; overflow: hidden; }
+      .dim-fill { height: 100%; background: var(--acc); border-radius: 99px; width: 0; transition: width .8s ease .15s; }
+      .poster-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px dashed var(--line); margin-top: 22px; padding-top: 14px; font-size: 12.5px; color: var(--ink-faint); }
+      .poster-foot b { color: var(--acc); }
+      .match-line { margin-top: 16px; background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink-soft); }
+      .match-line b { color: var(--acc); font-family: "Noto Serif SC", serif; }
+      .result-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 26px; }
+      .share-tip { text-align: center; color: var(--ink-faint); font-size: 13px; margin-top: 16px; }
+      .copy-ok { color: var(--accent-deep); font-weight: 700; }
+      @media (max-width: 430px) {
+        .scene-list { grid-template-columns: 1fr; }
+        .poster-body, .poster-top { padding-left: 20px; padding-right: 20px; }
+        .poster-tags { padding-left: 20px; padding-right: 20px; }
+        .seal { right: 16px; top: 16px; width: 46px; height: 46px; font-size: 23px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hearts" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="#bf4266"><path d="M12 21s-7.5-4.9-10-9.3C.4 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.4h4C15 6.1 16.4 5 18.4 5c3.4 0 5.3 3.6 3.6 6.7C19.5 16.1 12 21 12 21z" transform="scale(.92) translate(1,0)"/></svg>
+      <svg viewBox="0 0 24 24" fill="#bf4266"><path d="M12 21s-7.5-4.9-10-9.3C.4 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.4h4C15 6.1 16.4 5 18.4 5c3.4 0 5.3 3.6 3.6 6.7C19.5 16.1 12 21 12 21z" transform="scale(.92) translate(1,0)"/></svg>
+      <svg viewBox="0 0 24 24" fill="#bf4266"><path d="M12 21s-7.5-4.9-10-9.3C.4 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.4h4C15 6.1 16.4 5 18.4 5c3.4 0 5.3 3.6 3.6 6.7C19.5 16.1 12 21 12 21z" transform="scale(.92) translate(1,0)"/></svg>
+      <svg viewBox="0 0 24 24" fill="#bf4266"><path d="M12 21s-7.5-4.9-10-9.3C.4 8.6 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.4h4C15 6.1 16.4 5 18.4 5c3.4 0 5.3 3.6 3.6 6.7C19.5 16.1 12 21 12 21z" transform="scale(.92) translate(1,0)"/></svg>
+    </div>
+    <main class="wrap">
+
+      <!-- ======== HOME ======== -->
+      <section id="view-home" class="view active">
+        <div class="home-hero">
+          <p class="home-kicker">趣 味 人 格 测 试</p>
+          <h1 class="home-title serif">测你的<br /><span class="hl">恋爱人格</span></h1>
+          <p class="home-sub">20 道生活场景题，测出你在爱情里的真实模样——是直球热恋、黏人小狗，还是嘴硬心软？答案可能比你想象的更像你。</p>
+          <div class="meta-chips">
+            <span class="chip"><b>20</b> 道题</span>
+            <span class="chip">约 <b>3</b> 分钟</span>
+            <span class="chip"><b>8</b> 种恋爱人格</span>
+            <span class="chip"><b>8</b> 个情感维度</span>
+          </div>
+          <button class="btn btn-primary" id="btn-start" type="button">开始测试</button>
+        </div>
+
+        <div class="home-card">
+          <h2 class="serif">题目都来自真实恋爱场景</h2>
+          <p style="color:var(--ink-soft);font-size:14.5px;margin:0;">不问隐私、不考知识，凭第一直觉选就好——你的每一次心动、吃醋和服软，都在悄悄暴露你的恋爱人格。</p>
+          <ul class="scene-list">
+            <li>心动瞬间与一见钟情</li>
+            <li>聊天与相处模式</li>
+            <li>吵架、冷战与和好</li>
+            <li>表达爱意的方式</li>
+            <li>吃醋与安全感</li>
+            <li>独处与陪伴的取舍</li>
+            <li>纪念日与仪式感</li>
+            <li>异地与未来规划</li>
+          </ul>
+        </div>
+
+        <div class="type-teaser">
+          <p>8 种 结 果 · 你 会 是 哪 一 种</p>
+          <div class="teaser-tags">
+            <span>直球热恋型</span><span>细水长流型</span><span>独立猫系型</span><span>黏人小狗型</span>
+            <span>理性克制型</span><span>浪漫造梦型</span><span>慢热观察型</span><span>嘴硬心软型</span>
+          </div>
+        </div>
+
+        <p class="disclaimer">本测试为趣味人格测试，不是专业心理诊断，结果仅供娱乐与自我探索。</p>
+      </section>
+
+      <!-- ======== QUIZ ======== -->
+      <section id="view-quiz" class="view">
+        <div class="quiz-top">
+          <button class="btn-back" id="btn-prev" type="button">← 上一题</button>
+          <div class="progress-wrap">
+            <div class="progress-meta"><span>第 <b id="q-now">1</b> / 20 题</span><span id="q-pct">0%</span></div>
+            <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+          </div>
+        </div>
+        <div class="q-card" id="q-card">
+          <span class="q-cat" id="q-cat">心动瞬间</span>
+          <p class="q-text serif" id="q-text"></p>
+          <div class="options" id="q-options"></div>
+        </div>
+        <p class="quiz-hint">凭第一直觉选，没有对错——选完自动进入下一题</p>
+      </section>
+
+      <!-- ======== RESULT ======== -->
+      <section id="view-result" class="view">
+        <div class="result-head">
+          <p>20 道题答完了，你的恋爱人格是——</p>
+        </div>
+        <article class="poster" id="poster">
+          <div class="poster-top">
+            <p class="p-label">我 的 恋 爱 人 格</p>
+            <h2 class="poster-type serif" id="r-type"></h2>
+            <p class="poster-tagline" id="r-tagline"></p>
+            <div class="seal" id="r-seal">恋</div>
+          </div>
+          <div class="poster-tags" id="r-tags"></div>
+          <div class="poster-body">
+            <div class="p-sec"><h3>性格特点</h3><p id="r-traits"></p></div>
+            <div class="p-sec"><h3>恋爱中的样子</h3><p id="r-love"></p></div>
+            <div class="p-sec"><h3>隐藏优势</h3><p id="r-adv"></p></div>
+            <div class="p-sec egg"><h3>趣味彩蛋</h3><p id="r-egg"></p></div>
+            <div class="match-line" id="r-match"></div>
+            <div class="dims" id="r-dims"></div>
+            <div class="poster-foot">
+              <span>《测你的恋爱人格》· 20 题趣味测试</span>
+              <span>心动浓度 <b id="r-score"></b></span>
+            </div>
+          </div>
+        </article>
+        <div class="result-actions">
+          <button class="btn btn-primary" id="btn-copy" type="button">复制结果文案</button>
+          <button class="btn btn-ghost" id="btn-restart" type="button">重新测试</button>
+        </div>
+        <p class="share-tip" id="share-tip">截图上方这张卡片，就能分享到小红书和朋友圈啦</p>
+        <p class="disclaimer">本测试为趣味人格测试，不是专业心理诊断，结果仅供娱乐。</p>
+      </section>
+
+    </main>
+<script>
+"use strict";
+/* ================= 维度与类型定义 ================= */
+var DIMS = [
+{ k: "passion", n: "热烈度"}, { k: "romance", n: "浪漫度"},
+{ k: "cling", n: "黏人度"}, { k: "reason", n: "理性度"},
+{ k: "solo", n: "独立度"}, { k: "secure", n: "安全感"},
+{ k: "express", n: "表达欲"}, { k: "observe", n: "慢热度"}
+];
+/* 每种类型的维度签名：选项按主类型给分，维度条由此汇总 */
+var SIG = {
+A: { passion: 2, express: 2},
+B: { secure: 2, cling: 1},
+C: { solo: 2, reason: 1},
+D: { cling: 2, secure: 1, express: 1},
+E: { reason: 2, solo: 1},
+F: { romance: 2, passion: 1},
+G: { observe: 2, reason: 1},
+H: { cling: 1, passion: 1, secure: 1}
+};
+/* 主类型命中 +3，副类型 +1，拉开区分度、减少并列 */
+var SEC = { A: "F", B: "H", C: "E", D: "B", E: "G", F: "A", G: "E", H: "D"};
+
+var TYPES = {
+A: { name: "直球热恋型", seal: "燃", acc: "#c0392b",
+tagline: "心动从不隔夜，喜欢就要全世界都知道。",
+tags: ["#直球选手", "#行动派", "#热烈坦荡"],
+traits: "情绪全写在脸上，喜欢一个人藏不过三天；行动力拉满，想见你就立刻订票出发；爱得坦荡磊落，最讨厌猜来猜去和欲擒故纵。",
+love: "表白、官宣、惊喜一样不落，热恋期能维持得比谁都久；吵架不过夜，当场说开、当场和好，翻篇比翻书还快。",
+adv: "坦诚是最短的路——和你在一起的人永远不用猜你的心思，安全感你给得明明白白，这是很多人求都求不来的。",
+egg: "翻开你的聊天记录，全是「在干嘛」「想你了」「出来见面」：直球选手从不已读乱回地试探，只会已读秒回地奔赴。",
+match: "慢热观察型", matchWhy: "你负责冲锋，TA负责稳住——你的热烈正好融化TA的慢热。"},
+B: { name: "细水长流型", seal: "稳", acc: "#a9714b",
+tagline: "不说永远，只陪你把每个明天过成日常。",
+tags: ["#长情", "#靠谱本谱", "#日常浪漫"],
+traits: "不擅长轰轰烈烈，却能把小事坚持成习惯；情绪稳定，是关系里的定海神针；你的爱不挂在嘴边，藏在热粥、雨伞和准时接送里。",
+love: "没有太多大起大落，靠的是日复一日的陪伴和靠谱；纪念日也许不隆重，但你随口提过的小需求，TA一件都没落下。",
+adv: "耐力型选手——新鲜感会过期，你的爱不会。你的感情像老火汤，越熬越醇，越久越有味。",
+egg: "你的浪漫是「多喝热水」的豪华升级版：热水里加了红糖，出门前多问一句「带伞了没」。",
+match: "黏人小狗型", matchWhy: "小狗要的黏和陪，你恰好都给得起、给得稳。"},
+C: { name: "独立猫系型", seal: "猫", acc: "#5f8575",
+tagline: "可以很爱你，但风还是要吹向自己的方向。",
+tags: ["#亲密有间", "#松弛感", "#认准不放"],
+traits: "需要独处充电，亲密也要有间；不黏人、不查岗，给足彼此信任和空间；外表淡定疏离，一旦认准了就是一心一意。",
+love: "像猫一样：主动蹭过来的时候是真爱，躲起来的时候请勿打扰；不爱秀恩爱，却早把对方划进了自己的地盘。",
+adv: "自带松弛感，让关系能呼吸——和你相处不累、不压抑，这是成年人世界里最稀缺的恋爱体验。",
+egg: "你不是高冷，你是电量有限：社交耗电、独处充电，而TA是唯一被允许走进你充电房的人。",
+match: "理性克制型", matchWhy: "两个清醒的人谈恋爱，主打一个舒服和体面。"},
+D: { name: "黏人小狗型", seal: "黏", acc: "#d4677f",
+tagline: "爱就是想和你待着，连下楼扔垃圾都要一起。",
+tags: ["#黏人精", "#情绪价值拉满", "#分享欲爆棚"],
+traits: "快乐阈值极低，见到TA就自动开心；喜欢肢体接触，抱抱能解决百分之八十的坏情绪；分享欲爆棚，看到一朵好看的云都想拍给TA。",
+love: "秒回、报备、黏着撒娇三件套齐全，恨不得把「想你」设置成自动回复；吵架超不过十分钟，先服软的永远是你。",
+adv: "情绪价值拉满——你的热情能融化任何冰山。真诚的小狗谁能拒绝？反正冰山不行。",
+egg: "你的聊天置顶永远只有一个人；TA晚回十分钟消息，你已经在脑子里脑补完一部四十集连续剧。",
+match: "细水长流型", matchWhy: "你负责热烈黏人，TA负责稳稳接住。"},
+E: { name: "理性克制型", seal: "冷", acc: "#5b7fa6",
+tagline: "心动是本能，心定是本事。",
+tags: ["#清醒恋爱", "#靠谱天花板", "#长期主义"],
+traits: "先观察再投入，情绪很少失控；不说漂亮话，但承诺过的事件件落地；爱得清醒，分得清一时心动和长久合适。",
+love: "不搞突然袭击式的浪漫，却会把两个人的未来规划得明明白白；吵架讲逻辑、摆事实，目标是解决问题，而不是赢过对方。",
+adv: "靠谱本身就是顶级魅力——你的稳定，能治好对方所有的患得患失。",
+egg: "别人恋爱靠荷尔蒙，你靠项目管理：纪念日有提醒，约会有 Plan B，连哄人之后都有复盘笔记。",
+match: "独立猫系型", matchWhy: "势均力敌、彼此尊重，谁也不用将就谁。"},
+F: { name: "浪漫造梦型", seal: "梦", acc: "#a83e6d",
+tagline: "别人谈的是恋爱，你导的是电影。",
+tags: ["#氛围感大师", "#仪式感收藏家", "#情话批发商"],
+traits: "氛围感雷达全天候开启，日落、晚风、一首老歌都能触发心动；是资深仪式感收藏家，纪念日记得比日历还全；想象力丰富，擅长把平平无奇的日子过成电影片段。",
+love: "约会像精心分镜的电影：选址、音乐、穿搭全有讲究；情话张口就来，还总能翻出新花样，浪漫在你这里是日常供应。",
+adv: "和你恋爱永远不会无聊——你能把柴米油盐，调出玫瑰的味道。",
+egg: "你的相册里全是「适合当情侣头像、壁纸、官宣文案」的素材，就差一个主角——哦，主角已经在路上了。",
+match: "直球热恋型", matchWhy: "你负责造梦，TA负责把梦立刻变成真的。"},
+G: { name: "慢热观察型", seal: "慢", acc: "#4a5d7e",
+tagline: "不是不动心，是想把心看清楚了再交出去。",
+tags: ["#后程发力", "#眼光毒辣", "#认定就不放"],
+traits: "前期安静观察，人品、细节、三观都在你的考察清单上；一旦认定就异常坚定，属于后程发力型选手；讨厌速食感情，相信时间会筛选人。",
+love: "进展比别人慢半拍，但每一步都踩得很实；不轻易承诺，可只要承诺了，就是奔着长期主义去的。",
+adv: "眼光毒辣、踩雷率极低——你选中的人，往往真的能陪你走很远。",
+egg: "朋友都以为你没动心，其实你的观察笔记已经写满三页：TA对服务员的态度，早就在你的加分项里躺着了。",
+match: "直球热恋型", matchWhy: "你的慢热，需要一个不怕被拒绝的直球来敲门。"},
+H: { name: "嘴硬心软型", seal: "傲", acc: "#cf7031",
+tagline: "嘴上说随便，心里早就排好了和你的全部行程。",
+tags: ["#口是心非", "#嫌弃式宠爱", "#反差感拉满"],
+traits: "口头禅是「随便」「都行」「无所谓」，心里的小剧场却比谁都热闹；好面子、不爱先低头，但行动永远比嘴诚实；吃醋不说、想念不说，唯独对TA的好藏不住。",
+love: "嫌弃式宠爱本爱：嘴上吐槽TA熬夜，手已经伸过去关了灯；礼物说是「顺手买的」，其实挑了三个晚上。",
+adv: "反差感致命——你的柔软只对一个人开放，这种「专属限定」的温柔，谁顶得住。",
+egg: "你的嘴和你的心签了保密协议：嘴负责嘴硬，心负责把TA随口提的奶茶口味，记了整整两年。",
+match: "黏人小狗型", matchWhy: "只有小狗的直白和热情，能撬开你的嘴硬。"}
+};
+
+/* ================= 题库：20 题 × 4 选项 ================= */
+/* o(选项文本, 主类型) */
+function o(t, ty) { return { t: t, ty: ty};}
+var QUESTIONS = [
+{ cat: "心动瞬间", q: "第一次对一个人心动，通常是因为什么？", opts: [
+o("人群里一眼看到 TA，电光火石，当场沦陷", "A"),
+o("某个瞬间像电影镜头：晚风、侧脸、一首老歌，氛围感直接拉满", "F"),
+o("说不上来，相处久了才发现，心跳早就不对劲了", "G"),
+o("心动是心动，但我会先退后一步，慢慢看", "C")]},
+{ cat: "心动之后", q: "心动之后，你的第一反应是？", opts: [
+o("找机会搭话，喜欢就得让 TA 知道", "A"),
+o("制造各种「偶遇」，想办法多出现在 TA 面前", "D"),
+o("先默默观察一阵，看看 TA 的动态和日常再说", "G"),
+o("排练了八百遍开场白，见面只憋出一句「好巧」", "H")]},
+{ cat: "聊天日常", q: "和喜欢的人聊天，你的状态是？", opts: [
+o("秒回本回，还总想再多聊一会儿", "D"),
+o("不一定秒回，但每一条都认真回、好好聊", "B"),
+o("有事说事，聊得来比聊得勤重要", "E"),
+o("白天正常聊，深夜才是灵魂对谈时间", "F")]},
+{ cat: "约会安排", q: "第一次约会，你更想安排成什么样？", opts: [
+o("江边日落 + 散步 + 一家有氛围的小店，浪漫必须到位", "F"),
+o("直接约 TA 最想去的地方，想玩什么当场安排", "A"),
+o("一起逛逛菜市场，回家做一顿热乎饭", "B"),
+o("各看各的展，结束再汇合喝杯咖啡聊聊感受", "C")]},
+{ cat: "表达爱意", q: "你表达喜欢的方式，更接近哪一种？", opts: [
+o("直接说出口，「我喜欢你」四个字不难", "A"),
+o("嘴上不说，但 TA 随口提过的小事我全记得", "H"),
+o("黏黏糊糊的撒娇和拥抱，身体比嘴诚实", "D"),
+o("不常挂在嘴边，但 TA 需要时我永远在场", "E")]},
+{ cat: "吵架处理", q: "和 TA 吵架了，你通常会怎么做？", opts: [
+o("当场说开，吵完翻篇，绝不记仇过夜", "A"),
+o("先各自冷静，理清问题再坐下来谈", "E"),
+o("吵不过三分钟就先服软，只想赶紧和好抱抱", "D"),
+o("先自己消化一遍，确认问题出在哪再开口", "G")]},
+{ cat: "冷战时刻", q: "TA 突然冷淡、消息回得慢，你会？", opts: [
+o("坐立难安，忍不住发小作文问「是不是我做错了什么」", "D"),
+o("给彼此一点空间，等 TA 想说的时候再谈", "E"),
+o("心里急得冒烟，表面还要回一句「哦，没事」", "H"),
+o("照常发早安晚安，用稳定的日常把冰慢慢融化", "B")]},
+{ cat: "独处与陪伴", q: "关于独处和陪伴，你的理想配比是？", opts: [
+o("再相爱也要留完整的独处时间，那是我的充电方式", "C"),
+o("快乐就是和 TA 待在一起，什么都不干也开心", "D"),
+o("一半陪伴一半独处，张弛有度刚刚好", "B"),
+o("陪伴不在多而在质，一次用心的约会胜过天天黏着", "F")]},
+{ cat: "周末时光", q: "周末和 TA 在一起，你最想怎么过？", opts: [
+o("提前策划一场小惊喜约会，仪式感不能少", "F"),
+o("睡到自然醒，买菜做饭追剧，平平淡淡才是真", "B"),
+o("白天各自有安排，晚上碰头分享今天的见闻", "C"),
+o("想到什么玩什么，立刻拉上 TA 出门", "A")]},
+{ cat: "纪念日", q: "在一起的第一个纪念日，你会怎么做？", opts: [
+o("鲜花、餐厅、手写信，仪式感必须拉满", "F"),
+o("做一桌 TA 爱吃的菜，比什么排场都踏实", "B"),
+o("记得日子、心意到了就行，形式不重要", "E"),
+o("嘴上说「这有什么好过的」，礼物其实半个月前就备好了", "H")]},
+{ cat: "吃醋瞬间", q: "看到 TA 和异性聊得很开心，你的反应是？", opts: [
+o("有点酸就直接问清楚，不憋着自己内耗", "A"),
+o("酸得冒泡，还要强装大度说「我才不在意」", "H"),
+o("委屈巴巴凑过去求关注，求抱抱求安慰", "D"),
+o("相信 TA，但会找个时机认真聊聊彼此的边界", "E")]},
+{ cat: "异地考验", q: "如果要异地一段时间，你觉得？", opts: [
+o("提前定好见面节奏，各自努力，问题不大", "E"),
+o("每天视频到睡着，距离是我最大的敌人", "D"),
+o("正好交给时间检验，真的感情经得起距离", "G"),
+o("把各自的日子过好，重逢时都是惊喜", "B")]},
+{ cat: "朋友聚会", q: "带 TA 参加朋友聚会，你会？", opts: [
+o("大方介绍「这是我对象」，满脸写着骄傲", "A"),
+o("玩归玩，我更习惯恋爱和朋友圈各留空间", "C"),
+o("全程黏在 TA 身边，恨不得挂在 TA 胳膊上", "D"),
+o("介绍时耳朵通红，嘴上还要故作随意", "H")]},
+{ cat: "照顾与陪伴", q: "TA 生病了，你的第一反应是？", opts: [
+o("煲汤买药安排上，照顾得妥妥帖帖", "B"),
+o("查攻略、挂号、陪诊，用最靠谱的方式解决问题", "E"),
+o("急得团团转，恨不得替 TA 难受", "D"),
+o("立刻赶过去，先到场，其他再说", "A")]},
+{ cat: "送礼物", q: "给 TA 挑礼物时，你的风格是？", opts: [
+o("定制或亲手做，独一无二才配得上 TA", "F"),
+o("提前观察 TA 缺什么，送最实用的那一个", "E"),
+o("说是「随便买的」，其实挑了三个晚上", "H"),
+o("不贵重但贴心，都是能用在日常里的小东西", "B")]},
+{ cat: "公开关系", q: "关于在朋友圈公开恋情，你的态度是？", opts: [
+o("官宣！九宫格安排上，全世界都该知道", "A"),
+o("先稳定一阵子，确定了再公开也不迟", "G"),
+o("感情是两个人的事，不太爱秀", "C"),
+o("要等一个绝佳时机，配一张氛围感拉满的照片", "F")]},
+{ cat: "未来规划", q: "聊到两个人的未来，你的态度是？", opts: [
+o("会认真谈时间表，一步一步踏实推进", "E"),
+o("不说大话，先把今年的日子过好", "B"),
+o("一聊就兴奋，已经开始畅想一起生活的样子了", "A"),
+o("走一步看一步，感觉对了自然会往前走", "G")]},
+{ cat: "情绪低落", q: "TA 情绪低落时，你通常会？", opts: [
+o("陪着不走，先抱抱，道理以后再说", "D"),
+o("先问一句：「你需要我听着，还是帮你想办法？」", "E"),
+o("给 TA 安静的空间，需要时默默递上一杯热饮", "C"),
+o("不多说，把家务和琐事都揽下来，让 TA 好好休息", "B")]},
+{ cat: "和好方式", q: "吵架之后，谁先递台阶？", opts: [
+o("我，「别气了，请你吃好吃的」一句话的事", "A"),
+o("别扭半天，最后假装没事把 TA 爱吃的塞过去", "H"),
+o("必须是我，眼泪汪汪扑过去，绝不隔夜", "D"),
+o("等情绪都平复了，认真写一段话再好好谈", "G")]},
+{ cat: "理想爱情", q: "你心中理想的爱情，最接近哪一种？", opts: [
+o("像电影一样热烈浪漫，老了还能慢慢回放", "F"),
+o("柴米油盐、一日三餐，慢慢一起变老", "B"),
+o("亲密有间，是并肩同行，不是互相捆绑", "C"),
+o("势均力敌，彼此成就，一起变成更好的人", "E")]}
+];
+
+/* ================= 流程逻辑 ================= */
+var TOTAL = QUESTIONS.length;
+var answers = new Array(TOTAL).fill(null);
+var current = 0;
+var advancing = false;
+
+var views = { home: document.getElementById("view-home"), quiz: document.getElementById("view-quiz"), result: document.getElementById("view-result")};
+function show(name) {
+for (var k in views) views[k].classList.toggle("active", k === name);
+window.scrollTo({ top: 0});
+}
+
+var qCard = document.getElementById("q-card");
+var qCat = document.getElementById("q-cat");
+var qText = document.getElementById("q-text");
+var qOpts = document.getElementById("q-options");
+var qNow = document.getElementById("q-now");
+var qPct = document.getElementById("q-pct");
+var bar = document.getElementById("progress-bar");
+var btnPrev = document.getElementById("btn-prev");
+var LETTERS = ["A", "B", "C", "D"];
+
+function renderQuestion() {
+var item = QUESTIONS[current];
+qCat.textContent = item.cat;
+qText.textContent = item.q;
+qNow.textContent = current + 1;
+var done = answers.filter(function (a) { return a!== null;}).length;
+var pct = Math.round(done / TOTAL * 100);
+qPct.textContent = pct + "%";
+bar.style.width = pct + "%";
+btnPrev.disabled = current === 0;
+qOpts.innerHTML = "";
+item.opts.forEach(function (opt, i) {
+var b = document.createElement("button");
+b.type = "button";
+b.className = "opt" + (answers[current] === i? " picked": "");
+var letter = document.createElement("span");
+letter.className = "letter"; letter.textContent = LETTERS[i];
+var txt = document.createElement("span"); txt.textContent = opt.t;
+b.appendChild(letter); b.appendChild(txt);
+b.addEventListener("click", function () { pick(i, b);});
+qOpts.appendChild(b);
+});
+qCard.classList.remove("q-anim");
+void qCard.offsetWidth;
+qCard.classList.add("q-anim");
+}
+
+function pick(i, btn) {
+if (advancing) return;
+answers[current] = i;
+var all = qOpts.querySelectorAll(".opt");
+all.forEach(function (el) { el.classList.remove("picked");});
+btn.classList.add("picked");
+advancing = true;
+setTimeout(function () {
+advancing = false;
+if (current < TOTAL - 1) { current++; renderQuestion();}
+else { finish();}
+}, 260);
+}
+
+btnPrev.addEventListener("click", function () {
+if (current > 0 &&!advancing) { current--; renderQuestion();}
+});
+
+function computeResult() {
+var typeScore = {}, typeMax = {}, dimScore = {}, dimMax = {};
+Object.keys(TYPES).forEach(function (k) { typeScore[k] = 0; typeMax[k] = 0;});
+DIMS.forEach(function (d) { dimScore[d.k] = 0; dimMax[d.k] = 0;});
+QUESTIONS.forEach(function (item, qi) {
+/* 每题的理论最高分：用于归一化，避免出现频率高的类型占便宜、稀有类型成死结果 */
+DIMS.forEach(function (d) {
+var m = 0;
+item.opts.forEach(function (op) { m = Math.max(m, (SIG[op.ty][d.k] || 0));});
+dimMax[d.k] += m;
+});
+Object.keys(TYPES).forEach(function (t) {
+var mt = 0;
+item.opts.forEach(function (op) {
+var c = (op.ty === t ? 3 : 0) + (SEC[op.ty] === t ? 1 : 0);
+mt = Math.max(mt, c);
+});
+typeMax[t] += mt;
+});
+var chosen = item.opts[answers[qi]];
+typeScore[chosen.ty] += 3;
+typeScore[SEC[chosen.ty]] += 1;
+var sig = SIG[chosen.ty];
+for (var dk in sig) dimScore[dk] += sig[dk];
+});
+/* 按亲和度（得分 / 理论最高分）选结果，并列时原始分高者优先 */
+var best = null, bestAff = -1;
+Object.keys(TYPES).forEach(function (k) {
+var aff = typeMax[k] ? typeScore[k] / typeMax[k] : 0;
+if (aff > bestAff || (aff === bestAff && best !== null && typeScore[k] > typeScore[best])) { bestAff = aff; best = k;}
+});
+return { type: best, typeScore: typeScore, dimScore: dimScore, dimMax: dimMax};
+}
+
+function finish() {
+var res = computeResult();
+var T = TYPES[res.type];
+var poster = document.getElementById("poster");
+poster.style.setProperty("--acc", T.acc);
+document.getElementById("r-type").textContent = T.name;
+document.getElementById("r-tagline").textContent = T.tagline;
+document.getElementById("r-seal").textContent = T.seal;
+document.getElementById("r-traits").textContent = T.traits;
+document.getElementById("r-love").textContent = T.love;
+document.getElementById("r-adv").textContent = T.adv;
+document.getElementById("r-egg").textContent = T.egg;
+document.getElementById("r-match").innerHTML = "天生一对：<b></b> —— ";
+document.getElementById("r-match").querySelector("b").textContent = T.match;
+document.getElementById("r-match").appendChild(document.createTextNode(T.matchWhy));
+var tagsBox = document.getElementById("r-tags");
+tagsBox.innerHTML = "";
+T.tags.forEach(function (t) { var s = document.createElement("span"); s.textContent = t; tagsBox.appendChild(s);});
+var dimsBox = document.getElementById("r-dims");
+dimsBox.innerHTML = "";
+DIMS.forEach(function (d) {
+var pct = res.dimMax[d.k]? Math.round(res.dimScore[d.k] / res.dimMax[d.k] * 100): 0;
+pct = Math.max(6, Math.min(99, pct));
+var cell = document.createElement("div"); cell.className = "dim";
+var row = document.createElement("div"); row.className = "dim-row";
+var nm = document.createElement("span"); nm.textContent = d.n;
+var val = document.createElement("b"); val.textContent = pct + "%";
+row.appendChild(nm); row.appendChild(val);
+var track = document.createElement("div"); track.className = "dim-track";
+var fill = document.createElement("div"); fill.className = "dim-fill";
+fill.setAttribute("data-w", pct);
+track.appendChild(fill);
+cell.appendChild(row); cell.appendChild(track);
+dimsBox.appendChild(cell);
+});
+/* 心动浓度：由最高类型得分换算，稳定可复现 */
+var conc = 82 + (res.typeScore[res.type] * 7) % 17;
+document.getElementById("r-score").textContent = conc + "%";
+document.getElementById("share-tip").innerHTML = "截图上方这张卡片，就能分享到小红书和朋友圈啦";
+show("result");
+requestAnimationFrame(function () {
+setTimeout(function () {
+dimsBox.querySelectorAll(".dim-fill").forEach(function (f) { f.style.width = f.getAttribute("data-w") + "%";});
+}, 60);
+});
+}
+
+document.getElementById("btn-start").addEventListener("click", function () {
+answers = new Array(TOTAL).fill(null);
+current = 0;
+show("quiz");
+renderQuestion();
+});
+document.getElementById("btn-restart").addEventListener("click", function () {
+answers = new Array(TOTAL).fill(null);
+current = 0;
+show("quiz");
+renderQuestion();
+});
+document.getElementById("btn-copy").addEventListener("click", function () {
+var res = computeResult();
+var T = TYPES[res.type];
+var text = "我在《测你的恋爱人格》测出了——" + T.tagline + "你也来测测，你是哪种恋爱人格？";
+var tip = document.getElementById("share-tip");
+function ok() { tip.innerHTML = "<span class=\"copy-ok\">结果文案已复制，去分享给朋友吧</span>";}
+function fail() {
+tip.textContent = "复制失败，长按选中这句手动复制：" + text;
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(ok, fail);
+} else {
+var ta = document.createElement("textarea");
+ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta); ta.select();
+try { document.execCommand("copy")? ok(): fail();} catch (e) { fail();}
+document.body.removeChild(ta);
+}
+});
+</script>
+</body>
+</html>

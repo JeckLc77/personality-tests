@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>你在古代是什么身份</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f6f0e2; --paper2:#efe6d0; --card:#fdfaf2;
+--ink:#22302e; --ink2:#5a6b66; --line:#ddd0b4;
+--red:#a83226; --red2:#c8503f; --gold:#b98d3e; --gold2:#d9b96a;
+--teal:#2f5d57; --teal2:#4a7d76;
+--shadow:0 18px 50px rgba(60,45,15,.16);
+--radius:18px;
+}
+@media (prefers-color-scheme: dark){
+:root{ --paper:#141d1b; --paper2:#1a2522; --card:#1e2b28; --ink:#ece4d0; --ink2:#b3ab97; --line:#3a4a45; --shadow:0 18px 50px rgba(0,0,0,.5);}
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+font-family:"Noto Serif SC", "Songti SC", "STSong", serif;
+background:
+radial-gradient(ellipse 700px 400px at 15% -5%, rgba(185,141,62,.14), transparent 60%),
+radial-gradient(ellipse 600px 500px at 90% 110%, rgba(47,93,87,.14), transparent 60%),
+var(--paper);
+color:var(--ink); min-height:100vh;
+-webkit-tap-highlight-color:transparent;
+}
+button{font-family:inherit; cursor:pointer; min-height:44px}
+.wrap{max-width:680px; margin:0 auto; padding:20px 16px 48px}
+.view{display:none}
+.view.on{display:block; animation:fadeUp.45s ease both}
+@keyframes fadeUp{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){.view.on{animation:none}}
+
+/* ---------- 首页 ---------- */
+.hero{ text-align:center; padding:34px 10px 8px}
+.seal{
+display:inline-flex; align-items:center; justify-content:center;
+width:58px; height:58px; border-radius:12px; background:var(--red); color:#f8ecd8;
+font-family:"Ma Shan Zheng", serif; font-size:30px; transform:rotate(-4deg);
+box-shadow:0 8px 20px rgba(168,50,38,.35); margin-bottom:18px;
+}
+.hero h1{ font-size:clamp(30px,7.5vw,44px); font-weight:900; letter-spacing:.06em; margin:0 0 6px; line-height:1.25}
+.hero.sub{ font-family:"Ma Shan Zheng", serif; font-size:clamp(17px,4.5vw,21px); color:var(--red); letter-spacing:.14em; margin:0 0 16px}
+.hero p.desc{ color:var(--ink2); font-size:15px; line-height:1.9; max-width:480px; margin:0 auto 22px}
+.chips{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:26px}
+.chip{ font-size:13px; padding:7px 14px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--ink2)}
+.btn-main{
+display:inline-block; border:none; background:linear-gradient(135deg, var(--red), var(--red2));
+color:#fdf6e3; font-size:18px; font-weight:700; letter-spacing:.2em; padding:15px 52px 15px 60px;
+border-radius:999px; box-shadow:0 12px 28px rgba(168,50,38,.35);
+}
+.btn-main:active{transform:scale(.97)}
+.note{ margin-top:16px; font-size:12.5px; color:var(--ink2)}
+.preview{ margin-top:34px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow)}
+.preview h3{ margin:0 0 4px; font-size:16px; letter-spacing:.1em; text-align:center}
+.preview p{ margin:0 0 14px; font-size:13px; color:var(--ink2); text-align:center}
+.idgrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+@media(max-width:520px){.idgrid{grid-template-columns:repeat(2,1fr)}}
+.idcell{ border:1px dashed var(--line); border-radius:12px; padding:12px 6px; text-align:center; font-size:13.5px; font-weight:600; line-height:1.5}
+.idcell span{ display:block; font-size:20px; margin-bottom:4px}
+.howto{ margin-top:18px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+@media(max-width:520px){.howto{grid-template-columns:1fr}}
+.howto div{ background:var(--paper2); border-radius:12px; padding:14px; font-size:13.5px; line-height:1.7; color:var(--ink2)}
+.howto b{ color:var(--ink); display:block; margin-bottom:2px; font-size:14px}
+
+/* ---------- 答题 ---------- */
+.topbar{ display:flex; align-items:center; gap:12px; margin-bottom:8px}
+.qcount{ font-size:14px; font-weight:700; white-space:nowrap}
+.qcount em{ font-style:normal; color:var(--red); font-size:20px}
+.progress{ flex:1; height:8px; background:var(--paper2); border-radius:99px; overflow:hidden; border:1px solid var(--line)}
+.progress i{ display:block; height:100%; width:0; background:linear-gradient(90deg, var(--gold), var(--red)); border-radius:99px; transition:width.4s ease}
+.btn-back{ background:none; border:1px solid var(--line); border-radius:999px; padding:6px 16px; font-size:13.5px; color:var(--ink2); min-height:38px}
+.qcard{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:26px 22px 22px; margin-top:14px}
+.qtag{ display:inline-block; font-size:12px; letter-spacing:.18em; color:var(--gold); border:1px solid var(--gold2); padding:4px 12px; border-radius:999px; margin-bottom:14px}
+.qtext{ font-size:clamp(19px,5vw,23px); font-weight:700; line-height:1.6; margin:0 0 20px}
+.opts{ display:flex; flex-direction:column; gap:12px}
+.opt{
+display:flex; align-items:flex-start; gap:12px; text-align:left; width:100%;
+background:var(--paper); border:1.5px solid var(--line); border-radius:14px;
+padding:15px 16px; font-size:16px; line-height:1.65; color:var(--ink); transition:border-color.15s, background.15s;
+}
+.opt.k{ flex:none; width:28px; height:28px; border-radius:50%; border:1.5px solid var(--gold); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; margin-top:1px}
+.opt:active,.opt:hover{ border-color:var(--red); background:#fdf3e3}
+@media (prefers-color-scheme: dark){.opt:active,.opt:hover{ background:#2a2118}}
+.qcard.slide{ animation:slideIn.35s ease both}
+@keyframes slideIn{ from{opacity:0; transform:translateX(26px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){.qcard.slide{animation:none}}
+.qtip{ text-align:center; font-size:12.5px; color:var(--ink2); margin-top:16px}
+
+/* ---------- 结果海报 ---------- */
+.poster{
+position:relative; overflow:hidden; border-radius:22px; color:#f3e9d2;
+background:linear-gradient(160deg, #22382f 0%, #16241f 55%, #101a17 100%);
+box-shadow:0 24px 60px rgba(20,30,25,.45); padding:30px 24px 26px;
+border:1px solid rgba(217,185,106,.45);
+}
+.poster::before{ content:""; position:absolute; inset:10px; border:1px solid rgba(217,185,106,.35); border-radius:14px; pointer-events:none}
+.poster.p-seal{ position:absolute; top:22px; right:22px; width:46px; height:46px; border-radius:9px; background:var(--red); color:#f8ecd8; display:flex; align-items:center; justify-content:center; font-family:"Ma Shan Zheng",serif; font-size:22px; transform:rotate(5deg)}
+.poster.p-kicker{ font-size:12.5px; letter-spacing:.34em; color:var(--gold2); margin:0 0 10px}
+.poster h2{ font-size:clamp(30px,8vw,40px); font-weight:900; margin:0 0 4px; letter-spacing:.04em; line-height:1.3}
+.poster.p-alias{ font-family:"Ma Shan Zheng",serif; font-size:18px; color:#e8cf9a; letter-spacing:.1em; margin:0 0 16px}
+.poster.p-slogan{ font-size:16.5px; line-height:1.8; background:rgba(217,185,106,.12); border-left:3px solid var(--gold2); padding:12px 14px; border-radius:0 10px 10px 0; margin:0 0 20px}
+.poster h4{ font-size:13px; letter-spacing:.28em; color:var(--gold2); margin:20px 0 8px}
+.poster p.body{ font-size:15px; line-height:1.95; margin:0; color:#e9e0c9}
+.tags{ display:flex; flex-wrap:wrap; gap:8px}
+.tags span{ font-size:13px; padding:6px 13px; border-radius:999px; border:1px solid rgba(217,185,106,.55); color:#eed9a4}
+.dims{ margin-top:6px}
+.dimrow{ display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13px}
+.dimrow.dn{ width:52px; flex:none; color:#d8cba6}
+.dimrow.bar{ flex:1; height:7px; background:rgba(255,255,255,.14); border-radius:99px; overflow:hidden}
+.dimrow.bar i{ display:block; height:100%; background:linear-gradient(90deg, var(--gold2), var(--red2)); border-radius:99px}
+.dimrow.dv{ width:34px; text-align:right; color:#eed9a4; font-weight:700}
+.poster.p-foot{ margin-top:22px; padding-top:14px; border-top:1px dashed rgba(217,185,106,.4); font-size:12px; color:#b9ac8b; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.egg{ background:rgba(168,50,38,.22); border:1px dashed rgba(232,150,130,.6); border-radius:12px; padding:12px 14px; font-size:14.5px; line-height:1.8; margin-top:6px}
+.actions{ display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
+.btn-gold{ flex:1; min-width:150px; border:none; background:linear-gradient(135deg, var(--gold), var(--gold2)); color:#2c2110; font-size:16px; font-weight:700; letter-spacing:.12em; padding:14px 20px; border-radius:999px}
+.btn-ghost{ flex:1; min-width:150px; background:var(--card); border:1.5px solid var(--line); color:var(--ink); font-size:16px; font-weight:700; letter-spacing:.12em; padding:14px 20px; border-radius:999px}
+.toast{ position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--paper); padding:11px 22px; border-radius:999px; font-size:14px; opacity:0; pointer-events:none; transition:.3s; z-index:50; white-space:nowrap}
+.toast.show{ opacity:1; transform:translateX(-50%)}
+.foot-note{ text-align:center; font-size:12px; color:var(--ink2); margin-top:22px; line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 首页 -->
+<section class="view on" id="v-home">
+<div class="hero">
+<div class="seal">古</div>
+<h1>你在古代<br>是什么身份</h1>
+<p class="sub">一纸判词 · 定你前世</p>
+<p class="desc">20 道现代生活题，不考一句历史。凭你点外卖的方式、发朋友圈的习惯和花钱的姿势，就能算出：若生在古代，你是位极人臣，还是浪迹江湖。</p>
+<div class="chips">
+<span class="chip">20 道生活题</span><span class="chip">8 种古代身份</span><span class="chip">8 维性格图谱</span><span class="chip">约 3 分钟</span>
+</div>
+<button class="btn-main" id="btn-start">开始测算</button>
+<p class="note">趣味人格测试 · 不考历史 · 不是心理诊断 · 结果仅供一乐</p>
+</div>
+
+<div class="preview">
+<h3>八 种 命 格</h3>
+<p>你会是其中的哪一个？</p>
+<div class="idgrid">
+<div class="idcell"><span>🏯</span>位极人臣的谋臣</div>
+<div class="idcell"><span>🗡️</span>行侠仗义的游侠</div>
+<div class="idcell"><span>🧮</span>富甲一方的商贾</div>
+<div class="idcell"><span>🍵</span>隐世高人</div>
+<div class="idcell"><span>🩺</span>悬壶济世的医者</div>
+<div class="idcell"><span>🎭</span>名动京城的伶人</div>
+<div class="idcell"><span>🐎</span>戍边将军</div>
+<div class="idcell"><span>📚</span>书院山长</div>
+</div>
+<div class="howto">
+<div><b>凭直觉选</b>没有对错，第一反应最准，别回头改。</div>
+<div><b>看维度图谱</b>权谋、江湖、文人、富贵、自由、烟火、武勇、灵气，八维定命格。</div>
+<div><b>晒你的海报</b>结果是国风海报卡，截图发小红书、朋友圈刚刚好。</div>
+</div>
+</div>
+</section>
+
+<!-- 答题 -->
+<section class="view" id="v-quiz">
+<div class="topbar">
+<button class="btn-back" id="btn-prev">← 上一题</button>
+<div class="progress"><i id="bar"></i></div>
+<div class="qcount"><em id="qnow">1</em> / 20</div>
+</div>
+<div class="qcard" id="qcard">
+<span class="qtag" id="qtag">日常习惯</span>
+<p class="qtext" id="qtext"></p>
+<div class="opts" id="opts"></div>
+</div>
+<p class="qtip">点选后自动进入下一题 · 凭第一直觉，别想太久</p>
+</section>
+
+<!-- 结果 -->
+<section class="view" id="v-result">
+<div class="poster" id="poster"></div>
+<div class="actions">
+<button class="btn-gold" id="btn-copy">复制结果文案</button>
+<button class="btn-ghost" id="btn-again">再测一次</button>
+</div>
+<p class="foot-note">截图上方海报即可分享到小红书 / 朋友圈<br>《你在古代是什么身份》· 趣味测试，结果仅供娱乐</p>
+</section>
+</div>
+<div class="toast" id="toast">已复制，去分享给朋友吧</div>
+
+<script>
+/* ============ 维度 ============
+qm 权谋心 | jh 江湖气 | wr 文人气 | fg 富贵欲
+zy 自由度 | yh 烟火气 | wy 武勇值 | lq 灵气值 */
+var DIMS = [
+{k:'qm', n:'权谋心'}, {k:'jh', n:'江湖气'}, {k:'wr', n:'文人气'}, {k:'fg', n:'富贵欲'},
+{k:'zy', n:'自由度'}, {k:'yh', n:'烟火气'}, {k:'wy', n:'武勇值'}, {k:'lq', n:'灵气值'}
+];
+
+/* ============ 20 道题：每项给两个维度加分 ============ */
+var QUESTIONS = [
+{tag:'周末安排', q:'难得一个没安排的周末，你最想怎么过？', opts:[
+{t:'睡到自然醒，下楼吃碗热乎的，再慢慢逛菜市场', s:{yh:3, zy:1}},
+{t:'约上三五好友，组个局，热闹一整天', s:{jh:3, yh:1}},
+{t:'一个人去看展、泡书店，手机调静音', s:{wr:3, zy:1}},
+{t:'研究副业和行情，周末正是搞钱的好时候', s:{fg:3, qm:1}}]},
+{tag:'社交模式', q:'在朋友群里，你通常是哪个角色？', opts:[
+{t:'潜水观察型，谁在想什么我心里都有数', s:{qm:3, wr:1}},
+{t:'气氛组组长，梗和段子基本出自我手', s:{lq:3, jh:1}},
+{t:'有事真上型，谁喊帮忙我第一个到', s:{jh:3, yh:1}},
+{t:'链接资源型，总能给大家对接上需要的人和事', s:{fg:2, qm:2}}]},
+{tag:'消费观', q:'突然收到一笔 5000 元奖金，你的第一反应是？', opts:[
+{t:'存起来或买点稳健理财，钱要生钱', s:{fg:3, qm:1}},
+{t:'请朋友们好好吃一顿，快乐要分享', s:{yh:3, jh:1}},
+{t:'买下心仪已久的那件东西，对自己好一点', s:{lq:2, fg:1, zy:1}},
+{t:'说走就走，订一张去远方的票', s:{zy:3, jh:1}}]},
+{tag:'处事方式', q:'工作中有人把锅甩到你头上，你会？', opts:[
+{t:'不吵不闹，默默甩出聊天记录和时间线', s:{qm:3, wr:1}},
+{t:'当场对质，是非曲直必须说清楚', s:{wy:3, jh:1}},
+{t:'先把事情解决了，账以后再慢慢算', s:{qm:2, yh:2}},
+{t:'算了，不值得为这事耗神，下班还有生活', s:{zy:2, yh:2}}]},
+{tag:'旅行偏好', q:'出去旅行，你是哪种类型？', opts:[
+{t:'攻略做到小时级，表格拉满，绝不浪费一分钟', s:{qm:2, fg:2}},
+{t:'只订一张票，到了再说，走到哪算哪', s:{zy:3, jh:1}},
+{t:'专挑古镇老街、小众博物馆，慢慢逛慢慢品', s:{wr:3, yh:1}},
+{t:'哪里热闹去哪里，夜市、演出、集市一个不落', s:{lq:2, yh:2}}]},
+{tag:'情绪反应', q:'心情跌到谷底时，你靠什么回血？', opts:[
+{t:'独处。关门、泡茶、写点东西，自己消化', s:{wr:2, zy:2}},
+{t:'找最铁的朋友吐槽一顿，说出来就好了', s:{jh:2, yh:2}},
+{t:'运动暴汗，或者去吃一顿好的', s:{wy:3, yh:1}},
+{t:'看场演出、听会儿曲儿，美的东西能治我', s:{lq:3, wr:1}}]},
+{tag:'日常习惯', q:'你的手机相册里，最多的是什么？', opts:[
+{t:'美食和探店，活色生香', s:{yh:3, lq:1}},
+{t:'风景和远方，山川湖海', s:{zy:2, wr:2}},
+{t:'截图：资料、干货、值得记下来的东西', s:{wr:2, qm:2}},
+{t:'朋友合影和热闹场面', s:{jh:2, lq:2}}]},
+{tag:'价值取向', q:'如果只能留一样东西传给后人，你留？', opts:[
+{t:'一本手记，把经验和教训都写下来', s:{wr:3, qm:1}},
+{t:'一份家业，让他们少奋斗十年', s:{fg:3, yh:1}},
+{t:'一身好口碑，提起我都竖大拇指', s:{jh:2, yh:2}},
+{t:'什么都不留，活得自在比什么都强', s:{zy:3, lq:1}}]},
+{tag:'兴趣爱好', q:'免费送你一门课，你选哪个？', opts:[
+{t:'书法 / 国画 / 古琴，安安静静修身养性', s:{wr:3, zy:1}},
+{t:'投资理财课，搞钱才是正经事', s:{fg:3, qm:1}},
+{t:'拳击 / 骑马 / 射箭，帅就完了', s:{wy:4, jh:1}},
+{t:'表演 / 声乐 / 舞蹈，我想站上舞台', s:{lq:3, fg:1}}]},
+{tag:'社交模式', q:'朋友有难，开口向你借钱，你会？', opts:[
+{t:'二话不说先转过去，救急不救穷我懂，但他例外', s:{jh:3, yh:1}},
+{t:'先问清用途和还款计划，亲兄弟明算账', s:{fg:2, qm:2}},
+{t:'钱不多，但我可以帮他想别的办法、出人出力', s:{yh:2, qm:2}},
+{t:'量力而行帮一点，绝不让自己陷入被动', s:{qm:2, zy:2}}]},
+{tag:'处事方式', q:'团队里出现分歧，吵得不可开交，你会？', opts:[
+{t:'等大家吵完，站出来一锤定音给方案', s:{qm:3, wy:1}},
+{t:'把各方拉到饭桌上，酒过三巡就好谈了', s:{jh:2, yh:2}},
+{t:'先安抚情绪，谁委屈先听谁说', s:{yh:3, wr:1}},
+{t:'不掺和，等结果出来我再表态', s:{zy:2, qm:2}}]},
+{tag:'消费观', q:'买东西时，你最在意什么？', opts:[
+{t:'性价比。每一分钱都要花出响儿来', s:{fg:3, qm:1}},
+{t:'眼缘。喜欢就拿下，千金难买我乐意', s:{lq:2, zy:2}},
+{t:'品质和耐用，一件顶十件', s:{wr:2, fg:2}},
+{t:'能不能让生活更舒服、让家人更开心', s:{yh:3, fg:1}}]},
+{tag:'日常习惯', q:'你的房间 / 工位是什么风格？', opts:[
+{t:'极简留白，东西越少越好，心里才清净', s:{zy:2, wr:2}},
+{t:'满满当当，摆件、照片、纪念品全是故事', s:{yh:2, lq:2}},
+{t:'井井有条，每样东西都有固定位置', s:{qm:2, wr:2}},
+{t:'看着乱但我全找得到，自成一套体系', s:{jh:2, zy:2}}]},
+{tag:'情绪反应', q:'被当众夸奖时，你的真实反应是？', opts:[
+{t:'表面谦虚，内心狂喜，值得发个朋友圈', s:{lq:3, fg:1}},
+{t:'赶紧把功劳分给大家，一个人可干不成', s:{qm:2, yh:2}},
+{t:'有点不好意思，想赶紧翻篇', s:{wr:2, zy:2}},
+{t:'淡定收下，我知道自己几斤几两', s:{wy:3, qm:1}}]},
+{tag:'工作状态', q:'你理想的工作状态是？', opts:[
+{t:'运筹帷幄，关键决策由我来拍板', s:{qm:3, fg:1}},
+{t:'天高任鸟飞，别管我过程，看结果就行', s:{zy:3, jh:1}},
+{t:'带一帮学生 / 徒弟，把本事传下去', s:{wr:3, yh:1}},
+{t:'有一门过硬的手艺，到哪都饿不死', s:{yh:1, wy:2, fg:1}}]},
+{tag:'社交模式', q:'聚会上来了一个陌生人，你会？', opts:[
+{t:'主动搭话，三分钟摸清他是干什么的', s:{qm:2, fg:2}},
+{t:'热情招呼，很快就能称兄道弟', s:{jh:3, yh:1}},
+{t:'安静观察，有眼缘再深聊', s:{wr:2, zy:2}},
+{t:'不自觉就成了全场焦点，拦都拦不住', s:{lq:3, jh:1}}]},
+{tag:'处事方式', q:'deadline 只剩最后一天，你的状态是？', opts:[
+{t:'越到最后越冷静，我就吃压力这一套', s:{wy:4}},
+{t:'早就拆解好了进度，今天只是收尾', s:{qm:3, wr:1}},
+{t:'灵感在深夜爆发，熬一宿搞定', s:{lq:2, wr:2}},
+{t:'喊上伙伴分工协作，人多力量大', s:{jh:3, yh:1}}]},
+{tag:'价值取向', q:'下面哪句话最戳你？', opts:[
+{t:'「但愿苍生俱饱暖」——人间烟火最抚人心', s:{yh:3, wr:1}},
+{t:'「王侯将相宁有种乎」——命运要攥在自己手里', s:{wy:3, qm:1}},
+{t:'「此心安处是吾乡」——在哪都行，心安就行', s:{zy:3, wr:1}},
+{t:'「千金散尽还复来」——钱是赚出来的，不是省出来的', s:{fg:3, jh:1}}]},
+{tag:'兴趣爱好', q:'如果开一家自己的小店，你想开？', opts:[
+{t:'茶馆 / 书吧，往来都是有故事的人', s:{wr:2, yh:2}},
+{t:'当铺旁边的投资行，专做大买卖', s:{fg:3, qm:1}},
+{t:'医馆 / 食疗小馆，治病也治心', s:{yh:3, zy:1}},
+{t:'戏楼 / 酒肆，天天有戏看有酒喝', s:{lq:3, jh:1}}]},
+{tag:'终极一问', q:'最后一题：如果真能穿越回古代，你最怕什么？', opts:[
+{t:'怕没权没势，满腹计谋无处施展', s:{qm:3, fg:1}},
+{t:'怕日子太平淡，没有江湖没有远方', s:{jh:2, zy:2}},
+{t:'怕生离死别，想护的人护不住', s:{yh:1, wy:3}},
+{t:'怕泯然众人，一辈子没被人记住', s:{lq:3, fg:1}}]}
+];
+
+/* ============ 8 种身份 ============ */
+var RESULTS = {
+mouchen: { name:'位极人臣的谋臣', icon:'🏯', alias:'人称 · 算无遗策', main:'qm',
+slogan:'「你不争，天下却早已在你的棋盘上。」',
+portrait:'朝堂之上，你官袍不显山不露水，开口却字字千钧。皇帝倚重你，对手忌惮你，同僚摸不透你——因为你永远比所有人多看三步。批不完的奏折你理得清，理不清的人心你更算得明。',
+traits:['权谋心','洞察人心','沉得住气','大局观'],
+reason:'你的权谋心维度全场最高。甩锅你用证据说话，分歧你等吵完再一锤定音，聚会上三分钟摸清陌生人的底细——这不是心机，这是谋臣的基本功：先看清棋局，再落子。',
+adv:'隐藏优势：情绪稳定得可怕。越是 deadline 逼近、场面混乱，你越冷静，这种「压舱石」体质，在任何时代都是稀缺资源。',
+egg:'趣味彩蛋：小心，你身边的朋友可能早就发现了——每次组局去哪儿吃，最后定的都是你「随口提」的那家。'},
+youxia: { name:'行侠仗义的游侠', icon:'🗡️', alias:'人称 · 快意恩仇', main:'jh',
+slogan:'「路见不平一声吼，该出手时就出手。」',
+portrait:'一匹快马、一壶烈酒、一柄长剑走天涯。哪里有不平事，哪里就有你的身影；朋友有难你比当事人还急，银子在你手里从来留不过夜——不是穷，是仗义疏财惯了。',
+traits:['江湖气','重情重义','行动派','天生自来熟'],
+reason:'你的江湖气维度一骑绝尘。朋友借钱你二话不说先转过去，聚会上三分钟称兄道弟，选座位、选旅行都是「到了再说」——规矩是死的，人是活的，这是刻在骨子里的侠客逻辑。',
+adv:'隐藏优势：人缘就是你的江湖通行证。你攒下的人情，比存折上的数字更抗跌，关键时刻总有人替你两肋插刀。',
+egg:'趣味彩蛋：你的外卖订单暴露了你——深夜加单最多的品类是烧烤和啤酒，因为总有「路过」的朋友要来你家坐坐。'},
+shanggu: { name:'富甲一方的商贾', icon:'🧮', alias:'人称 · 点石成金', main:'fg',
+slogan:'「和气生财，你的算盘打得比谁都响。」',
+portrait:'城中最大的绸缎庄、钱庄、酒楼，幕后东家都是你。别人逛街看热闹，你逛街看商机；别人聊天叙旧，你聊天里全是信息差。富甲一方不稀奇，难得的是你富得让人服气——童叟无欺，口碑就是你的金字招牌。',
+traits:['富贵欲','精打细算','资源整合','眼光毒辣'],
+reason:'你的富贵欲维度稳居高位。奖金先想着钱生钱，买东西必须花出响儿来，朋友群里你还是那个总能对接上资源的人——商人的天赋不是抠，是让每一份资源都流动起来生利。',
+adv:'隐藏优势：对「值不值」的判断快得像本能。别人纠结三天的消费决策，你扫一眼就知道坑在哪，这份眼力，穿越回古代就是行商的祖师爷。',
+egg:'趣味彩蛋：据说你家的冰箱上贴着各大平台的满减攻略，古代若有优惠券，你怕是能靠薅羊毛再富一档。'},
+gaoren: { name:'隐世高人', icon:'🍵', alias:'人称 · 大隐于市', main:'zy',
+slogan:'「世人笑我太疯癫，我笑世人看不穿——其实你只是想清净。」',
+portrait:'山间一间草庐，门前三亩薄田，屋里满架藏书。达官贵人抬着金银来求你出山，你泡一壶茶，说一句「缘分未到」就把人送走了。不是清高，是你早就看透：名利场里争来的，都不如睡个好觉。',
+traits:['自由度','通透淡然','精神富有','边界感强'],
+reason:'你的自由度维度拉满。被甩锅你说「不值得耗神」，被夸你想赶紧翻篇，理想的生活是「在哪都行，心安就行」——这种不争不抢不是躺平，是想明白之后的降维打击。',
+adv:'隐藏优势：你的快乐成本极低。一壶茶、一本书、一个下午就能满血复活，这种自给自足的能量系统，谁也拿不走。',
+egg:'趣味彩蛋：你的朋友圈要么不发，发必是山水花草配一句看不懂的话——高人，都是这么营业的。'},
+yizhe: { name:'悬壶济世的医者', icon:'🩺', alias:'人称 · 妙手仁心', main:'yh',
+slogan:'「治得了病，更治得了人心。」',
+portrait:'药香满巷的医馆里，你一把脉、一搭眼，就知道病人是身子病了还是心里病了。穷人看病你分文不取，还倒贴药材；富人千金求诊，你只淡淡一句「先学会好好吃饭睡觉」。十里八乡提起你，没有不竖大拇指的。',
+traits:['烟火气','共情力强','温润可靠','治愈系'],
+reason:'你的烟火气维度最高。周末要吃热乎的、逛菜市场，团队有分歧你先安抚情绪，朋友有难你出人出力——医者的仁心，在你身上就是日常：先暖人心，再治事情。',
+adv:'隐藏优势：你是人群里的「情绪解药」。谁跟你聊完天都觉得轻松了，这份让人安心的本事，比任何证书都值钱。',
+egg:'趣味彩蛋：你的随身包里大概率常备创可贴、润喉糖或胃药——别问，问就是职业病，虽然你并不从医。'},
+lingren: { name:'名动京城的伶人', icon:'🎭', alias:'人称 · 一曲倾城', main:'lq',
+slogan:'「台下十年无人问，一朝登台天下知。」',
+portrait:'京城最大的戏楼，你一亮嗓，满座寂然；你一回眸，王孙公子掷金如土。但你红得明白：三分天赋，七分是没人看见的苦功。散了场卸了妆，你还是那个爱热闹、爱漂亮、爱把日子过成戏的人间清醒。',
+traits:['灵气值','表现力拉满','审美在线','天生焦点'],
+reason:'你的灵气值维度一枝独秀。相册里全是热闹场面，被夸了想发朋友圈，免费课你选表演声乐——你不是爱出风头，你是天生为舞台和人群而生的发光体。',
+adv:'隐藏优势：感染力是你的超能力。你往那一站，气氛就活了；你开口三句，陌生人就想跟你交朋友，这是练不出来的天赋。',
+egg:'趣味彩蛋：洗澡时唱歌、走路带节奏、拍照永远找得到最佳角度——别否认，镜头感已经刻进你的 DNA 了。'},
+jiangjun: { name:'戍边将军', icon:'🐎', alias:'人称 · 一夫当关', main:'wy',
+slogan:'「身后是家国，面前是山河，你一步都不会退。」',
+portrait:'大漠黄沙，烽火连天，你披甲立于城头，身后是万家灯火。你不爱说话，但将士们都服你——因为每次冲锋你都在最前面，每次断后你都在最后面。功名于你如浮云，守住身后的人，才是你认的理。',
+traits:['武勇值','扛压能力','说一不二','守护型人格'],
+reason:'你的武勇值维度居首。当众对质你不躲，deadline 越近你越冷静，「命运要攥在自己手里」最戳你——将军的气质不在嗓门，在关键时刻永远顶得上去。',
+adv:'隐藏优势：你是天生的「主心骨」。天塌下来的场合，所有人都会下意识看向你，而你也真的接得住。',
+egg:'趣味彩蛋：别看你在外雷厉风行，回家换上拖鞋，你大概率是那个被猫/狗/娃拿捏得死死的「纸老虎」。'},
+shanzhang: { name:'书院山长', icon:'📚', alias:'人称 · 桃李满天下', main:'wr',
+slogan:'「你教出的学生改变天下，你的名字写进人心。」',
+portrait:'青山脚下的书院，你是创办人也是第一位先生。达官贵人的子弟你教，山里娃你也教，束脩给不起的，一把青菜也算数。你的官不大，名声却比谁都远——三十年后朝堂上半数重臣，见了你都要恭恭敬敬行个弟子礼。',
+traits:['文人气','好为人师','腹有诗书','传承欲强'],
+reason:'你的文人气维度底蕴深厚。独处时写写画画，旅行专挑古镇书院，传给后人的东西你选了「一本手记」——山长的快乐不在自己的功名，在看着别人因你而走得更远。',
+adv:'隐藏优势：你有把复杂讲简单的本事。再难的道理，经你的嘴一说就通透了，这种「点拨力」在哪一行都是降维打击。',
+egg:'趣味彩蛋：朋友圈里你大概率是那个总爱转发深度长文、还附三句点评的人——山长批作业的习惯，藏不住了。'}
+};
+
+/* 第二顺位组合彩蛋：自由+文人 偏隐世，烟火+江湖 偏医者微调在主结果内处理 */
+
+var state = { idx:0, answers:[]};
+var $ = function(id){ return document.getElementById(id);};
+function show(id){
+['v-home','v-quiz','v-result'].forEach(function(v){ $(v).classList.toggle('on', v===id);});
+window.scrollTo({top:0, behavior:'smooth'});
+}
+function renderQ(){
+var item = QUESTIONS[state.idx];
+$('qnow').textContent = state.idx + 1;
+$('bar').style.width = ((state.idx) / QUESTIONS.length * 100) + '%';
+$('qtag').textContent = item.tag;
+$('qtext').textContent = item.q;
+$('btn-prev').style.visibility = state.idx === 0? 'hidden': 'visible';
+var box = $('opts'); box.innerHTML = '';
+var keys = ['A','B','C','D'];
+item.opts.forEach(function(o, i){
+var b = document.createElement('button');
+b.className = 'opt';
+b.innerHTML = '<span class="k">' + keys[i] + '</span><span></span>';
+b.lastChild.textContent = o.t;
+b.addEventListener('click', function(){ pick(i);});
+box.appendChild(b);
+});
+var card = $('qcard'); card.classList.remove('slide'); void card.offsetWidth; card.classList.add('slide');
+}
+function pick(i){
+state.answers[state.idx] = i;
+if (state.idx < QUESTIONS.length - 1){ state.idx++; renderQ();}
+else { finish();}
+}
+function compute(){
+var sc = {}; DIMS.forEach(function(d){ sc[d.k] = 0;});
+state.answers.forEach(function(a, qi){
+if (a == null) return;
+var s = QUESTIONS[qi].opts[a].s;
+for (var k in s) sc[k] += s[k];
+});
+/* 主维度定身份 */
+var mainKey = 'qm', best = -1;
+DIMS.forEach(function(d){ if (sc[d.k] > best){ best = sc[d.k]; mainKey = d.k;}});
+var map = { qm:'mouchen', jh:'youxia', fg:'shanggu', zy:'gaoren', yh:'yizhe', lq:'lingren', wy:'jiangjun', wr:'shanzhang'};
+/* 特殊微调：自由度与文人气双高且接近时，优先隐世高人 */
+if ((mainKey === 'wr') && sc.zy >= sc.wr - 2 && sc.zy >= 10) mainKey = 'zy';
+return { sc: sc, id: map[mainKey], mainKey: mainKey};
+}
+function finish(){
+$('bar').style.width = '100%';
+var r = compute();
+var res = RESULTS[r.id];
+/* 维度百分比：理论最高分约 42，归一化展示 */
+var rows = DIMS.map(function(d){
+var pct = Math.min(100, Math.round(r.sc[d.k] / 30 * 100));
+return '<div class="dimrow"><span class="dn">' + d.n + '</span><span class="bar"><i style="width:' + pct + '%"></i></span><span class="dv">' + r.sc[d.k] + '</span></div>';
+}).join('');
+var tags = res.traits.map(function(t){ return '<span>' + t + '</span>';}).join('');
+$('poster').innerHTML =
+'<div class="p-seal">印</div>' +
+'<p class="p-kicker">你在古代是什么身份</p>' +
+'<h2>' + res.icon + ' ' + res.name + '</h2>' +
+'<p class="p-alias">' + res.alias + '</p>' +
+'<p class="p-slogan">' + res.slogan + '</p>' +
+'<h4>身 份 画 像</h4><p class="body">' + res.portrait + '</p>' +
+'<h4>性 格 标 签</h4><div class="tags">' + tags + '</div>' +
+'<h4>为 何 是 你</h4><p class="body">' + res.reason + '</p>' +
+'<h4>八 维 图 谱</h4><div class="dims">' + rows + '</div>' +
+'<h4>隐 藏 优 势</h4><p class="body">' + res.adv.replace('隐藏优势：','') + '</p>' +
+'<h4>趣 味 彩 蛋</h4><div class="egg">' + res.egg.replace('趣味彩蛋：','') + '</div>' +
+'<div class="p-foot"><span>趣味人格测试 · 仅供娱乐</span><span>截图分享给朋友测一测 →</span></div>';
+show('v-result');
+state.resultText = '我在《你在古代是什么身份》测出了' + res.slogan + ' 快来测测你在古代是什么身份！';
+}
+$('btn-start').addEventListener('click', function(){ state.idx = 0; state.answers = []; show('v-quiz'); renderQ();});
+$('btn-prev').addEventListener('click', function(){ if (state.idx > 0){ state.idx--; renderQ();}});
+$('btn-again').addEventListener('click', function(){ state.idx = 0; state.answers = []; show('v-home');});
+$('btn-copy').addEventListener('click', function(){
+var txt = state.resultText || '';
+function done(){ var t = $('toast'); t.classList.add('show'); setTimeout(function(){ t.classList.remove('show');}, 2200);}
+if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(done).catch(done);}
+else {
+var ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta);
+ta.select(); try { document.execCommand('copy');} catch(e){} document.body.removeChild(ta); done();
+}
+});
+</script>
+</body>
+</html>

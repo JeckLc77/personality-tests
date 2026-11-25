@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>你的人生主线任务测试</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+
+      :root {
+        --bg: #f3eddc;
+        --bg-deep: #e9e0c8;
+        --panel: #fffaf0;
+        --panel-2: #f8f1de;
+        --ink: #2c2517;
+        --ink-soft: #57503e;
+        --muted: #8a7d63;
+        --line: #ddd0ac;
+        --line-strong: #c3b184;
+        --gold: #a37c14;
+        --gold-bright: #c99b1d;
+        --gold-soft: #f3e5bd;
+        --danger: #b3402e;
+        --shadow: 0 18px 40px rgba(94, 74, 28, .18);
+        --card-shadow: 0 10px 28px rgba(94, 74, 28, .14);
+        --xp-track: #e3d7b4;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e1120;
+          --bg-deep: #090b16;
+          --panel: #181d31;
+          --panel-2: #1f2540;
+          --ink: #ede8da;
+          --ink-soft: #c6c0ae;
+          --muted: #8f96b0;
+          --line: #2d3454;
+          --line-strong: #454e78;
+          --gold: #e0b33e;
+          --gold-bright: #f2c94c;
+          --gold-soft: #33301c;
+          --danger: #e07a5f;
+          --shadow: 0 18px 44px rgba(0, 0, 0, .5);
+          --card-shadow: 0 10px 28px rgba(0, 0, 0, .42);
+          --xp-track: #262c48;
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        font-family: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(1100px 500px at 85% -10%, rgba(201, 155, 29, .14), transparent 60%),
+          radial-gradient(900px 480px at -10% 110%, rgba(201, 155, 29, .10), transparent 60%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+        min-height: 100vh;
+      }
+      .serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+
+      .wrap { max-width: 680px; margin: 0 auto; padding: 22px 16px 56px; }
+
+      .screen { display: none; }
+      .screen.active { display: block; animation: screenIn .38s ease both; }
+      @keyframes screenIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+      /* ---------- 通用小件 ---------- */
+      .quest-tag {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 12px; letter-spacing: .22em; font-weight: 700;
+        color: var(--gold);
+        border: 1px solid var(--line-strong);
+        padding: 6px 12px; border-radius: 999px;
+        background: var(--panel);
+      }
+      .quest-tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold-bright); box-shadow: 0 0 0 3px var(--gold-soft); }
+      .btn {
+        appearance: none; border: 0; cursor: pointer;
+        font-family: inherit; font-weight: 700;
+        border-radius: 12px; transition: transform .15s ease, filter .15s ease, background .15s ease;
+      }
+      .btn:active { transform: scale(.98); }
+      .btn-primary {
+        background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+        color: #fffdf4; font-size: 17px; letter-spacing: .12em;
+        padding: 15px 34px; min-height: 54px;
+        box-shadow: 0 10px 24px rgba(163, 124, 20, .35), inset 0 1px 0 rgba(255,255,255,.35);
+        text-shadow: 0 1px 2px rgba(80, 58, 0, .35);
+      }
+      .btn-primary:hover { filter: brightness(1.06); }
+      .btn-ghost {
+        background: var(--panel); color: var(--ink-soft);
+        border: 1px solid var(--line-strong);
+        font-size: 15px; padding: 12px 22px; min-height: 48px;
+      }
+      .btn-ghost:hover { color: var(--ink); border-color: var(--gold); }
+
+      /* ---------- 首页 ---------- */
+      .hero {
+        background: var(--panel);
+        border: 1px solid var(--line-strong);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 34px 26px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before, .hero::after {
+        content: ""; position: absolute; width: 54px; height: 54px;
+        border: 2px solid var(--gold); opacity: .5; pointer-events: none;
+      }
+      .hero::before { top: 10px; left: 10px; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; }
+      .hero::after { bottom: 10px; right: 10px; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; }
+      .hero h1 {
+        font-family: "Noto Serif SC", serif; font-weight: 900;
+        font-size: clamp(30px, 7.4vw, 44px); line-height: 1.25;
+        margin: 18px 0 6px; letter-spacing: .02em;
+      }
+      .hero h1 .hl { color: var(--gold); }
+      .hero .sub { color: var(--ink-soft); font-size: 15px; line-height: 1.8; margin: 10px auto 0; max-width: 30em; }
+      .hero .scroll-note {
+        margin: 20px auto 0; max-width: 30em;
+        background: var(--panel-2); border: 1px dashed var(--line-strong);
+        border-radius: 12px; padding: 13px 16px;
+        font-size: 13.5px; line-height: 1.75; color: var(--ink-soft); text-align: left;
+      }
+      .hero .scroll-note b { color: var(--gold); }
+      .meta-row {
+        display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 22px 0 26px;
+      }
+      .meta-chip {
+        font-size: 13px; color: var(--ink-soft);
+        border: 1px solid var(--line); background: var(--panel-2);
+        border-radius: 999px; padding: 7px 14px;
+      }
+      .meta-chip b { color: var(--gold); font-size: 14px; }
+      .disclaimer { margin-top: 20px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+      .preview { margin-top: 22px; }
+      .preview h2 { font-family: "Noto Serif SC", serif; font-size: 17px; margin: 0 0 12px; letter-spacing: .06em; }
+      .preview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .preview-item {
+        background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+        padding: 13px 15px; font-size: 14px; color: var(--ink-soft);
+        display: flex; align-items: center; gap: 10px; box-shadow: var(--card-shadow);
+      }
+      .preview-item .dot { width: 9px; height: 9px; border-radius: 2px; flex: none; transform: rotate(45deg); }
+      @media (max-width: 480px) { .preview-grid { grid-template-columns: 1fr 1fr; } .preview-item { font-size: 13px; padding: 11px 12px; } }
+
+      /* ---------- 答题 ---------- */
+      .quiz-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+      .lv-badge {
+        flex: none; display: inline-flex; align-items: baseline; gap: 4px;
+        background: var(--panel); border: 1px solid var(--line-strong); border-radius: 10px;
+        padding: 7px 12px; font-weight: 700; color: var(--gold);
+        font-size: 13px; letter-spacing: .08em;
+      }
+      .lv-badge b { font-size: 18px; font-family: "Noto Serif SC", serif; }
+      .q-count { font-size: 13px; color: var(--muted); letter-spacing: .14em; font-weight: 700; }
+      .q-count b { color: var(--ink); font-size: 15px; }
+      .xpbar {
+        height: 14px; border-radius: 999px; background: var(--xp-track);
+        border: 1px solid var(--line-strong); overflow: hidden; position: relative;
+      }
+      .xpfill {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+        border-radius: 999px; transition: width .45s cubic-bezier(.22, .8, .3, 1);
+        position: relative;
+      }
+      .xpfill::after {
+        content: ""; position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0) 55%);
+      }
+      .xp-label { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-top: 6px; letter-spacing: .1em; }
+
+      .q-card {
+        margin-top: 18px; background: var(--panel);
+        border: 1px solid var(--line-strong); border-radius: 18px;
+        box-shadow: var(--card-shadow); padding: 24px 22px 8px;
+      }
+      .q-card.anim { animation: qIn .32s ease both; }
+      @keyframes qIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: none; } }
+      .q-card.anim-back { animation: qInBack .32s ease both; }
+      @keyframes qInBack { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+      .q-scene { font-size: 12px; letter-spacing: .2em; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+      .q-text { font-family: "Noto Serif SC", serif; font-weight: 700; font-size: clamp(19px, 5vw, 22px); line-height: 1.55; margin: 0 0 20px; }
+      .opts { display: flex; flex-direction: column; gap: 11px; padding-bottom: 18px; }
+      .opt {
+        display: flex; align-items: center; gap: 13px; text-align: left;
+        width: 100%; min-height: 56px; padding: 13px 16px;
+        background: var(--panel-2); color: var(--ink);
+        border: 1.5px solid var(--line); border-radius: 13px;
+        font-size: 15.5px; line-height: 1.55; font-family: inherit; cursor: pointer;
+        transition: border-color .15s ease, background .15s ease, transform .15s ease;
+      }
+      .opt:hover { border-color: var(--gold); transform: translateY(-1px); }
+      .opt .key {
+        flex: none; width: 30px; height: 30px; border-radius: 8px;
+        display: grid; place-items: center;
+        border: 1.5px solid var(--line-strong); color: var(--gold);
+        font-weight: 700; font-size: 14px; background: var(--panel);
+      }
+      .opt.picked { border-color: var(--gold); background: var(--gold-soft); }
+      .opt.picked .key { background: var(--gold); color: #fffdf4; border-color: var(--gold); }
+      .quiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+      .btn-back {
+        background: none; border: 0; color: var(--muted); font-size: 14px; cursor: pointer;
+        padding: 10px 6px; min-height: 44px; font-family: inherit;
+      }
+      .btn-back:hover { color: var(--ink); }
+      .btn-back[disabled] { opacity: 0; pointer-events: none; }
+      .quiz-tip { font-size: 12px; color: var(--muted); }
+
+      /* ---------- 结果 ---------- */
+      .poster {
+        border-radius: 20px; overflow: hidden;
+        background: var(--panel);
+        border: 1.5px solid var(--rc, var(--gold));
+        box-shadow: var(--shadow);
+      }
+      .poster-top {
+        padding: 22px 24px 18px;
+        background: linear-gradient(135deg, var(--rc-soft, var(--gold-soft)), transparent 70%);
+        border-bottom: 1px dashed var(--line-strong);
+        position: relative;
+      }
+      .rarity {
+        position: absolute; top: 18px; right: 20px;
+        font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 15px;
+        color: var(--rc, var(--gold)); border: 2px solid var(--rc, var(--gold));
+        border-radius: 8px; padding: 3px 9px; transform: rotate(6deg); letter-spacing: .06em;
+        background: var(--panel);
+      }
+      .poster-code { font-size: 11.5px; letter-spacing: .26em; color: var(--muted); font-weight: 700; }
+      .poster h2 {
+        font-family: "Noto Serif SC", serif; font-weight: 900;
+        font-size: clamp(27px, 6.6vw, 36px); line-height: 1.3; margin: 10px 0 4px;
+      }
+      .poster h2 .rc { color: var(--rc, var(--gold)); }
+      .poster-quest { font-size: 16.5px; font-weight: 700; color: var(--ink); line-height: 1.6; }
+      .poster-tagline {
+        margin-top: 12px; font-family: "Noto Serif SC", serif; font-size: 16px;
+        color: var(--rc, var(--gold)); font-weight: 700; line-height: 1.6;
+      }
+      .match-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+      .match-chip {
+        font-size: 12.5px; border: 1px solid var(--line-strong); border-radius: 999px;
+        padding: 5px 12px; color: var(--ink-soft); background: var(--panel);
+      }
+      .match-chip b { color: var(--rc, var(--gold)); }
+      .poster-body { padding: 20px 24px 24px; }
+      .poster-desc { font-size: 15px; line-height: 1.85; color: var(--ink-soft); margin: 0; }
+      .sec-title {
+        display: flex; align-items: center; gap: 9px;
+        font-family: "Noto Serif SC", serif; font-weight: 700; font-size: 15.5px;
+        margin: 22px 0 11px; letter-spacing: .05em;
+      }
+      .sec-title::before { content: ""; width: 8px; height: 8px; transform: rotate(45deg); background: var(--rc, var(--gold)); flex: none; }
+      .sec-title:first-of-type { margin-top: 20px; }
+      .skill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+      .skill-chip {
+        font-size: 13.5px; padding: 7px 13px; border-radius: 9px;
+        background: var(--panel-2); border: 1px solid var(--line); color: var(--ink);
+      }
+      .talent-box {
+        background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px;
+        padding: 13px 16px; font-size: 14.5px; line-height: 1.75; color: var(--ink-soft);
+      }
+      .talent-box b { color: var(--rc, var(--gold)); }
+      .trait-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .trait-list li {
+        font-size: 14px; color: var(--ink-soft); background: var(--panel-2);
+        border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; line-height: 1.5;
+      }
+      @media (max-width: 420px) { .trait-list { grid-template-columns: 1fr; } }
+
+      .stat-row { display: grid; grid-template-columns: 64px 1fr 40px; align-items: center; gap: 10px; margin: 7px 0; font-size: 13px; }
+      .stat-row .nm { color: var(--ink-soft); font-weight: 500; }
+      .stat-row .vl { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+      .stat-track { height: 9px; border-radius: 999px; background: var(--xp-track); overflow: hidden; }
+      .stat-fill { height: 100%; border-radius: 999px; background: var(--muted); width: 0; transition: width .8s cubic-bezier(.22,.8,.3,1); }
+      .stat-row.top .nm { color: var(--ink); font-weight: 700; }
+      .stat-row.top .stat-fill { background: linear-gradient(90deg, var(--rc, var(--gold)), var(--gold-bright)); }
+      .stat-row.top .vl { color: var(--rc, var(--gold)); font-weight: 700; }
+
+      .detail-card {
+        margin-top: 16px; background: var(--panel); border: 1px solid var(--line);
+        border-radius: 16px; padding: 6px 22px 20px; box-shadow: var(--card-shadow);
+      }
+      .side-list { margin: 0; padding: 0; list-style: none; counter-reset: side; }
+      .side-list li {
+        counter-increment: side; position: relative;
+        padding: 10px 0 10px 40px; font-size: 14.5px; line-height: 1.7; color: var(--ink-soft);
+        border-bottom: 1px dashed var(--line);
+      }
+      .side-list li:last-child { border-bottom: 0; }
+      .side-list li::before {
+        content: counter(side, decimal-leading-zero);
+        position: absolute; left: 0; top: 11px;
+        font-size: 12px; font-weight: 700; color: var(--gold);
+        border: 1px solid var(--line-strong); border-radius: 6px; padding: 1px 6px; background: var(--panel-2);
+      }
+      .reward-box {
+        margin-top: 4px; border-radius: 12px; padding: 15px 17px;
+        background: linear-gradient(135deg, var(--gold-soft), transparent 75%);
+        border: 1px solid var(--line-strong);
+        font-size: 15px; line-height: 1.8; color: var(--ink);
+        font-family: "Noto Serif SC", serif; font-weight: 700;
+      }
+      .plain-text { font-size: 14.5px; line-height: 1.85; color: var(--ink-soft); margin: 0; }
+      .egg-box {
+        border: 1px dashed var(--line-strong); border-radius: 12px; padding: 13px 16px;
+        font-size: 14px; line-height: 1.8; color: var(--ink-soft); background: var(--panel-2);
+      }
+      .result-actions { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+      .result-actions .btn { flex: 1; min-width: 150px; }
+      .result-foot { text-align: center; margin-top: 18px; font-size: 12px; color: var(--muted); line-height: 1.8; }
+
+      .toast {
+        position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 16px);
+        background: var(--ink); color: var(--bg); font-size: 14px; font-weight: 500;
+        padding: 11px 20px; border-radius: 999px; opacity: 0; pointer-events: none;
+        transition: opacity .25s ease, transform .25s ease; z-index: 50;
+        box-shadow: 0 12px 30px rgba(0,0,0,.25); max-width: calc(100vw - 32px); text-align: center;
+      }
+      .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+
+      <!-- ============ 首页 ============ -->
+      <section class="screen active" id="screen-home">
+        <div class="hero">
+          <span class="quest-tag">主线任务 · 待领取</span>
+          <h1>你的人生<br /><span class="hl">主线任务</span>测试</h1>
+          <p class="sub">如果人生是一款开放世界游戏，你接到的那条主线到底是什么？<br />是登顶、是远行、是守护，还是提前通关？</p>
+          <div class="scroll-note">
+            <b>任务简报：</b>回答 20 道人生抉择题，系统会根据你的选择倾向，测算你的八维欲望图谱，并为你派发唯一一条人生主线任务——附支线任务、初始技能与终极奖励。
+          </div>
+          <div class="meta-row">
+            <span class="meta-chip"><b>20</b> 道抉择题</span>
+            <span class="meta-chip"><b>8</b> 条人生主线</span>
+            <span class="meta-chip">约 <b>3</b> 分钟通关</span>
+          </div>
+          <button class="btn btn-primary" id="btn-start" type="button">领取主线任务</button>
+          <p class="disclaimer">趣味人格测试，图个乐子，不是专业心理诊断。<br />结果不定义你——你才是那个接任务的人。</p>
+        </div>
+
+        <div class="preview">
+          <h2>命运任务池 · 部分剧透</h2>
+          <div class="preview-grid" id="preview-grid"></div>
+        </div>
+      </section>
+
+      <!-- ============ 答题 ============ -->
+      <section class="screen" id="screen-quiz">
+        <div class="quiz-head">
+          <span class="lv-badge">LV.<b id="lv-num">1</b></span>
+          <span class="q-count">QUEST <b id="q-cur">1</b> / 20</span>
+        </div>
+        <div class="xpbar"><div class="xpfill" id="xp-fill"></div></div>
+        <div class="xp-label"><span>经验值 EXP</span><span id="xp-pct">0%</span></div>
+
+        <div class="q-card" id="q-card">
+          <div class="q-scene" id="q-scene">第 1 关</div>
+          <p class="q-text" id="q-text"></p>
+          <div class="opts" id="opts"></div>
+        </div>
+
+        <div class="quiz-foot">
+          <button class="btn-back" id="btn-back" type="button" disabled>← 上一题</button>
+          <span class="quiz-tip">凭第一直觉选，别想太久</span>
+        </div>
+      </section>
+
+      <!-- ============ 结果 ============ -->
+      <section class="screen" id="screen-result">
+        <div class="poster" id="poster">
+          <div class="poster-top">
+            <span class="rarity" id="r-rarity">SSR</span>
+            <div class="poster-code" id="r-code">MAIN QUEST · NO.01</div>
+            <h2>主线任务<br /><span class="rc" id="r-name"></span></h2>
+            <div class="poster-quest" id="r-quest"></div>
+            <p class="poster-tagline" id="r-tagline"></p>
+            <div class="match-row">
+              <span class="match-chip">灵魂契合度 <b id="r-match"></b></span>
+              <span class="match-chip">主导欲望 <b id="r-dim"></b></span>
+            </div>
+          </div>
+          <div class="poster-body">
+            <p class="poster-desc" id="r-desc"></p>
+
+            <div class="sec-title">初始技能</div>
+            <div class="skill-row" id="r-skills"></div>
+
+            <div class="sec-title">天赋加成</div>
+            <div class="talent-box" id="r-talent"></div>
+
+            <div class="sec-title">性格特点</div>
+            <ul class="trait-list" id="r-traits"></ul>
+
+            <div class="sec-title">八维欲望图谱</div>
+            <div id="r-stats"></div>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="sec-title">支线任务</div>
+          <ol class="side-list" id="r-sides"></ol>
+
+          <div class="sec-title">隐藏优势</div>
+          <p class="plain-text" id="r-hidden"></p>
+
+          <div class="sec-title">终极奖励</div>
+          <div class="reward-box" id="r-reward"></div>
+
+          <div class="sec-title">趣味彩蛋</div>
+          <div class="egg-box" id="r-egg"></div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" id="btn-copy" type="button">复制我的主线任务</button>
+          <button class="btn btn-ghost" id="btn-retest" type="button">重新测试</button>
+        </div>
+        <p class="result-foot">截图这张任务卡，发给朋友对一下主线——<br />说不定你们接的，正好是同一个副本。</p>
+      </section>
+
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================= 维度 ================= */
+var DIMS = {
+conquer: { name: "征服欲"},
+explore: { name: "探索欲"},
+guard: { name: "守护欲"},
+create: { name: "创造欲"},
+wealth: { name: "财富欲"},
+freedom: { name: "自由欲"},
+heal: { name: "破局欲"},
+self: { name: "寻真欲"}
+};
+var DIM_KEYS = Object.keys(DIMS);
+
+/* ================= 题目 =================
+d = 主维度(+3)，s = 副维度(+1) */
+var QUESTIONS = [
+{ scene: "新手村 · 技能分配", q: "刚进入人生这款游戏，系统发你 10 点技能点，你先加给哪一项？", opts: [
+{ t: "把一门本事练到出神入化，先有安身立命的绝活", d: "conquer", s: "create"},
+{ t: "点亮地图，先去看看更大的世界长什么样", d: "explore", s: "freedom"},
+{ t: "先学会赚钱——钱，就是行走江湖的底气", d: "wealth", s: "conquer"},
+{ t: "点在动手能力上，总想亲手做出点东西来", d: "create", s: "explore"}
+]},
+{ scene: "主城 · 成就感来源", q: "下面哪种瞬间，最让你有成就感？", opts: [
+{ t: "攻克了一个卡了自己很久的难题", d: "conquer", s: "create"},
+{ t: "在乎的人因为你，过得更好了一点", d: "guard", s: "heal"},
+{ t: "银行卡余额，又往上跳了一截", d: "wealth", s: "freedom"},
+{ t: "忽然想通了一件困扰自己很久的事", d: "self", s: "heal"}
+]},
+{ scene: "酒馆 · 朋友眼中的你", q: "在朋友眼里，你最像下面哪种人？", opts: [
+{ t: "随心所欲，谁也管不住，永远在计划下一次出发", d: "freedom", s: "explore"},
+{ t: "一直在和过去的自己较劲，想活得和父辈不一样", d: "heal", s: "self"},
+{ t: "好奇心爆棚，什么新鲜事都想试一试", d: "explore", s: "create"},
+{ t: "脑子里总有新点子，三句话不离自己的小计划", d: "create", s: "conquer"}
+]},
+{ scene: "驿站 · 意外假期", q: "突然多出三个月带薪假期，你会怎么用？", opts: [
+{ t: "背上包，去几个一直想去的地方看看", d: "explore", s: "freedom"},
+{ t: "闭关一段时间，做一件一直想做的作品或项目", d: "create", s: "self"},
+{ t: "好好陪陪家人，补上平时欠下的时光", d: "guard", s: "heal"},
+{ t: "不做任何规划，走到哪儿算哪儿", d: "freedom", s: "explore"}
+]},
+{ scene: "野外 · 遭遇憋屈", q: "遇到一件特别憋屈的事，你的第一反应通常是？", opts: [
+{ t: "先冷静下来——不能让情绪替我做决定，更不能重蹈覆辙", d: "heal", s: "self"},
+{ t: "憋一口气，把它变成往上爬的燃料", d: "conquer", s: "wealth"},
+{ t: "独处一会儿，先搞清楚自己到底在难受什么", d: "self", s: "freedom"},
+{ t: "换个环境透透气，天塌不下来", d: "freedom", s: "guard"}
+]},
+{ scene: "钱庄 · 存金币的理由", q: "你攒钱最主要的动力是什么？", opts: [
+{ t: "攒够了就能提前下班，把时间买回来", d: "wealth", s: "freedom"},
+{ t: "给家人兜底，真有事的时候我能顶上", d: "guard", s: "heal"},
+{ t: "攒一张去远方的票，世界还没看够", d: "explore", s: "freedom"},
+{ t: "攒一份底气，让自己有资格选不一样的活法", d: "heal", s: "wealth"}
+]},
+{ scene: "幻境 · 理想的晚年", q: "想象一下晚年生活，你最想达成哪幅画面？", opts: [
+{ t: "儿孙绕膝，一大家子热热闹闹", d: "guard", s: "heal"},
+{ t: "留下些作品或东西，多年后还有人记得", d: "create", s: "self"},
+{ t: "身体硬朗，想去哪去哪，不麻烦任何人", d: "freedom", s: "explore"},
+{ t: "心里没什么遗憾，平平静静，自洽安稳", d: "self", s: "guard"}
+]},
+{ scene: "组队 · 你的站位", q: "在一个团队里，你通常是哪个位置？", opts: [
+{ t: "冲在最前面、拿结果的那个", d: "conquer", s: "create"},
+{ t: "默默补位、替大家收拾残局的那个", d: "guard", s: "heal"},
+{ t: "出点子、搞气氛、盘活全场的那个", d: "create", s: "freedom"},
+{ t: "负责探路、总能找到新打法的那个", d: "explore", s: "conquer"}
+]},
+{ scene: "碑文 · 最戳你的一句话", q: "下面哪句话最戳你？", opts: [
+{ t: "“人生是旷野，不是轨道。”", d: "self", s: "freedom"},
+{ t: "“要么不做，要做就做到最好。”", d: "conquer", s: "wealth"},
+{ t: "“上一代没走完的路，不必由我重走一遍。”", d: "heal", s: "guard"},
+{ t: "“钱不是万能的，但能解决大部分烦恼。”", d: "wealth", s: "freedom"}
+]},
+{ scene: "重开 · 换个开局", q: "如果人生能重开一局，你最想换掉什么？", opts: [
+{ t: "换掉出身和成长环境，换一个剧本开局", d: "heal", s: "self"},
+{ t: "前半生太安稳了，这次想多闯一闯", d: "explore", s: "freedom"},
+{ t: "那些没好好陪伴的人，这次想重来一次", d: "guard", s: "heal"},
+{ t: "曾经认输的那几次，这次要赢回来", d: "conquer", s: "create"}
+]},
+{ scene: "行囊 · 手机相册", q: "翻翻你的手机相册，数量最多的是哪类照片？", opts: [
+{ t: "旅行、风景，和路上的各种见闻", d: "explore", s: "create"},
+{ t: "家人朋友的合照和日常", d: "guard", s: "self"},
+{ t: "自己的作品、成果，和攒下的灵感截图", d: "create", s: "wealth"},
+{ t: "随手拍的天空、云，和某个安静的瞬间", d: "self", s: "freedom"}
+]},
+{ scene: "工坊 · 最受不了的事", q: "工作或学业里，最让你受不了的是什么？", opts: [
+{ t: "重复、无聊、被管得死死的", d: "freedom", s: "self"},
+{ t: "付出和回报完全不成正比", d: "wealth", s: "conquer"},
+{ t: "明明能做得更好，却只能将就", d: "conquer", s: "create"},
+{ t: "忙得团团转，却不知道自己在忙什么", d: "self", s: "heal"}
+]},
+{ scene: "年关 · 亲戚的盘问", q: "过年回家，亲戚问起近况，你最想拿得出手的是？", opts: [
+{ t: "收入和存款——实打实的底气", d: "wealth", s: "conquer"},
+{ t: "在行业里做出的成绩和名气", d: "conquer", s: "create"},
+{ t: "我活成了和他们不一样的样子，而且过得挺好", d: "heal", s: "freedom"},
+{ t: "家里一切都好，我把大家都照顾得不错", d: "guard", s: "wealth"}
+]},
+{ scene: "许愿池 · 被动技能", q: "如果能白嫖一个“被动技能”，你选哪个？", opts: [
+{ t: "灵感永不枯竭，随时能进入创作状态", d: "create", s: "conquer"},
+{ t: "在任何陌生地方都能快速适应、如鱼得水", d: "explore", s: "guard"},
+{ t: "情绪稳定如山，不被外界轻易带偏", d: "self", s: "heal"},
+{ t: "随时能抽身离开的底气——去哪都行，留下也行", d: "freedom", s: "wealth"}
+]},
+{ scene: "深夜 · 失眠放映厅", q: "深夜睡不着的时候，你脑子里最常转的是？", opts: [
+{ t: "我这辈子，到底想怎么活", d: "self", s: "heal"},
+{ t: "下一个目标，下一件要搞定的事", d: "conquer", s: "wealth"},
+{ t: "钱够不够花，以后的日子怎么办", d: "wealth", s: "guard"},
+{ t: "小时候的一些事，和现在的自己有什么关系", d: "heal", s: "self"}
+]},
+{ scene: "邀约 · 朋友喊你入伙", q: "朋友创业喊你入伙，你最可能因为什么心动？", opts: [
+{ t: "能赚钱，前景看着不错", d: "wealth", s: "conquer"},
+{ t: "是没做过的事，想体验一把新副本", d: "explore", s: "create"},
+{ t: "能按自己的想法，把产品做出来", d: "create", s: "freedom"},
+{ t: "是信得过的人，想帮他一把", d: "guard", s: "heal"}
+]},
+{ scene: "据点 · 理想中的家", q: "你理想中的“家”，是什么样的？", opts: [
+{ t: "不大，但装得下所有在乎的人", d: "guard", s: "heal"},
+{ t: "随时能走也能回，是个自由的据点", d: "freedom", s: "explore"},
+{ t: "有一间自己的工作室或书房，能沉浸式做事", d: "create", s: "self"},
+{ t: "安静、舒服，能让自己彻底放松下来", d: "self", s: "guard"}
+]},
+{ scene: "庆功宴 · 最想听的夸奖", q: "哪句夸奖最能让你开心一整天？", opts: [
+{ t: "“这方面，你就是最强的。”", d: "conquer", s: "wealth"},
+{ t: "“你做的东西，真的打动到我了。”", d: "create", s: "explore"},
+{ t: "“有你在，大家就安心。”", d: "guard", s: "heal"},
+{ t: "“你的经历也太丰富了，跟你聊天像在旅行。”", d: "explore", s: "self"}
+]},
+{ scene: "攻坚 · 目标打法", q: "面对一个很难、但很想实现的目标，你的打法是？", opts: [
+{ t: "拆解、苦练、死磕到底，不服就是干", d: "conquer", s: "heal"},
+{ t: "先处理好内心的障碍，再一步一步来", d: "heal", s: "self"},
+{ t: "先上路，边走边调整路线", d: "explore", s: "freedom"},
+{ t: "先算清成本和收益，再决定投入多少", d: "wealth", s: "guard"}
+]},
+{ scene: "终章 · 通关结算", q: "游戏通关的结算画面上，你最希望出现什么？", opts: [
+{ t: "一件由你亲手打造、署着你名字的作品", d: "create", s: "conquer"},
+{ t: "一行字：“你终于成为了你自己。”", d: "self", s: "freedom"},
+{ t: "从此海阔天空，再没有人能给你派任务", d: "freedom", s: "wealth"},
+{ t: "你守护的人，都过上了安稳的日子", d: "guard", s: "heal"}
+]}
+];
+
+/* ================= 结果 ================= */
+var RESULTS = {
+conquer: {
+code: "MAIN QUEST · NO.01", color: "#c2402e", soft: "rgba(194,64,46,.12)",
+name: "登峰造极", quest: "成为某个领域的顶尖高手",
+tagline: "“山就在那里——你不登顶，睡不着。”",
+desc: "你的主线从来不是“过得去就行”。在你选定的那个领域里，一路打怪升级，直到名字被写在排行榜前列——别人眼中的天花板，只是你的出发点。这条路注定辛苦，但无聊和平庸，才是你真正受不了的东西。",
+skills: ["死磕到底", "快速学习", "大心脏抗压"],
+talent: "<b>竞争嗅觉 +50%</b>：越是强手如林的局，你越兴奋；对手越强，你的状态越好。",
+traits: ["目标感极强", "不服输，输了先复盘自己", "对平庸过敏", "赢了之后，还想赢更大的"],
+hidden: "你的执行力，就是你最稀有的天赋。大多数人输在“想了三年没动手”，而你通常今晚就开干——这一条，已经甩开九成人。",
+sides: ["找到你的“本命领域”，停止雨露均沾", "拜一位真正的高手为师，哪怕只是远远偷师", "拿下一个能拿出手的硬成果，给自己立个碑"],
+reward: "某一天，别人介绍你时只用一句话：“这方面，找他，准没错。”",
+egg: "彩蛋：你连打游戏都爱选最高难度，输了不骂队友，先骂自己菜——然后默默再开一局。"
+},
+explore: {
+code: "MAIN QUEST · NO.02", color: "#1f7a6d", soft: "rgba(31,122,109,.12)",
+name: "万里收录", quest: "看遍世界，收集一千个故事",
+tagline: "“世界那么大，你的任务是把它装进口袋。”",
+desc: "你的主线不在某一张办公桌前，而在地图上那些还没点亮的角落。你对世界的好奇心永远满格：新的城市、新的吃法、陌生人的故事，都是你要收集的图鉴。安稳对你来说不是奖励，是惩罚。",
+skills: ["随遇而安", "故事雷达", "厚脸皮搭讪"],
+talent: "<b>陌生环境适应力 +50%</b>：别人水土不服，你水土全服；越是陌生的地方，你越如鱼得水。",
+traits: ["好奇心没有上限", "对一成不变的生活耐受度极低", "经历比存款更让你有安全感", "天生的故事收集者"],
+hidden: "你的适应力被严重低估了。换城市、换行业、换圈子，别人要缓半年，你三天就能摸清门道——这是乱世里最值钱的生存技能。",
+sides: ["列一张“这辈子要去的 30 个地方”清单，开始逐个划掉", "学会用镜头或文字记录，别让故事只活在记忆里", "每年至少解锁一个完全陌生的领域或城市"],
+reward: "老了以后，你是饭桌上故事最多的人——每个皱纹里，都藏着一段远方。",
+egg: "彩蛋：你的收藏夹里躺着 47 个“以后一定要去”的攻略，去过的只有 3 个——但你依然在收藏。"
+},
+guard: {
+code: "MAIN QUEST · NO.03", color: "#b06f28", soft: "rgba(176,111,40,.13)",
+name: "灯火守夜", quest: "守护好一小群人",
+tagline: "“你的天下不大，刚好装得下最重要的人。”",
+desc: "你的主线没有宏大叙事：父母安康、朋友靠谱、爱的人睡得踏实，就是你的通关条件。你不追求站在聚光灯下，你追求的是——无论出什么事，你在，他们就安心。这种人，叫靠山。",
+skills: ["靠谱本谱", "情绪稳定器", "随叫随到"],
+talent: "<b>安全感辐射 +50%</b>：你出现的地方，慌乱自动降级；你是所有人的“别怕，有我”。",
+traits: ["重感情，认定了就是一辈子", "嘴上不说，事上全办了", "对陌生人客气，对自己人掏心", "比起远方，更怕辜负身边人"],
+hidden: "你的“被需要”其实是一种顶级影响力。你守护的这一小群人，会在你低谷时反过来托住你——这是你存下的、最硬的情感存款。",
+sides: ["给父母安排一次像样的体检和旅行，别等“以后”", "建立你的家庭应急小金库，金额不大，心里有底", "学会开口求助——靠山偶尔也要靠一靠别人"],
+reward: "很多年后的一个普通夜晚，一家人围坐吃饭，灯火可亲——那就是你的通关动画。",
+egg: "彩蛋：你手机里存着全家人的身份证号、血型和过敏史，自己的却记不住。"
+},
+create: {
+code: "MAIN QUEST · NO.04", color: "#7a4fa3", soft: "rgba(122,79,163,.12)",
+name: "留名之作", quest: "创造一件能留得下来的作品",
+tagline: "“人会走，作品会留下来替你说话。”",
+desc: "你的主线是“造物”：一本书、一个产品、一间小店、一首歌……形式不重要，重要的是这世上要有一件因你而存在的东西。你对“留下点什么”的渴望，比对名利更深——那是你对抗虚无的方式。",
+skills: ["无中生有", "审美在线", "沉浸式心流"],
+talent: "<b>灵感转化率 +50%</b>：别人脑子里闪过就没了的念头，到你手里能落地成形。",
+traits: ["不做点什么就浑身难受", "对作品挑剔到近乎偏执", "享受从 0 到 1 的过程", "比起被夸，更想被作品记住"],
+hidden: "你的审美就是生产力。在大家拼体力的赛道里，你能靠“做得好看又好用”降维打击——而且这项能力，年纪越大越值钱。",
+sides: ["选定一个载体，先完成一个粗糙但完整的版本", "给自己留一块不被打扰的创作时间，雷打不动", "把作品发出去——被看见，才是完成的一半"],
+reward: "很多年后，一个陌生人因为你的作品找到你，说：“这个东西，陪我走过了一段很难的日子。”",
+egg: "彩蛋：你的备忘录、草稿箱和未命名文件夹，就是一座没对外开放的博物馆。"
+},
+wealth: {
+code: "MAIN QUEST · NO.05", color: "#8f7a1e", soft: "rgba(143,122,30,.13)",
+name: "提前通关", quest: "赚够钱，提前退休",
+tagline: "“先攒够赎身的钱，再谈诗和远方。”",
+desc: "你的主线目标非常清晰：让钱先替你上班，你再去过日子。你不是爱钱，你是太清楚钱能买回什么——时间、选择权，和说“不”的底气。在别人纠结面子的时候，你在默默算自己的通关进度条。",
+skills: ["算账精通", "延迟满足", "风险嗅觉"],
+talent: "<b>金钱感知 +50%</b>：你对价格、成本和机会的敏感度天生高一截，很少为面子买单。",
+traits: ["目标务实，不画大饼", "能存钱，也舍得为值得的花", "对“被动收入”四个字毫无抵抗力", "比起羡慕别人，更爱研究别人怎么赚的"],
+hidden: "你的克制力就是复利本身。当同龄人在冲动消费里循环时，你的每一分克制都在悄悄生息——时间站在你这边。",
+sides: ["算清你的“通关数字”：到底攒多少才算够", "搭建至少一条工资之外的收入管道", "把记账和定投变成自动动作，别靠意志力"],
+reward: "某个普通的周一早晨，别人挤地铁时，你睡到自然醒——不是因为你懒，是因为你提前交卷了。",
+egg: "彩蛋：你收藏的理财文章比工资还多，而且真的看完了——这在成年人里属于珍稀物种。"
+},
+freedom: {
+code: "MAIN QUEST · NO.06", color: "#2e6db0", soft: "rgba(46,109,176,.12)",
+name: "不被定义", quest: "活成自己想要的样子",
+tagline: "“你的人生，没有人能给你派任务。”",
+desc: "你的主线，是拒绝主线。什么年龄该做什么事、什么赛道最体面——这些“标准答案”你统统不接。你要的是时间自己支配、去留自己决定、活法自己定义。自由不是你的奖励，自由是你的氧气。",
+skills: ["说走就走", "低欲望生存", "屏蔽噪音"],
+talent: "<b>抗绑架体质 +50%</b>：道德绑架、人情绑架、KPI 绑架，到你这儿统统信号不良。",
+traits: ["被管束时战斗力直接减半", "对“别人都这样”天然免疫", "宁可少赚，也要睡个好觉", "边界感强，自己的事自己说了算"],
+hidden: "你的低欲望其实是高级的自由杠杆：你需要的越少，能绑住你的就越少。这让你在所有人被房贷和面子推着走的时候，还能随时转身。",
+sides: ["守住至少一项“不卖时间”的收入或技能", "定期做减法：删掉那些为了合群而维持的关系和事", "把“想去的地方、想过的日子”写下来，别只活在脑子里"],
+reward: "你过的每一天，都是自己签的字、画的押——这种人生，没有差评的资格，只有本人的五星好评。",
+egg: "彩蛋：你的离职理由储备库比简历还长，虽然大部分还没用上——但光是想想就很解压。"
+},
+heal: {
+code: "MAIN QUEST · NO.07", color: "#a34a72", soft: "rgba(163,74,114,.12)",
+name: "改写剧本", quest: "破除原生家庭的循环",
+tagline: "“上一代的剧本，到你这里，改稿。”",
+desc: "你的主线是一场安静的革命：父母那一代没想通的事、没过好的日子、没说出口的话，到你这里统统不复制。你要亲手证明——出身只是开局，不是结局；循环之所以叫循环，就是因为总有人先走出来。",
+skills: ["自我觉察", "情绪断舍离", "边界建造"],
+talent: "<b>模式识别 +50%</b>：你总能一眼看穿“这事我爸妈当年也这样”——看穿，就是破解的开始。",
+traits: ["想得深，不轻易被情绪牵着走", "对“我们家一直都这样”保持警惕", "愿意为自己的成长花钱花时间", "温柔，但有底线"],
+hidden: "你的觉察力是全家几代人的“版本更新”。你每想通一件事，就替下一代少埋一个雷——这种功德，不显山不露水，但改的是命。",
+sides: ["写下三条“我绝不重复的模式”，贴在看得见的地方", "认真学一次沟通：不讨好，也不攻击", "允许自己过得比父母好——这不是背叛，是报恩"],
+reward: "有一天你会发现：你成了小时候最想遇到的那种大人。而你的孩子，不用再做这道题。",
+egg: "彩蛋：你劝朋友想开点的时候金句频出，轮到自己半夜 emo——道理都懂，正在逐条施工中。"
+},
+self: {
+code: "MAIN QUEST · NO.08", color: "#4a6741", soft: "rgba(74,103,65,.13)",
+name: "寻真之旅", quest: "找到真正的自己",
+tagline: "“走遍千山，最后是为了认出自己。”",
+desc: "你的主线没有外部终点，终点在你心里。你一直在追问：抛开别人的期待、社会的标准，我到底是谁、到底想要什么？这条路看着“没用”，却是所有路的起点——想清楚的人，做什么都不慌。",
+skills: ["深度独处", "自我对话", "去伪存真"],
+talent: "<b>内视清晰度 +50%</b>：别人被情绪淹没时，你能退后一步，看清自己到底在想什么。",
+traits: ["比起热闹，更需要独处充电", "对“假装合群”耐受度极低", "想的比说的多，慢热但通透", "不急着抵达，先确认方向"],
+hidden: "你的“慢”其实是稀缺的定力。在所有人被流量和焦虑推着跑的年代，你能停下来问一句“这是我要的吗”——这一问，胜过很多人的十年。",
+sides: ["保留固定的独处时间，写日记或只是发呆", "列一张“真心喜欢 / 只是别人喜欢”的对照表", "尝试一次短途独行，看看没有同伴时你是什么样"],
+reward: "某天清晨你会忽然很平静：不再羡慕任何人的人生——因为你终于住进了自己的。",
+egg: "彩蛋：你的人生问题总在洗澡和睡前刷新，而且从不在你方便记下来的时候出现。"
+}
+};
+
+/* ================= 逻辑 ================= */
+var $ = function (id) { return document.getElementById(id);};
+var answers = [];
+var cur = 0;
+var locked = false;
+
+/* 每维度的理论最高分（用于归一化） */
+var MAXP = {};
+DIM_KEYS.forEach(function (k) { MAXP[k] = 0;});
+QUESTIONS.forEach(function (q) {
+DIM_KEYS.forEach(function (k) {
+var best = 0;
+q.opts.forEach(function (o) {
+var v = (o.d === k? 3: 0) + (o.s === k? 1: 0);
+if (v > best) best = v;
+});
+MAXP[k] += best;
+});
+});
+
+function showScreen(id) {
+["screen-home", "screen-quiz", "screen-result"].forEach(function (s) {
+$(s).classList.toggle("active", s === id);
+});
+window.scrollTo({ top: 0, behavior: "auto"});
+}
+
+function renderQuestion(dir) {
+var q = QUESTIONS[cur];
+$("q-cur").textContent = cur + 1;
+$("lv-num").textContent = cur + 1;
+var pct = Math.round((answers.filter(function (a) { return a!== undefined;}).length) / QUESTIONS.length * 100);
+$("xp-fill").style.width = pct + "%";
+$("xp-pct").textContent = pct + "%";
+$("q-scene").textContent = "第 " + (cur + 1) + " 关 · " + q.scene;
+$("q-text").textContent = q.q;
+var box = $("opts");
+box.innerHTML = "";
+var keys = ["A", "B", "C", "D"];
+q.opts.forEach(function (o, i) {
+var b = document.createElement("button");
+b.type = "button";
+b.className = "opt" + (answers[cur] === i? " picked": "");
+b.innerHTML = '<span class="key">' + keys[i] + '</span><span></span>';
+b.querySelector("span:last-child").textContent = o.t;
+b.addEventListener("click", function () { pick(i);});
+box.appendChild(b);
+});
+$("btn-back").disabled = cur === 0;
+var card = $("q-card");
+card.classList.remove("anim", "anim-back");
+void card.offsetWidth;
+card.classList.add(dir === "back"? "anim-back": "anim");
+}
+
+function pick(i) {
+if (locked) return;
+locked = true;
+answers[cur] = i;
+var opts = $("opts").children;
+for (var j = 0; j < opts.length; j++) opts[j].classList.toggle("picked", j === i);
+var pct = Math.round((cur + 1) / QUESTIONS.length * 100);
+$("xp-fill").style.width = pct + "%";
+$("xp-pct").textContent = pct + "%";
+setTimeout(function () {
+locked = false;
+if (cur < QUESTIONS.length - 1) { cur++; renderQuestion("next");}
+else { finish();}
+}, 260);
+}
+
+function computeResult() {
+var raw = {};
+DIM_KEYS.forEach(function (k) { raw[k] = 0;});
+answers.forEach(function (a, qi) {
+if (a === undefined) return;
+var o = QUESTIONS[qi].opts[a];
+raw[o.d] += 3;
+if (o.s) raw[o.s] += 1;
+});
+var pct = {};
+DIM_KEYS.forEach(function (k) { pct[k] = MAXP[k]? raw[k] / MAXP[k]: 0;});
+var winner = DIM_KEYS[0];
+DIM_KEYS.forEach(function (k) {
+if (pct[k] > pct[winner] || (pct[k] === pct[winner] && raw[k] > raw[winner])) winner = k;
+});
+return { raw: raw, pct: pct, winner: winner};
+}
+
+function finish() {
+var res = computeResult();
+var R = RESULTS[res.winner];
+var poster = $("poster");
+poster.style.setProperty("--rc", R.color);
+poster.style.setProperty("--rc-soft", R.soft);
+var match = Math.min(99, Math.round(72 + res.pct[res.winner] * 36));
+$("r-rarity").textContent = match >= 95? "SSR": (match >= 88? "SR": "R");
+$("r-code").textContent = R.code;
+$("r-name").textContent = "【" + R.name + "】";
+$("r-quest").textContent = R.quest;
+$("r-tagline").textContent = R.tagline;
+$("r-match").textContent = match + "%";
+$("r-dim").textContent = DIMS[res.winner].name;
+$("r-desc").textContent = R.desc;
+$("r-skills").innerHTML = R.skills.map(function (s) { return '<span class="skill-chip">' + s + "</span>";}).join("");
+$("r-talent").innerHTML = R.talent;
+$("r-traits").innerHTML = R.traits.map(function (t) { return "<li>" + t + "</li>";}).join("");
+$("r-sides").innerHTML = R.sides.map(function (s) { return "<li>" + s + "</li>";}).join("");
+$("r-hidden").textContent = R.hidden;
+$("r-reward").textContent = R.reward;
+$("r-egg").textContent = R.egg;
+
+var sorted = DIM_KEYS.slice().sort(function (a, b) { return res.pct[b] - res.pct[a];});
+$("r-stats").innerHTML = sorted.map(function (k, i) {
+var v = Math.round(res.pct[k] * 100);
+return '<div class="stat-row' + (i === 0? " top": "") + '"><span class="nm">' + DIMS[k].name +
+'</span><span class="stat-track"><span class="stat-fill" data-w="' + v + '"></span></span><span class="vl">' + v + "</span></div>";
+}).join("");
+
+showScreen("screen-result");
+setTimeout(function () {
+var fills = document.querySelectorAll(".stat-fill");
+for (var i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute("data-w") + "%";
+}, 80);
+
+poster.dataset.copyText =
+"【你的人生主线任务测试】\n" +
+"我的主线任务：【" + R.name + "】——" + R.quest + "\n" +
+R.tagline + "\n" +
+"主导欲望：" + DIMS[res.winner].name + "｜灵魂契合度：" + match + "%\n" +
+"终极奖励：" + R.reward;
+}
+
+function toast(msg) {
+var t = $("toast");
+t.textContent = msg;
+t.classList.add("show");
+clearTimeout(t._timer);
+t._timer = setTimeout(function () { t.classList.remove("show");}, 2200);
+}
+
+/* 首页剧透池 */
+(function () {
+var grid = $("preview-grid");
+DIM_KEYS.forEach(function (k) {
+var R = RESULTS[k];
+var div = document.createElement("div");
+div.className = "preview-item";
+div.innerHTML = '<span class="dot"></span><span></span>';
+div.querySelector(".dot").style.background = R.color;
+div.querySelector("span:last-child").textContent = "【" + R.name + "】" + R.quest;
+grid.appendChild(div);
+});
+})();
+
+$("btn-start").addEventListener("click", function () {
+answers = []; cur = 0;
+showScreen("screen-quiz");
+renderQuestion("next");
+});
+$("btn-back").addEventListener("click", function () {
+if (cur > 0 &&!locked) { cur--; renderQuestion("back");}
+});
+$("btn-retest").addEventListener("click", function () {
+answers = []; cur = 0;
+showScreen("screen-home");
+});
+$("btn-copy").addEventListener("click", function () {
+var text = $("poster").dataset.copyText || "";
+function done() { toast("已复制，去粘贴给朋友对主线吧");}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta); ta.select();
+try { document.execCommand("copy"); done();}
+catch (e) { toast("复制失败，截图任务卡分享吧");}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, fallback);
+} else { fallback();}
+});
+</script>
+</body>
+</html>

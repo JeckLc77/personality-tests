@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>你在仙侠世界是什么角色</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"] { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        --bg: #eef2ec;
+        --bg2: #dfe8dd;
+        --ink: #22302a;
+        --ink-soft: #4c5d54;
+        --card: #fbfcf8;
+        --card-line: #c9d4c4;
+        --gold: #a97e2f;
+        --gold-soft: #c9a44e;
+        --cinnabar: #b23a2e;
+        --jade: #3f7a63;
+        --mist: rgba(63, 122, 99, .10);
+        --shadow: 0 18px 40px rgba(34, 48, 42, .14);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d1512;
+          --bg2: #12201a;
+          --ink: #e8e4d5;
+          --ink-soft: #a9b3a4;
+          --card: #16211c;
+          --card-line: #31443a;
+          --gold: #d3ab55;
+          --gold-soft: #e3c67e;
+          --cinnabar: #e0685a;
+          --jade: #7fbfa4;
+          --mist: rgba(127, 191, 164, .10);
+          --shadow: 0 18px 44px rgba(0, 0, 0, .5);
+          color-scheme: dark;
+        }
+      }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: "Noto Serif SC", "Songti SC", "STSong", serif;
+        color: var(--ink);
+        background:
+          radial-gradient(1100px 500px at 85% -10%, var(--mist), transparent 60%),
+          radial-gradient(900px 480px at -10% 30%, var(--mist), transparent 55%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+      .stars { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+      .stars i {
+        position: absolute; border-radius: 50%;
+        background: var(--gold-soft); opacity: .35;
+        animation: drift 11s ease-in-out infinite alternate;
+      }
+      @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-26px); } }
+      .mountains { position: fixed; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none; opacity: .5; }
+      .mountains svg { display: block; width: 100%; height: 120px; }
+      .wrap { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 28px 18px 90px; }
+      .screen { display: none; }
+      .screen.on { display: block; animation: rise .45s ease both; }
+      @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+      /* ---------- 首页 ---------- */
+      .home { text-align: center; padding-top: 26px; }
+      .home .seal-top {
+        display: inline-block; width: 54px; height: 54px; line-height: 54px;
+        background: var(--cinnabar); color: #fdf6ec; border-radius: 8px;
+        font-family: "Ma Shan Zheng", cursive; font-size: 30px;
+        transform: rotate(-4deg); box-shadow: var(--shadow); margin-bottom: 22px;
+      }
+      .home h1 {
+        font-family: "Ma Shan Zheng", "Noto Serif SC", cursive;
+        font-weight: 400; font-size: clamp(38px, 9vw, 58px);
+        line-height: 1.25; margin: 0 0 6px; letter-spacing: .02em;
+      }
+      .home h1 .accent { color: var(--cinnabar); }
+      .home .sub { color: var(--ink-soft); font-size: 16px; line-height: 1.9; margin: 14px auto 0; max-width: 30em; }
+      .home .roles-preview {
+        display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 26px auto 6px; max-width: 520px;
+      }
+      .home .roles-preview span {
+        border: 1px solid var(--card-line); background: var(--card); color: var(--ink-soft);
+        border-radius: 999px; padding: 6px 13px; font-size: 13.5px;
+      }
+      .btn {
+        appearance: none; border: none; cursor: pointer; font-family: inherit;
+        border-radius: 12px; font-weight: 600; letter-spacing: .06em;
+        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn:active { transform: scale(.97); }
+      .btn-main {
+        background: linear-gradient(135deg, var(--jade), #2c5c47); color: #f7f3e4;
+        font-size: 19px; padding: 16px 46px; margin-top: 30px;
+        box-shadow: 0 12px 26px rgba(44, 92, 71, .35);
+      }
+      @media (prefers-color-scheme: dark) { .btn-main { background: linear-gradient(135deg, #2f6b52, #1d4634); } }
+      .btn-ghost {
+        background: transparent; color: var(--ink); border: 1.5px solid var(--card-line);
+        font-size: 15px; padding: 12px 26px;
+      }
+      .btn-gold {
+        background: linear-gradient(135deg, var(--gold-soft), var(--gold)); color: #2a1f08;
+        font-size: 15px; padding: 12px 26px;
+      }
+      .home .meta { margin-top: 22px; color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+      .divider { display: flex; align-items: center; gap: 12px; margin: 30px auto 0; max-width: 340px; color: var(--gold); }
+      .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-soft), transparent); }
+
+      /* ---------- 答题 ---------- */
+      .quiz-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+      .quiz-head .count { font-size: 14px; color: var(--ink-soft); letter-spacing: .1em; }
+      .quiz-head .count b { color: var(--cinnabar); font-size: 20px; }
+      .quiz-head .dim-hint { font-size: 12.5px; color: var(--gold); letter-spacing: .14em; }
+      .track { height: 8px; border-radius: 99px; background: var(--mist); overflow: hidden; border: 1px solid var(--card-line); }
+      .track .fill {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, var(--jade), var(--gold-soft));
+        border-radius: 99px; transition: width .45s ease;
+      }
+      .q-card {
+        background: var(--card); border: 1px solid var(--card-line); border-radius: 18px;
+        box-shadow: var(--shadow); padding: 30px 24px 26px; margin-top: 22px;
+      }
+      .q-card.swap { animation: qin .38s ease both; }
+      @keyframes qin { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+      .q-num { font-family: "Ma Shan Zheng", cursive; color: var(--gold); font-size: 19px; margin-bottom: 8px; }
+      .q-text { font-size: 20.5px; font-weight: 900; line-height: 1.65; margin: 0 0 22px; }
+      .opts { display: grid; gap: 12px; }
+      .opt {
+        display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left;
+        background: var(--bg); border: 1.5px solid var(--card-line); border-radius: 14px;
+        padding: 15px 16px; font-family: inherit; font-size: 16px; line-height: 1.6;
+        color: var(--ink); cursor: pointer; transition: border-color .15s ease, background .15s ease, transform .12s ease;
+      }
+      .opt:hover { border-color: var(--gold-soft); }
+      .opt .letter {
+        flex: 0 0 auto; width: 27px; height: 27px; border-radius: 50%;
+        border: 1.5px solid var(--gold); color: var(--gold);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13.5px; font-weight: 900; margin-top: 1px;
+      }
+      .opt.picked { border-color: var(--jade); background: var(--mist); }
+      .opt.picked .letter { background: var(--jade); border-color: var(--jade); color: #fff; }
+      .quiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
+      .back-btn {
+        background: none; border: none; color: var(--ink-soft); font-family: inherit;
+        font-size: 15px; cursor: pointer; padding: 10px 14px; border-radius: 10px;
+      }
+      .back-btn:disabled { opacity: .3; cursor: default; }
+      .quiz-foot .tip { font-size: 12.5px; color: var(--ink-soft); }
+
+      /* ---------- 结果海报 ---------- */
+      .poster {
+        position: relative; border-radius: 20px; overflow: hidden;
+        background: var(--card); box-shadow: var(--shadow);
+        border: 1px solid var(--card-line);
+      }
+      .poster::before {
+        content: ""; position: absolute; inset: 9px; border: 1.5px solid var(--gold-soft);
+        border-radius: 13px; pointer-events: none; opacity: .65; z-index: 2;
+      }
+      .poster-band {
+        padding: 40px 28px 24px; text-align: center; position: relative;
+        background: linear-gradient(160deg, var(--band1), var(--band2)); color: #f8f3e3;
+      }
+      .poster-band .sect { font-size: 13.5px; letter-spacing: .34em; opacity: .85; margin-bottom: 12px; }
+      .poster-band h2 {
+        font-family: "Ma Shan Zheng", "Noto Serif SC", cursive; font-weight: 400;
+        font-size: clamp(33px, 8.4vw, 46px); line-height: 1.3; margin: 0;
+        text-shadow: 0 3px 14px rgba(0,0,0,.25);
+      }
+      .poster-band .tagline { margin: 14px auto 0; font-size: 16.5px; font-weight: 600; line-height: 1.7; max-width: 24em; }
+      .poster-seal {
+        position: absolute; top: 20px; right: 20px; width: 46px; height: 46px;
+        background: var(--cinnabar); border-radius: 7px; color: #fdf6ec;
+        font-family: "Ma Shan Zheng", cursive; font-size: 15px; line-height: 1.15;
+        display: flex; align-items: center; justify-content: center; text-align: center;
+        transform: rotate(5deg); padding: 4px; box-shadow: 0 4px 12px rgba(0,0,0,.25); z-index: 3;
+      }
+      .poster-body { padding: 26px 28px 32px; position: relative; z-index: 1; }
+      .gear { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+      .gear .g { background: var(--bg); border: 1px solid var(--card-line); border-radius: 12px; padding: 12px 10px; text-align: center; }
+      .gear .g .k { font-size: 12px; color: var(--gold); letter-spacing: .22em; margin-bottom: 6px; font-weight: 900; }
+      .gear .g .v { font-size: 14.5px; line-height: 1.55; font-weight: 600; }
+      .sec { margin-bottom: 20px; }
+      .sec h3 {
+        font-size: 15px; letter-spacing: .2em; color: var(--jade); margin: 0 0 8px;
+        display: flex; align-items: center; gap: 9px; font-weight: 900;
+      }
+      .sec h3::after { content: ""; flex: 1; height: 1px; background: var(--card-line); }
+      .sec p { margin: 0; font-size: 15.5px; line-height: 1.95; color: var(--ink); }
+      .sec.egg p { color: var(--ink-soft); }
+      .dims { margin-top: 4px; }
+      .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; font-size: 13px; }
+      .dim-row .dn { flex: 0 0 3.4em; color: var(--ink-soft); letter-spacing: .1em; }
+      .dim-row .bar { flex: 1; height: 7px; border-radius: 99px; background: var(--mist); overflow: hidden; }
+      .dim-row .bar i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--jade), var(--gold-soft)); }
+      .dim-row .dv { flex: 0 0 2em; text-align: right; color: var(--ink-soft); }
+      .poster-foot {
+        text-align: center; padding: 0 28px 30px; color: var(--ink-soft); font-size: 12.5px; line-height: 1.8;
+      }
+      .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px; }
+      .toast {
+        position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px);
+        background: var(--ink); color: var(--bg); padding: 12px 22px; border-radius: 99px;
+        font-size: 14.5px; opacity: 0; pointer-events: none; transition: all .3s ease; z-index: 50;
+        box-shadow: var(--shadow); white-space: nowrap;
+      }
+      .toast.show { opacity: 1; transform: translateX(-50%); }
+      .others { margin-top: 34px; }
+      .others h3 { text-align: center; font-size: 15px; letter-spacing: .24em; color: var(--ink-soft); margin: 0 0 16px; font-weight: 600; }
+      .others .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .others .item {
+        background: var(--card); border: 1px solid var(--card-line); border-radius: 13px; padding: 14px 15px;
+      }
+      .others .item .n { font-weight: 900; font-size: 15px; margin-bottom: 4px; }
+      .others .item .t { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+      .others .item.me { border-color: var(--gold); }
+      .others .item.me .n::after { content: " · 你"; color: var(--cinnabar); font-size: 12.5px; }
+      @media (max-width: 480px) {
+        .gear { grid-template-columns: 1fr; }
+        .gear .g { text-align: left; display: flex; gap: 12px; align-items: baseline; }
+        .gear .g .k { margin-bottom: 0; flex: 0 0 3.2em; }
+        .others .grid { grid-template-columns: 1fr; }
+        .poster-body { padding: 22px 20px 26px; }
+        .poster-band { padding: 36px 20px 22px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+    <div class="mountains" aria-hidden="true">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,120 L0,84 L140,44 L300,78 L470,26 L640,72 L820,34 L990,80 L1150,40 L1300,74 L1440,50 L1440,120 Z" fill="#3f7a63" opacity="0.20"/><path d="M0,120 L0,98 L200,64 L420,92 L660,52 L900,94 L1120,60 L1440,92 L1440,120 Z" fill="#22302a" opacity="0.14"/></svg>
+    </div>
+
+    <div class="wrap">
+      <!-- 首页 -->
+      <section class="screen on" id="screen-home">
+        <div class="home">
+          <div class="seal-top">仙</div>
+          <h1>你在仙侠世界<br />是什么<span class="accent">角色</span></h1>
+          <p class="sub">不用背功法，不用懂剧情。<br />20 道现代生活题，测出你穿越到仙侠世界后，<br />会是哪一路让江湖闻风丧胆（或哭笑不得）的人物。</p>
+          <div class="roles-preview">
+            <span>剑宗首席弟子</span><span>丹修大师</span><span>魔教少主</span><span>散修隐士</span>
+            <span>灵兽契约者</span><span>阵法师</span><span>医仙</span><span>逆袭的大师兄</span>
+          </div>
+          <button class="btn btn-main" id="btn-start">踏入江湖 · 开始测试</button>
+          <div class="divider">❖</div>
+          <p class="meta">共 20 题 · 约 2 分钟 · 凭直觉选，别想太多<br />本测试为趣味娱乐，非专业心理诊断，结果不对人生负责，只对快乐负责。</p>
+        </div>
+      </section>
+
+      <!-- 答题 -->
+      <section class="screen" id="screen-quiz">
+        <div class="quiz-head">
+          <div class="count">第 <b id="q-cur">1</b> / 20 题</div>
+          <div class="dim-hint">灵 根 测 试 中</div>
+        </div>
+        <div class="track"><div class="fill" id="q-fill"></div></div>
+        <div class="q-card" id="q-card">
+          <div class="q-num" id="q-num">第一题</div>
+          <p class="q-text" id="q-text"></p>
+          <div class="opts" id="q-opts"></div>
+        </div>
+        <div class="quiz-foot">
+          <button class="back-btn" id="btn-back">← 上一题</button>
+          <span class="tip">点选后自动进入下一题</span>
+        </div>
+      </section>
+
+      <!-- 结果 -->
+      <section class="screen" id="screen-result">
+        <div class="poster" id="poster">
+          <div class="poster-band" id="poster-band">
+            <div class="poster-seal" id="poster-seal">仙侠<br />认证</div>
+            <div class="sect" id="r-sect"></div>
+            <h2 id="r-name"></h2>
+            <p class="tagline" id="r-tagline"></p>
+          </div>
+          <div class="poster-body">
+            <div class="gear">
+              <div class="g"><div class="k">门 派</div><div class="v" id="r-faction"></div></div>
+              <div class="g"><div class="k">武 器</div><div class="v" id="r-weapon"></div></div>
+              <div class="g"><div class="k">绝 招</div><div class="v" id="r-move"></div></div>
+            </div>
+            <div class="sec"><h3>性 格 特 点</h3><p id="r-traits"></p></div>
+            <div class="sec"><h3>匹 配 理 由</h3><p id="r-why"></p></div>
+            <div class="sec"><h3>隐 藏 优 势</h3><p id="r-edge"></p></div>
+            <div class="sec egg"><h3>趣 味 彩 蛋</h3><p id="r-egg"></p></div>
+            <div class="sec dims"><h3>八 维 灵 根</h3><div id="r-dims"></div></div>
+          </div>
+          <div class="poster-foot">《你在仙侠世界是什么角色》 · 趣味人格测试<br />截图保存这张海报，看看朋友们都是什么角色</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-gold" id="btn-copy">复制我的结果</button>
+          <button class="btn btn-ghost" id="btn-again">重新测试</button>
+        </div>
+        <div class="others">
+          <h3>江 湖 人 物 谱</h3>
+          <div class="grid" id="others-grid"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast">已复制，去分享给朋友吧</div>
+
+<script>
+// 八维灵根：剑意 jian / 丹火 dan / 野心 ye / 孤傲 gu / 灵性 ling / 机敏 ji / 慈悲 ci / 逆骨 ni
+var DIM_NAMES = { jian: "剑意", dan: "丹火", ye: "野心", gu: "孤傲", ling: "灵性", ji: "机敏", ci: "慈悲", ni: "逆骨"};
+var DIM_ORDER = ["jian", "dan", "ye", "gu", "ling", "ji", "ci", "ni"];
+
+var QUESTIONS = [
+{ q: "周末难得空闲一整天，你最想怎么过？", opts: [
+{ t: "独自去爬山或骑行，把体力榨干才痛快", s: { jian: 3, ni: 1}},
+{ t: "在家鼓捣新菜谱或手作，慢慢打磨一下午", s: { dan: 3, ling: 1}},
+{ t: "约上三五好友，热热闹闹吃喝玩乐", s: { ci: 3, ji: 1}},
+{ t: "关掉手机，谁也别找我，睡到自然醒", s: { gu: 3, ling: 1}}
+]},
+{ q: "朋友聚餐，你通常是饭桌上的哪种人？", opts: [
+{ t: "默默记下大家爱吃的菜，下次主动点单", s: { dan: 3, ci: 1}},
+{ t: "气氛组组长，梗一个接一个往外抛", s: { ji: 3, ye: 1}},
+{ t: "负责订位、结账、安排下半场的人", s: { ye: 3, ji: 1}},
+{ t: "坐角落听大家聊，偶尔一句神补刀", s: { gu: 3, ji: 1}}
+]},
+{ q: "工作或学习卡在一个难题上，你的第一反应是？", opts: [
+{ t: "硬刚，一遍遍试，直到试通为止", s: { jian: 3, ni: 1}},
+{ t: "拆解问题，画图列步骤，慢慢往前推", s: { dan: 3, ji: 1}},
+{ t: "先放一放，洗个澡散个步，灵感自己会来", s: { ling: 3, gu: 1}},
+{ t: "找高手请教，站在巨人的肩膀上", s: { ji: 3, ye: 1}}
+]},
+{ q: "被人误解，甚至有点被冤枉时，你会？", opts: [
+{ t: "当场说清，是非对错必须分明", s: { jian: 3, ye: 1}},
+{ t: "不解释，清者自清，时间会证明一切", s: { gu: 3, ni: 1}},
+{ t: "先安抚对方情绪，别把事情闹大", s: { ci: 3, ji: 1}},
+{ t: "表面没事，心里默默记上一笔", s: { ni: 3, gu: 1}}
+]},
+{ q: "购物车里躺了很久的一件东西，你最后通常会？", opts: [
+{ t: "等大促，算好满减凑单再下手", s: { ji: 3, dan: 1}},
+{ t: "直接买，喜欢的东西不纠结", s: { ye: 3, jian: 1}},
+{ t: "自己用不上，买来送人更开心", s: { ci: 3}},
+{ t: "研究测评半个月，参数倒背如流才下单", s: { dan: 3, gu: 1}}
+]},
+{ q: "团队合作时，你最想担任的角色是？", opts: [
+{ t: "冲在最前面啃硬骨头的人", s: { jian: 3, ni: 1}},
+{ t: "定方向、拍板拿主意的人", s: { ye: 3, jian: 1}},
+{ t: "在幕后把流程和细节都打磨好的人", s: { dan: 3, ci: 1}},
+{ t: "哪里需要补哪里，全能救火队长", s: { ji: 3, ci: 1}}
+]},
+{ q: "深夜突然 emo，你一般会？", opts: [
+{ t: "戴上耳机循环一首歌，情绪自己消化", s: { gu: 3, ling: 1}},
+{ t: "写点东西，或发一条仅自己可见的朋友圈", s: { ling: 3, dan: 1}},
+{ t: "约最铁的朋友语音，聊到睡着", s: { ci: 3, ji: 1}},
+{ t: "告诉自己：睡一觉，明天继续干", s: { ni: 3, jian: 1}}
+]},
+{ q: "意外中了笔小奖或收到大红包，你第一反应是？", opts: [
+{ t: "请朋友大吃一顿，快乐就是要分享", s: { ye: 3, ci: 1}},
+{ t: "存起来，积少成多，留着搞大事", s: { ye: 3, dan: 1}},
+{ t: "买一件一直想买的小众爱好品", s: { ling: 3, gu: 1}},
+{ t: "换成装备或课程，投资自己", s: { jian: 3, ni: 1}}
+]},
+{ q: "朋友哭着向你倾诉，你会先做什么？", opts: [
+{ t: "递纸巾倒热水，先把人照顾好", s: { ci: 3, dan: 1}},
+{ t: "帮他分析问题出在哪、接下来怎么解决", s: { ji: 3, dan: 1}},
+{ t: "什么也不说，陪着坐一晚上也行", s: { ling: 3, ci: 1}},
+{ t: "讲一个自己更惨的经历，逗他笑出来", s: { ni: 3, ci: 1}}
+]},
+{ q: "出门旅行，你的风格是？", opts: [
+{ t: "攻略做到小时级，表格拉满", s: { dan: 3, ji: 1}},
+{ t: "只订个住处，剩下的随缘乱逛", s: { ling: 3, gu: 1}},
+{ t: "专挑没人去的小众地方，越野越好", s: { gu: 3, ni: 1}},
+{ t: "地标加网红店，效率拉满，全收集", s: { ye: 3, ji: 1}}
+]},
+{ q: "路上看到有人被欺负，你会怎么做？", opts: [
+{ t: "直接上前制止，实在看不下去", s: { jian: 3, ci: 1}},
+{ t: "先录像留证，再报警或找工作人员", s: { ji: 3, ci: 1}},
+{ t: "事后默默帮受害者一把", s: { ci: 3, gu: 1}},
+{ t: "记住这件事，提醒自己别成为那样的人", s: { ni: 3, ling: 1}}
+]},
+{ q: "你的手机相册里，占比最高的是？", opts: [
+{ t: "风景和天空，好看的云能拍一百张", s: { ling: 3, gu: 1}},
+{ t: "美食和探店记录", s: { dan: 3, ci: 1}},
+{ t: "截图：攻略、干货、重要信息", s: { ji: 3, ye: 1}},
+{ t: "和朋友家人的合照", s: { ci: 3, ling: 1}}
+]},
+{ q: "被领导或老师当众点名批评，你的内心 OS 是？", opts: [
+{ t: "“他说得对的部分我改，错的我不认”", s: { jian: 3, gu: 1}},
+{ t: "“三十年河东，三十年河西”", s: { ni: 3, ye: 1}},
+{ t: "“别慌，先稳住，下去再复盘”", s: { dan: 3, ji: 1}},
+{ t: "“算了算了，不跟他计较”", s: { gu: 3, ling: 1}}
+]},
+{ q: "你最受不了哪种人？", opts: [
+{ t: "优柔寡断、磨磨唧唧的人", s: { jian: 3, ye: 1}},
+{ t: "背后捅刀、表里不一的人", s: { ni: 3, jian: 1}},
+{ t: "冷漠自私、从不顾及别人感受的人", s: { ci: 3, ling: 1}},
+{ t: "得过且过、一点追求都没有的人", s: { ye: 3, dan: 1}}
+]},
+{ q: "如果能立刻学会一项技能，你选？", opts: [
+{ t: "一门乐器或书法，把气质拉满", s: { ling: 3, gu: 1}},
+{ t: "烹饪或调香，把日子过成手艺", s: { dan: 3, ci: 1}},
+{ t: "编程或搞钱技能，实用至上", s: { ye: 3, ji: 1}},
+{ t: "格斗或运动，身体才是本钱", s: { jian: 3, ni: 1}}
+]},
+{ q: "你的书桌或房间，通常是什么状态？", opts: [
+{ t: "极简，东西少而精，各有其位", s: { gu: 3, dan: 1}},
+{ t: "乱中有序，只有我自己找得到东西", s: { ji: 3, ling: 1}},
+{ t: "摆满手办、绿植和喜欢的小玩意儿", s: { ling: 3, ci: 1}},
+{ t: "工具材料一大堆，随时能开工", s: { dan: 3, ni: 1}}
+]},
+{ q: "朋友们公认你最大的特点是？", opts: [
+{ t: "靠谱，答应的事从不掉链子", s: { ci: 3, jian: 1}},
+{ t: "有主见，谁也带不动我的节奏", s: { gu: 3, ye: 1}},
+{ t: "点子多，总能想出奇怪又有效的办法", s: { ji: 3, ling: 1}},
+{ t: "能吃苦，再难的事也能熬过去", s: { ni: 3, dan: 1}}
+]},
+{ q: "遇到特别想要的东西或机会，你的态度是？", opts: [
+{ t: "立刻行动，抢了再说", s: { ye: 3, jian: 1}},
+{ t: "先观望，等最合适的时机再出手", s: { ji: 3, gu: 1}},
+{ t: "随缘，是我的跑不掉", s: { ling: 3, gu: 1}},
+{ t: "默默准备，出手时必须一击必中", s: { ni: 3, jian: 1}}
+]},
+{ q: "人生低谷期，你靠什么撑过来？", opts: [
+{ t: "一股不服输的劲儿：凭什么就我倒霉", s: { ni: 3, jian: 1}},
+{ t: "家人朋友的陪伴和托举", s: { ci: 3, ling: 1}},
+{ t: "埋头做事，手上有活，心里就不慌", s: { dan: 3, ni: 1}},
+{ t: "看山看水看书，想通了就过去了", s: { ling: 3, gu: 1}}
+]},
+{ q: "如果人生是一部剧，你最想当哪个角色？", opts: [
+{ t: "从头强到尾的大男主 / 大女主", s: { ye: 3, jian: 1}},
+{ t: "深藏不露、关键时刻一剑定乾坤的高人", s: { gu: 3, jian: 1}},
+{ t: "被命运捶打，却一路逆袭的草根主角", s: { ni: 3, ye: 1}},
+{ t: "云游四方、快意逍遥的江湖闲人", s: { ling: 3, gu: 1}}
+]}
+];
+
+var RESULTS = {
+jian: {
+name: "剑宗首席弟子", sect: "青 冥 剑 宗", tagline: "“我这一剑，不问出身，只问是非。”",
+faction: "青冥剑宗 · 首席大弟子", weapon: "三尺青锋「照雪」", move: "一剑霜寒十四州",
+band: ["#33566e", "#1d3444"],
+traits: "果断、正直、行动力拉满。不服就干，但干得有分寸；看不惯的事绝不装没看见，认定的路九头牛也拉不回来。",
+why: "你的「剑意」灵根冠绝全场。难题当前你先动手再说道理，有人受欺负你第一反应是站出来——不绕弯、不和稀泥，这是剑修刻在骨子里的命。",
+edge: "关键时刻的决断力。别人还在犹豫要不要出手，你的剑已经出鞘了——很多机会，就是这么抢回来的。",
+egg: "据说首席弟子的剑从不轻易出鞘。就像你：平时好说话得不行，一旦认真起来，全场都会自动安静。"
+},
+dan: {
+name: "丹修大师", sect: "太 上 丹 房", tagline: "“火候到了，什么都能炼成金丹。”",
+faction: "太上丹房 · 自立门户的炼丹师", weapon: "紫金八卦炉", move: "九转还魂丹",
+band: ["#8a4b21", "#5d2f12"],
+traits: "细致、沉稳、手艺人心态。相信慢工出细活，对流程和火候有近乎偏执的讲究，日子被你过成了一门手艺。",
+why: "你的「丹火」灵根最为旺盛。购物车要研究半个月、旅行攻略做到小时级——别人觉得你磨叽，其实你只是在控火候。丹修的世界里，快，从来不是美德。",
+edge: "复利型选手。你的积累前期看不见，后期全是壁垒——等别人反应过来，你的丹已经出炉了。",
+egg: "丹修最怕炸炉。而你的人生哲学是：炸了就再炼一炉，反正材料费不高，经验值全涨。"
+},
+ye: {
+name: "魔教少主", sect: "玄 冥 教", tagline: "“正道容不下我？那我自成一道。”",
+faction: "玄冥教 · 少主", weapon: "玄铁令", move: "借势而为，翻云覆雨",
+band: ["#4a2d55", "#2a1833"],
+traits: "有野心、有手腕、不在乎世俗评价。对想要的东西从不假装淡泊，规则能用就用，不能用就绕过去——天生自带少主气场。",
+why: "你的「野心」灵根冲天而起。机会来了先抢再说，低谷期想的是怎么翻盘而不是怎么抱怨。教主之位对你来说，从来只是时间问题。",
+edge: "目标感极强，情绪从不为不值得的人内耗。你的精力，永远只花在棋局上。",
+egg: "魔教少主出场自带 BGM。据说你走进会议室的时候，同事们的聊天声都会自动小一格——别问，问就是气场。"
+},
+gu: {
+name: "散修隐士", sect: "无 门 无 派", tagline: "“山高水远，我自逍遥。”",
+faction: "云游散修 · 拒绝了所有大派的邀约", weapon: "一壶酒，一把旧伞", move: "神龙见首不见尾",
+band: ["#4c5f5a", "#2c3a36"],
+traits: "独立、通透、不合群也不孤独。不解释、不争辩、不内耗，精神世界丰富得像一座私人洞府。",
+why: "你的「孤傲」灵根独树一帜。你不是社恐，你是电量宝贵；不是清高，是真觉得山里的云比饭局的话题有意思。散修没有靠山——因为自己就是靠山。",
+edge: "极强的独处续航能力。热闹散尽之后，别人的修为停滞，你的修为涨得最快。",
+egg: "各大门派都想拉拢你，江湖传言你的洞府地址价值千金。翻译成现代话就是：你的微信号，轻易不给。"
+},
+ling: {
+name: "灵兽契约者", sect: "万 兽 谷", tagline: "“万物有灵，而我恰好听得懂。”",
+faction: "万兽谷 · 御灵一脉传人", weapon: "契约灵铃", move: "心意相通，万兽来朝",
+band: ["#2f6b4f", "#1a4230"],
+traits: "感性、通透、直觉敏锐。和自然、小动物天然亲近，快乐开关不在 KPI 里，在风、花和毛茸茸那里。",
+why: "你的「灵性」灵根与天地相通。看云能看半小时，难过了就去抱抱猫、看看山——你不是逃避世界，你只是有另一个充电方式。",
+edge: "直觉准得离谱。大数据算不出来的事，你的第六感一抓一个准，跟开了天眼似的。",
+egg: "灵兽只亲近心思干净的人。你家楼下的流浪猫见了你都主动蹭腿——这资质，万兽谷招生办已经连夜给你寄录取书了。"
+},
+ji: {
+name: "阵法师", sect: "天 机 阁", tagline: "“蛮力破不了的局，我用脑子解。”",
+faction: "天机阁 · 首席阵法师", weapon: "八十一枚阵旗", move: "困龙大阵",
+band: ["#7a6420", "#4c3d10"],
+traits: "机敏、缜密、点子王。不爱硬碰硬，擅长四两拨千斤；别人还在蛮干，你已经找到了那个一捅就破的阵眼。",
+why: "你的「机敏」灵根运转如飞。遇事先留证再行动，相册里全是攻略截图不是没道理——你的人生信条是：信息差，就是修为差。",
+edge: "临场应变的天花板。再乱的局，你都能在十秒内找到破局的那一步。",
+egg: "阵法师最擅长的不是布阵，是拆别人的局。谁想给你挖坑，最后都会发现：坑底铺着你提前放好的软垫。"
+},
+ci: {
+name: "医仙", sect: "药 王 谷", tagline: "“医得了天下人，也想护住身边人。”",
+faction: "药王谷 · 谷主亲传弟子", weapon: "九转金针", move: "妙手回春，枯骨生肉",
+band: ["#7c4a56", "#4e2c35"],
+traits: "温柔、靠谱、共情力强。是所有人通讯录里「有事第一个想到的人」，你的温柔不是软弱，是一种修行。",
+why: "你的「慈悲」灵根温润绵长。朋友哭了你先递纸巾，有人受委屈你默默帮一把——药王谷一脉的规矩就是：先救人，再谈别的。",
+edge: "人缘即气运。你攒下的每一份人情，都会在你最需要的时候，满江湖地还回来。",
+egg: "医仙下山从不带钱，因为走到哪儿都有人抢着请吃饭。你的朋友圈，就是一本行走的功德簿。"
+},
+ni: {
+name: "逆袭的大师兄", sect: "自 立 山 头", tagline: "“当年你们逐我出山门，如今我自立山头。”",
+faction: "原第一大派（已除名）→ 自创「逆天峰」", weapon: "一把断剑", move: "绝境逢生，越挫越勇",
+band: ["#8e2f26", "#571a14"],
+traits: "韧性拉满，记仇更记恩。低谷期不吭声、不卖惨，默默攒修为——等你出关那天，吓所有人一跳。",
+why: "你的「逆骨」灵根傲立群雄。被批评时你心里默念「三十年河东」，被冤枉了你不吵不闹、默默记账。你的人生从来不是顺风局——是所有人以为你完了，你偏要赢给他们看。",
+edge: "抗压能力异于常人。别人的人生低谷是终点，你的低谷，只是新副本的入口。",
+egg: "大师兄的经典台词是「我回来了」。据说你每次换工作、换城市之后的逆袭故事，都够单独写三章番外篇。"
+}
+};
+
+var CN_NUM = ["第一题","第二题","第三题","第四题","第五题","第六题","第七题","第八题","第九题","第十题","第十一题","第十二题","第十三题","第十四题","第十五题","第十六题","第十七题","第十八题","第十九题","第二十题"];
+var LETTERS = ["A", "B", "C", "D"];
+
+var state = { idx: 0, answers: []};
+var $ = function (id) { return document.getElementById(id);};
+
+function show(id) {
+var screens = document.querySelectorAll(".screen");
+for (var i = 0; i < screens.length; i++) screens[i].classList.remove("on");
+$(id).classList.add("on");
+window.scrollTo({ top: 0, behavior: "smooth"});
+}
+
+function renderQuestion() {
+var item = QUESTIONS[state.idx];
+$("q-cur").textContent = state.idx + 1;
+$("q-fill").style.width = (state.idx / QUESTIONS.length * 100) + "%";
+$("q-num").textContent = CN_NUM[state.idx];
+$("q-text").textContent = item.q;
+var box = $("q-opts");
+box.innerHTML = "";
+item.opts.forEach(function (opt, i) {
+var b = document.createElement("button");
+b.className = "opt" + (state.answers[state.idx] === i? " picked": "");
+b.innerHTML = '<span class="letter">' + LETTERS[i] + "</span><span>" + opt.t + "</span>";
+b.addEventListener("click", function () { pick(i, b);});
+box.appendChild(b);
+});
+$("btn-back").disabled = state.idx === 0;
+var card = $("q-card");
+card.classList.remove("swap");
+void card.offsetWidth;
+card.classList.add("swap");
+}
+
+function pick(i, btn) {
+state.answers[state.idx] = i;
+var opts = document.querySelectorAll(".opt");
+for (var k = 0; k < opts.length; k++) opts[k].classList.remove("picked");
+btn.classList.add("picked");
+setTimeout(function () {
+if (state.idx < QUESTIONS.length - 1) {
+state.idx++;
+renderQuestion();
+} else {
+finish();
+}
+}, 260);
+}
+
+function computeScores() {
+var scores = {};
+DIM_ORDER.forEach(function (d) { scores[d] = 0;});
+state.answers.forEach(function (a, qi) {
+if (a == null) return;
+var s = QUESTIONS[qi].opts[a].s;
+for (var d in s) scores[d] += s[d];
+});
+return scores;
+}
+
+function finish() {
+var scores = computeScores();
+var best = DIM_ORDER[0], bestVal = -1;
+DIM_ORDER.forEach(function (d) { if (scores[d] > bestVal) { bestVal = scores[d]; best = d;}});
+var r = RESULTS[best];
+$("poster-band").style.setProperty("--band1", r.band[0]);
+$("poster-band").style.setProperty("--band2", r.band[1]);
+$("r-sect").textContent = r.sect;
+$("r-name").textContent = r.name;
+$("r-tagline").textContent = r.tagline;
+$("r-faction").textContent = r.faction;
+$("r-weapon").textContent = r.weapon;
+$("r-move").textContent = r.move;
+$("r-traits").textContent = r.traits;
+$("r-why").textContent = r.why;
+$("r-edge").textContent = r.edge;
+$("r-egg").textContent = r.egg;
+var max = Math.max.apply(null, DIM_ORDER.map(function (d) { return scores[d];})) || 1;
+var dimsHtml = "";
+DIM_ORDER.forEach(function (d) {
+dimsHtml += '<div class="dim-row"><span class="dn">' + DIM_NAMES[d] + '</span><span class="bar"><i style="width:' + Math.round(scores[d] / max * 100) + '%"></i></span><span class="dv">' + scores[d] + "</span></div>";
+});
+$("r-dims").innerHTML = dimsHtml;
+var grid = "";
+DIM_ORDER.forEach(function (d) {
+var o = RESULTS[d];
+grid += '<div class="item' + (d === best? " me": "") + '"><div class="n">' + o.name + '</div><div class="t">' + o.tagline + "</div></div>";
+});
+$("others-grid").innerHTML = grid;
+$("poster").dataset.result = best;
+show("screen-result");
+}
+
+function toast(msg) {
+var t = $("toast");
+t.textContent = msg;
+t.classList.add("show");
+setTimeout(function () { t.classList.remove("show");}, 2200);
+}
+
+$("btn-start").addEventListener("click", function () {
+state.idx = 0; state.answers = [];
+show("screen-quiz");
+renderQuestion();
+});
+$("btn-back").addEventListener("click", function () {
+if (state.idx > 0) { state.idx--; renderQuestion();}
+});
+$("btn-again").addEventListener("click", function () {
+state.idx = 0; state.answers = [];
+show("screen-home");
+});
+$("btn-copy").addEventListener("click", function () {
+var key = $("poster").dataset.result;
+var r = RESULTS[key];
+var text = "\n我是「" + r.name + "」——" + r.tagline + "\n门派：" + r.faction + "｜武器：" + r.weapon + "｜绝招：" + r.move + "\n隐藏优势：" + r.edge + "\n你是哪种角色？快来测测看！";
+function done() { toast("结果已复制，去分享给朋友吧");}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, function () { fallback();});
+} else { fallback();}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta); ta.select();
+try { document.execCommand("copy"); done();} catch (e) { toast("复制失败，截图海报分享吧");}
+document.body.removeChild(ta);
+}
+});
+
+// 背景浮尘
+(function () {
+var box = $("stars"), html = "";
+for (var i = 0; i < 22; i++) {
+var size = (Math.random() * 3 + 2).toFixed(1);
+html += '<i style="left:' + (Math.random() * 100).toFixed(1) + "%;top:" + (Math.random() * 70).toFixed(1) + "%;width:" + size + "px;height:" + size + "px;animation-delay:" + (Math.random() * 6).toFixed(1) + 's"></i>';
+}
+box.innerHTML = html;
+})();
+</script>
+</body>
+</html>

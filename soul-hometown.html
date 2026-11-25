@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>你的灵魂老家在哪座城市</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#f6f1e7; --paper:#fffdf7; --ink:#1e2320; --muted:#6b6f66; --line:#e5ddd0;
+--accent:#c94f2e; --accent2:#1a6b5a; --gold:#c9a86a; --card:#ffffff;
+--shadow:0 18px 50px rgba(30,35,32,.13);
+}
+@media (prefers-color-scheme:dark){
+:root{--bg:#141816;--paper:#1c201d;--ink:#ece8dd;--muted:#a8ada3;--line:#333832;--card:#222722;--shadow:0 18px 50px rgba(0,0,0,.5)}
+}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(600px 300px at 15% 0%,rgba(201,79,46,.12),transparent 60%),radial-gradient(600px 300px at 90% 10%,rgba(26,107,90,.12),transparent 60%);pointer-events:none}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px;position:relative}
+button{font-family:inherit;cursor:pointer;min-height:48px}
+.serif{font-family:"Noto Serif SC",serif}
+/* HOME */
+.home{text-align:center;padding:28px 0 0}
+.badge{display:inline-block;border:1px solid var(--line);background:var(--paper);padding:6px 14px;border-radius:999px;font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.home h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:42px;line-height:1.15;margin:22px 0 12px;letter-spacing:.02em}
+.home h1 em{font-style:normal;color:var(--accent);position:relative}
+.home p.lead{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto}
+.cities-strip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px 0}
+.cities-strip span{padding:8px 14px;border-radius:999px;font-weight:700;font-size:14px;color:#fff}
+.postcard{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;text-align:left;box-shadow:var(--shadow);margin:8px 0 22px;position:relative;overflow:hidden}
+.postcard::after{content:"灵魂邮戳 · SOUL POST";position:absolute;right:16px;top:16px;border:2px dashed var(--gold);color:var(--gold);font-size:11px;letter-spacing:.15em;padding:6px 8px;border-radius:8px;transform:rotate(6deg);font-weight:700}
+.postcard h3{margin:0 0 8px;font-size:17px}
+.postcard p{margin:0;color:var(--muted);font-size:14.5px;max-width:82%}
+.meta{display:flex;gap:16px;justify-content:center;color:var(--muted);font-size:13px;margin:18px 0 22px;flex-wrap:wrap}
+.btn-main{background:var(--ink);color:var(--bg);border:none;padding:0 36px;border-radius:999px;font-size:17px;font-weight:900;letter-spacing:.06em;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.btn-main:active{transform:scale(.98)}
+.note{font-size:12.5px;color:var(--muted);margin-top:14px}
+/* QUIZ */
+.quiz-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 22px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px;transition:width.45s ease;width:0}
+.qcard{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px 22px;box-shadow:var(--shadow)}
+.qtag{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:900}
+.qtitle{font-family:"Noto Serif SC",serif;font-size:24px;font-weight:800;line-height:1.4;margin:10px 0 20px}
+.opts{display:grid;gap:12px}
+.opt{width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px 16px;font-size:15.5px;line-height:1.5;color:var(--ink);display:flex;gap:12px;align-items:flex-start;transition:.18s}
+.opt b{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font-size:13px}
+.opt:hover{border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:rgba(201,79,46,.07)}
+.opt.sel b{background:var(--accent);color:#fff;border-color:var(--accent)}
+.quiz-foot{display:flex;justify-content:space-between;margin-top:16px}
+.btn-ghost{background:none;border:none;color:var(--muted);font-weight:700;padding:0 10px}
+.btn-ghost:disabled{opacity:.3}
+.fade{animation:fadeSlide.38s ease both}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}.progress i{transition:none}}
+/* CALC */
+.calc{text-align:center;padding:80px 0}
+.calc.stamp{width:92px;height:92px;margin:0 auto 20px;border:3px dashed var(--accent);border-radius:50%;display:grid;place-items:center;font-family:"Noto Serif SC",serif;font-weight:900;color:var(--accent);animation:spinPulse 1.2s ease infinite}
+@keyframes spinPulse{0%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(4deg) scale(1.06)}100%{transform:rotate(-8deg) scale(1)}}
+/* RESULT POSTER */
+.poster{border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--paper)}
+.poster-top{padding:30px 26px 22px;color:#fff;position:relative;overflow:hidden}
+.poster-top::after{content:attr(data-watermark);position:absolute;right:-6px;bottom:-22px;font-family:"Noto Serif SC",serif;font-size:110px;font-weight:900;opacity:.14;line-height:1}
+.poster-top.kicker{font-size:12px;letter-spacing:.22em;opacity:.9;font-weight:700}
+.poster-top h2{font-family:"Noto Serif SC",serif;font-size:56px;margin:6px 0 2px;line-height:1;font-weight:900}
+.poster-top.pinyin{letter-spacing:.28em;font-size:13px;opacity:.85;text-transform:uppercase}
+.poster-top.slogan{font-family:"Noto Serif SC",serif;font-size:19px;margin-top:16px;line-height:1.5;max-width:92%;position:relative;z-index:1}
+.match{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;margin-top:14px;backdrop-filter:blur(4px)}
+.poster-body{padding:24px 26px 26px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.tags span{border:1px solid var(--line);background:var(--bg);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.sec{margin:18px 0}
+.sec h4{margin:0 0 6px;font-size:13px;letter-spacing:.16em;color:var(--accent)}
+.sec p{margin:0;font-size:15px;color:var(--ink)}
+.dims{margin:20px 0 4px}
+.dim{display:grid;grid-template-columns:64px 1fr 36px;gap:10px;align-items:center;font-size:13px;margin:8px 0}
+.dim.bar{height:7px;background:var(--line);border-radius:99px;overflow:hidden}
+.dim.bar i{display:block;height:100%;background:var(--accent2);border-radius:99px}
+.dim b{text-align:right;font-variant-numeric:tabular-nums}
+.neighbors{font-size:13.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px;margin-top:18px}
+.actions{display:grid;gap:10px;margin-top:20px}
+.btn-copy{background:var(--accent);color:#fff;border:none;border-radius:999px;font-weight:900;font-size:16px}
+.btn-again{background:var(--paper);color:var(--ink);border:1.5px solid var(--line);border-radius:999px;font-weight:800;font-size:15px}
+.tip{text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px}
+.hidden{display:none!important}
+@media(min-width:640px){.home h1{font-size:54px}.poster-top h2{font-size:72px}.qtitle{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="screen-home" class="home">
+<span class="badge">趣 味 人 格 测 试 · 20 题</span>
+<h1>你的灵魂老家<br>在哪座<em>城市</em>？</h1>
+<p class="lead">有些城市你没去过，却一听名字就觉得亲切。那不是巧合——是你的生活习惯、口味和脾气，早就替你选好了老家。</p>
+<div class="cities-strip" id="strip"></div>
+<div class="postcard">
+<h3>这张测试怎么玩？</h3>
+<p>20 道全是生活题：吃什么、怎么过周末、如何花钱、怎样疗愈自己……不考地理，不问你去过哪。凭第一直觉选，答案没有对错，只有像不像你。</p>
+</div>
+<div class="meta"><span>⏱ 约 2 分钟</span><span>🏙 7 座候选城市</span><span>📮 生成专属海报卡</span></div>
+<button class="btn-main" id="btn-start">开始寻找我的老家 →</button>
+<p class="note">趣味测试，仅供娱乐，不是专业心理诊断，结果请笑着看。</p>
+</section>
+
+<!-- QUIZ -->
+<section id="screen-quiz" class="hidden">
+<div class="quiz-head"><span id="q-count">第 1 / 20 题</span><span id="q-cat">生活日常</span></div>
+<div class="progress"><i id="bar"></i></div>
+<div class="qcard fade" id="qcard">
+<div class="qtag" id="q-tag">DAILY LIFE</div>
+<div class="qtitle" id="q-title"></div>
+<div class="opts" id="opts"></div>
+</div>
+<div class="quiz-foot">
+<button class="btn-ghost" id="btn-prev">← 上一题</button>
+<span style="font-size:13px;color:var(--muted);align-self:center">凭直觉选，别想太久</span>
+</div>
+</section>
+
+<!-- CALC -->
+<section id="screen-calc" class="hidden calc">
+<div class="stamp">邮戳<br>确认中</div>
+<h2 class="serif" style="font-size:24px;margin:0 0 8px">正在为你寄出灵魂明信片…</h2>
+<p style="color:var(--muted);margin:0" id="calc-text">翻看你的口味与习惯…</p>
+</section>
+
+<!-- RESULT -->
+<section id="screen-result" class="hidden">
+<div class="poster fade" id="poster">
+<div class="poster-top" id="poster-top">
+<div class="kicker">你的灵魂老家是 · YOUR SOUL HOMETOWN</div>
+<h2 id="r-city"></h2>
+<div class="pinyin" id="r-pinyin"></div>
+<div class="slogan" id="r-slogan"></div>
+<div class="match">灵魂契合度 <span id="r-match"></span></div>
+</div>
+<div class="poster-body">
+<div class="tags" id="r-tags"></div>
+<div class="sec"><h4>为什么是你</h4><p id="r-reason"></p></div>
+<div class="sec"><h4>隐藏优势</h4><p id="r-adv"></p></div>
+<div class="sec"><h4>趣味彩蛋</h4><p id="r-egg"></p></div>
+<div class="dims" id="r-dims"></div>
+<div class="neighbors" id="r-neighbors"></div>
+</div>
+</div>
+<div class="actions">
+<button class="btn-copy" id="btn-copy">复制结果文案，去分享</button>
+<button class="btn-again" id="btn-again">重新测试</button>
+</div>
+<p class="tip">截图上方海报卡，就能发小红书 / 朋友圈啦</p>
+<p class="tip" id="copy-tip"></p>
+</section>
+</div>
+
+<script>
+var CITIES={
+chengdu:{name:"成都",pinyin:"CHENGDU",color:"#2e7d5b",color2:"#c94f2e",tags:["巴适得板","烟火气拉满","松弛感天花板","美食雷达"],slogan:"“你不是躺平，你是把日子过成了散文诗。”",reason:"你的答案里全是热气腾腾的生活：愿意为一顿好吃的绕路，能把下午茶喝出仪式感，遇事不慌、先吃为敬。你骨子里信奉‘急什么，慢慢来’，这种自带结界的松弛，和成都的茶馆、巷子和火锅香，是同一种频率。",adv:"情绪稳定，感染力极强。和你在一起的人会不自觉慢下来——你是朋友圈里的定海神针，也是深夜食堂级别的治愈系。",egg:"彩蛋：你对‘巴适’的理解不需要翻译。如果有人凌晨约你吃串串，你大概率会说‘走嘛’，而不是‘明天还要上班’。"},
+dali:{name:"大理",pinyin:"DALI",color:"#3a7ca5",color2:"#7fb069",tags:["风花雪月","自由至上","治愈系","逃离高手"],slogan:"“你的心不在格子间，它在洱海边晒太阳。”",reason:"你选的总是风、云、慢时间和留白。你对‘有用’没那么执着，对‘舒服’却异常敏锐；情绪来了不硬扛，而是去吹吹风、发发呆、看看天。你需要的不是更多刺激，而是一个能让心落下来的地方——大理的节奏，刚好接住你。",adv:"自我修复能力超强。别人emo要三天，你睡一觉、晒晒太阳就满血复活，这种钝感力是成年人最稀缺的天赋。",egg:"彩蛋：你的收藏夹里一定躺着不止一家‘以后一定要去住一周’的民宿，而且你真的会去，只是还没定哪一周。"},
+shanghai:{name:"上海",pinyin:"SHANGHAI",color:"#8c2f4a",color2:"#c9a86a",tags:["精致体面","高效清醒","摩登本登","边界感强"],slogan:"“你把生活过成了精品店橱窗——好看，且有秩序。”",reason:"你的选择精致、清醒、有分寸：效率要高，品质不能将就，热闹可以有，但不能吵到你。你欣赏规则，也懂得享受；表面克制，内里对美好事物有着雷达般的挑剔。这份‘拎得清’的摩登气质，和上海是天生一对。",adv:"审美与执行力双在线。你能在混乱中迅速理出头绪，还能把方案做得体面漂亮——是那种‘交给他就放心’的人。",egg:"彩蛋：你嘴上说‘随便吃点’，最后选的餐厅人均、评分和出片率，一个都没随便过。"},
+beijing:{name:"北京",pinyin:"BEIJING",color:"#9a3324",color2:"#2b3a4a",tags:["大气格局","有底蕴","靠谱担当","局气"],slogan:"“你心里装着一座城的格局，小事从不计较。”",reason:"你的答案透着一股‘大’：看事情看长远，交朋友讲义气，对历史和老规矩有天然的敬意。你不爱小打小闹的精致，更欣赏厚重、敞亮、有分量的活法。四合院的影子、胡同的烟火和首都的气场，装得下你这份大气。",adv:"格局大、扛事强。关键时刻你总能稳住场面，朋友遇到大事第一个想打电话的人，往往就是你。",egg:"彩蛋：你讲起道理来一套一套的，而且很难被忽悠——想给你画饼，先得过你‘这事儿靠谱吗’这一关。"},
+xian:{name:"西安",pinyin:"XI'AN",color:"#a05a1e",color2:"#6b4226",tags:["恋旧情深","历史体质","碳水之魂","重情重义"],slogan:"“新潮的东西千千万，你只偏爱有故事的那一款。”",reason:"你对老物件、老味道、老朋友有一种顽固的温柔：店可以旧，味道不能变；人可以久不联系，一见面还是当年。你骨子里认‘根’，喜欢有来历、有沉淀的东西。十三朝古都的城墙根下，埋着的就是你这种人的乡愁。",adv:"念旧不是守旧，是重情。你的长情让关系历久弥新，你记住的每个小细节，都是别人心里的一盏灯。",egg:"彩蛋：如果碳水有段位，你至少是王者。面、馍、饼在你这里不是主食，是信仰，而且你坚决认为‘汤泡馍要自己掰才香’。"},
+xiamen:{name:"厦门",pinyin:"XIAMEN",color:"#2a9d8f",color2:"#e9a87a",tags:["海风体质","温柔松弛","小确幸","文艺日常"],slogan:"“你的温柔有海的味道，不张扬，但谁都想靠近。”",reason:"你的选择里藏着海岛的慢生活：喜欢散步、看海、喝点甜的，把平凡日子过出小清新的滤镜。你不争不抢，却自有主张；情绪柔软，共情力强，和你相处像吹海风——舒服，而且上头。厦门的鼓浪屿和环岛路，就是为你这种人修的。",adv:"共情力与亲和力满格。你总能察觉别人没说出口的情绪，一句恰到好处的安慰，胜过十句大道理。",egg:"彩蛋：你的手机相册里天空和海的照片多过自拍，而且每一张云，你都觉得‘这张和上次那张不一样’。"},
+changsha:{name:"长沙",pinyin:"CHANGSHA",color:"#d64520",color2:"#7b2d8b",tags:["热辣人生","不夜体质","快乐开关","人间烟火王"],slogan:"“你的快乐带辣味，越夜越兴奋，越热闹越来劲。”",reason:"你的答案热气腾腾：无辣不欢、夜生活满格、朋友一喊就到，快乐阈值低、感染力却极高。你的人生信条是‘先快乐，再说别的’，讨厌冷清，偏爱人声鼎沸的烟火气。长沙的夜宵摊和茶颜悦色排队的人群里，全是你的同类。",adv:"快乐制造机本机。只要有你在，冷场不存在；你的热情自带扩音器，能把普通聚会过成节日。",egg:"彩蛋：你对‘最后一杯奶茶’的抵抗力为零，并且坚信夜宵吃的是氛围，胖瘦那是明天的事。"}
+};
+var DIMS=["烟火气","松弛感","进取心","浪漫度","恋旧度","热闹度"];
+/* each option: t text, c city, d [dimIndex, points] */
+var Q=[
+{cat:"日常习惯",tag:"MORNING",q:"周末早上自然醒，你的第一件事是？",o:[
+{t:"赖床刷手机，刷到饿了再起",c:"chengdu",d:[1,2]},
+{t:"拉开窗帘看看天，决定今天去哪发呆",c:"dali",d:[3,2]},
+{t:"按计划起床，健身、咖啡、清单一条龙",c:"shanghai",d:[2,2]},
+{t:"下楼遛个弯，顺便买份热乎早餐和人聊两句",c:"beijing",d:[0,2]}]},
+{cat:"饮食口味",tag:"BREAKFAST",q:"只能选一种早餐过一辈子，你选？",o:[
+{t:"一碗热辣小面 / 肉夹馍，碳水管饱",c:"xian",d:[4,2]},
+{t:"精致的Brunch：牛油果吐司配手冲咖啡",c:"shanghai",d:[2,1]},
+{t:"楼下摊子的豆浆油条，边走边吃",c:"beijing",d:[0,2]},
+{t:"海鲜沙茶面，汤头鲜到见底",c:"xiamen",d:[0,1]}]},
+{cat:"饮食口味",tag:"TASTE",q:"朋友问你吃辣的水平，你实话实说：",o:[
+{t:"无辣不欢，越辣越上头",c:"changsha",d:[5,2]},
+{t:"微辣是底线，麻辣是热爱",c:"chengdu",d:[0,2]},
+{t:"一点点辣提味就好，清淡才是养生",c:"xiamen",d:[1,1]},
+{t:"甜口爱好者，辣与我无缘",c:"shanghai",d:[3,1]}]},
+{cat:"生活节奏",tag:"PACE",q:"你最受不了哪种生活状态？",o:[
+{t:"天天加班，忙到没有自己的时间",c:"dali",d:[1,2]},
+{t:"混乱无序，计划永远赶不上变化",c:"shanghai",d:[2,2]},
+{t:"太安静太冷清，没有人间气息",c:"changsha",d:[5,2]},
+{t:"漂泊无根，像浮萍一样没有归属感",c:"xian",d:[4,2]}]},
+{cat:"社交方式",tag:"SOCIAL",q:"朋友局上，你通常是哪个角色？",o:[
+{t:"气氛组组长，冷场是不可能冷场的",c:"changsha",d:[5,2]},
+{t:"安静听大家说，偶尔补一句关键的",c:"dali",d:[1,1]},
+{t:"组织者，订位、点菜、控场全包",c:"beijing",d:[2,1]},
+{t:"干饭担当，好吃的绝不放过，顺带安利菜单",c:"chengdu",d:[0,2]}]},
+{cat:"情绪反应",tag:"MOOD",q:"心情跌到谷底时，你的自救方式是？",o:[
+{t:"去有风的地方走走，看云看水发呆",c:"dali",d:[3,2]},
+{t:"约朋友吃顿火锅 / 夜宵，边吃边吐槽",c:"changsha",d:[5,1]},
+{t:"逛老街、老店，在旧时光里回血",c:"xian",d:[4,2]},
+{t:"一个人去海边坐会儿，听浪声清空大脑",c:"xiamen",d:[3,1]}]},
+{cat:"消费偏好",tag:"MONEY",q:"发工资了，第一笔钱最可能花在？",o:[
+{t:"吃顿好的，犒劳自己才是正经事",c:"chengdu",d:[0,2]},
+{t:"买件质感好的衣服 / 心仪已久的好物",c:"shanghai",d:[2,1]},
+{t:"订一张去远方的票，先走再说",c:"dali",d:[3,2]},
+{t:"给家人朋友买点东西，分享才快乐",c:"beijing",d:[0,1]}]},
+{cat:"旅行偏好",tag:"TRAVEL",q:"理想的旅行打开方式是？",o:[
+{t:"不做攻略，睡到自然醒，走到哪算哪",c:"chengdu",d:[1,2]},
+{t:"小众文艺路线，咖啡馆、书店、老巷子",c:"xiamen",d:[3,2]},
+{t:"历史人文深度游，博物馆和古迹必打卡",c:"xian",d:[4,2]},
+{t:"网红地标全收集，夜景和美食一个不落",c:"changsha",d:[5,1]}]},
+{cat:"生活日常",tag:"HOME",q:"你理想中的家，最重要的是？",o:[
+{t:"楼下就是小吃街，出门三分钟吃遍天下",c:"changsha",d:[0,2]},
+{t:"推窗见绿 / 见海，空气里有植物的味道",c:"dali",d:[3,1]},
+{t:"地段好、配套全，出门就是繁华",c:"shanghai",d:[2,2]},
+{t:"有个小院子，能种花、喝茶、晒太阳",c:"chengdu",d:[1,2]}]},
+{cat:"日常习惯",tag:"NIGHT",q:"晚上十一点，你大概率在？",o:[
+{t:"夜宵摊上，第二轮才刚开始",c:"changsha",d:[5,2]},
+{t:"窝在沙发里追剧，茶几上全是零食",c:"chengdu",d:[1,1]},
+{t:"复盘今天、规划明天，还没舍得睡",c:"beijing",d:[2,2]},
+{t:"护肤、听歌、写两句手账，准备入睡",c:"xiamen",d:[3,1]}]},
+{cat:"兴趣偏好",tag:"PHOTO",q:"翻你的手机相册，最多的是哪类照片？",o:[
+{t:"天空、云和海，每一张都不一样",c:"xiamen",d:[3,2]},
+{t:"美食特写，从街边摊拍到大餐",c:"chengdu",d:[0,2]},
+{t:"老建筑、老招牌、有年代感的东西",c:"xian",d:[4,2]},
+{t:"和朋友的合照，热热闹闹一大群",c:"changsha",d:[5,1]}]},
+{cat:"社交方式",tag:"FRIENDS",q:"老朋友从外地来，你怎么招待？",o:[
+{t:"带他吃遍本地老字号，讲每家店的故事",c:"xian",d:[4,1]},
+{t:"安排得明明白白，行程表精确到小时",c:"shanghai",d:[2,2]},
+{t:"白天随意逛，晚上必须整一顿大的局",c:"beijing",d:[0,1]},
+{t:"找个舒服的地方坐着聊天，叙旧最重要",c:"dali",d:[1,2]}]},
+{cat:"情绪反应",tag:"STRESS",q:"压力爆棚时，你身体最诚实的反应是？",o:[
+{t:"想吃重口味，辣的甜的都行，先满足胃",c:"changsha",d:[0,1]},
+{t:"想消失几天，去没人认识我的地方",c:"dali",d:[1,2]},
+{t:"疯狂收拾屋子 / 列清单，秩序感能救命",c:"shanghai",d:[2,2]},
+{t:"找老朋友打个长电话，聊完就好一半",c:"beijing",d:[5,1]}]},
+{cat:"消费偏好",tag:"SHOPPING",q:"逛街时最容易让你剁手的是？",o:[
+{t:"限量款、设计款，有调性的东西",c:"shanghai",d:[3,1]},
+{t:"老字号、老手艺，有故事的物件",c:"xian",d:[4,2]},
+{t:"文创小物、手作饰品，好看就走不动",c:"xiamen",d:[3,2]},
+{t:"吃的！所有试吃摊位都是我的陷阱",c:"chengdu",d:[0,2]}]},
+{cat:"生活节奏",tag:"WORK",q:"你向往的工作状态更接近？",o:[
+{t:"节奏快、成长快，忙并闪闪发光着",c:"shanghai",d:[2,2]},
+{t:"稳定有分量，在大平台做长久的事",c:"beijing",d:[2,1]},
+{t:"自由职业 / 远程办公，时间归我管",c:"dali",d:[1,2]},
+{t:"强度适中，下班生活比上班更精彩",c:"chengdu",d:[1,1]}]},
+{cat:"兴趣偏好",tag:"SEASON",q:"一年四季，你最爱哪个季节的氛围？",o:[
+{t:"春天，微风、野花、万物冒头",c:"dali",d:[3,2]},
+{t:"夏天，冰饮、夜市、蝉鸣和晚风",c:"changsha",d:[5,2]},
+{t:"秋天，落叶、桂香、适合怀旧",c:"xian",d:[4,2]},
+{t:"冬天，围炉、热茶、适合宅家",c:"chengdu",d:[1,1]}]},
+{cat:"日常习惯",tag:"DRINK",q:"下午三点，你想喝点什么续命？",o:[
+{t:"一杯盖碗茶，慢慢泡，慢慢聊",c:"chengdu",d:[1,2]},
+{t:"冰美式，提神醒脑不废话",c:"shanghai",d:[2,2]},
+{t:"网红奶茶，必须全糖去冰加料",c:"changsha",d:[5,1]},
+{t:"鲜榨果汁 / 椰子水，清清爽爽",c:"xiamen",d:[3,1]}]},
+{cat:"社交方式",tag:"CHAT",q:"在群里聊天，你通常是？",o:[
+{t:"表情包大户，活跃气氛第一名",c:"changsha",d:[5,2]},
+{t:"潜水党，只看不说，心里都有数",c:"dali",d:[1,1]},
+{t:"信息枢纽，谁有事我都能帮上忙",c:"beijing",d:[2,1]},
+{t:"深夜诗人，偶尔冒泡就是金句",c:"xiamen",d:[3,2]}]},
+{cat:"旅行偏好",tag:"SOUVENIR",q:"旅行回来，你行李箱里最可能装的是？",o:[
+{t:"当地老字号特产，给全家人都带了",c:"xian",d:[4,1]},
+{t:"辣酱、卤味、零食大礼包",c:"changsha",d:[0,2]},
+{t:"明信片、手账胶带、冰箱贴",c:"xiamen",d:[3,1]},
+{t:"什么都没买，记忆就是最好的纪念品",c:"dali",d:[1,2]}]},
+{cat:"人生信条",tag:"LIFE",q:"选一句最像你人生信条的话：",o:[
+{t:"人生苦短，必须好玩",c:"changsha",d:[5,2]},
+{t:"不争不抢，自有安排",c:"dali",d:[1,2]},
+{t:"做人做事，要对得起良心和朋友",c:"beijing",d:[4,1]},
+{t:"日子是自己的，过得舒服最重要",c:"chengdu",d:[0,1]}]}
+];
+var answers=[], cur=0;
+var $=function(id){return document.getElementById(id)};
+/* strip */
+Object.keys(CITIES).forEach(function(k){var c=CITIES[k];var s=document.createElement("span");s.textContent=c.name;s.style.background="linear-gradient(120deg,"+c.color+","+c.color2+")";$("strip").appendChild(s)});
+function show(id){["screen-home","screen-quiz","screen-calc","screen-result"].forEach(function(x){$(x).classList.toggle("hidden",x!==id)})}
+function renderQ(){
+var item=Q[cur];
+$("q-count").textContent="第 "+(cur+1)+" / 20 题";
+$("q-cat").textContent=item.cat;
+$("bar").style.width=((cur)/20*100)+"%";
+$("q-tag").textContent=item.tag;
+$("q-title").textContent=item.q;
+var box=$("opts");box.innerHTML="";
+var letters=["A","B","C","D"];
+item.o.forEach(function(op,i){
+var b=document.createElement("button");b.className="opt"+(answers[cur]===i?" sel":"");
+b.innerHTML="<b>"+letters[i]+"</b><span></span>";b.querySelector("span").textContent=op.t;
+b.onclick=function(){answers[cur]=i;renderQsel();setTimeout(next,220)};
+box.appendChild(b);
+});
+$("btn-prev").disabled=cur===0;
+var card=$("qcard");card.classList.remove("fade");void card.offsetWidth;card.classList.add("fade");
+}
+function renderQsel(){var opts=$("opts").children;for(var i=0;i<opts.length;i++){opts[i].classList.toggle("sel",answers[cur]===i)}}
+function next(){if(cur<19){cur++;renderQ()}else{finish()}}
+$("btn-prev").onclick=function(){if(cur>0){cur--;renderQ()}};
+$("btn-start").onclick=function(){answers=[];cur=0;show("screen-quiz");renderQ()};
+function finish(){
+$("bar").style.width="100%";
+show("screen-calc");
+var texts=["翻看你的口味与习惯…","比对七座城市的气质…","盖上你的灵魂邮戳…"];
+var i=0;var timer=setInterval(function(){i++;if(i<texts.length)$("calc-text").textContent=texts[i]},550);
+setTimeout(function(){clearInterval(timer);showResult()},1750);
+}
+function compute(){
+var score={},dims=[0,0,0,0,0,0],maxD=[0,0,0,0,0,0];
+Object.keys(CITIES).forEach(function(k){score[k]=0});
+Q.forEach(function(item,qi){
+item.o.forEach(function(op){maxD[op.d[0]]+=2});
+var op=item.o[answers[qi]];if(!op)return;
+score[op.c]+=2;
+// secondary: give 1 pt to cities sharing dimension affinity via option index spread - keep simple: primary only, plus dim
+dims[op.d[0]]+=op.d[1];
+});
+var sorted=Object.keys(score).sort(function(a,b){return score[b]-score[a]});
+return {winner:sorted[0],sorted:sorted,score:score,dims:dims,maxD:maxD};
+}
+function showResult(){
+var r=compute();var c=CITIES[r.winner];
+var total=40;var pct=Math.round(78+ (r.score[r.winner]/total)*38); if(pct>98)pct=98;
+$("poster-top").style.background="linear-gradient(135deg,"+c.color+","+c.color2+")";
+$("poster-top").setAttribute("data-watermark",c.name);
+$("r-city").textContent=c.name;$("r-pinyin").textContent=c.pinyin;
+$("r-slogan").textContent=c.slogan;$("r-match").textContent=pct+"%";
+$("r-tags").innerHTML=c.tags.map(function(t){return "<span># "+t+"</span>"}).join("");
+$("r-reason").textContent=c.reason;$("r-adv").textContent=c.adv;$("r-egg").textContent=c.egg;
+var dh="";DIMS.forEach(function(d,i){var v=r.maxD[i]?Math.round(r.dims[i]/r.maxD[i]*100):0; if(v<12)v=12+((i*7)%15); dh+='<div class="dim"><span>'+d+'</span><div class="bar"><i style="width:'+v+'%"></i></div><b>'+v+'%</b></div>'});
+$("r-dims").innerHTML='<div class="sec"><h4>你的气质图谱</h4></div>'+dh;
+var n1=CITIES[r.sorted[1]],n2=CITIES[r.sorted[2]];
+$("r-neighbors").textContent="灵魂邻居："+n1.name+" 与 "+n2.name+" 也和你很合拍——有机会去住几天，说不定会找到第二故乡。";
+window._shareText="我的灵魂老家是，契合度"+pct+"%！"+c.slogan+" 关键词："+c.tags.join("、")+"。快来测测你的灵魂老家在哪座城市？";
+show("screen-result");window.scrollTo({top:0,behavior:"smooth"});
+}
+$("btn-again").onclick=function(){answers=[];cur=0;show("screen-home");window.scrollTo({top:0})};
+$("btn-copy").onclick=function(){
+var t=window._shareText||"";
+function done(){$("copy-tip").textContent="已复制，去粘贴分享吧 ✓"}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(function(){fallback()})}else{fallback()}
+function fallback(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){$("copy-tip").textContent=t}document.body.removeChild(ta)}
+};
+</script>
+</body>
+</html>

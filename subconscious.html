@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>你的潜意识人格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+:root{
+--bg:#12101f; --bg2:#1c1933; --card:#211d3a; --card2:#2a2547;
+--ink:#f2eefc; --muted:#b9b1d6; --faint:#8d84b3;
+--gold:#e8c987; --lilac:#b8a6e8; --rose:#e8a6c3; --line:rgba(184,166,232,.22);
+--accent:#b8a6e8;
+}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;min-height:44px}
+.serif{font-family:"Noto Serif SC",serif}
+
+/* starfield */
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;background:
+radial-gradient(1.5px 1.5px at 12% 18%,#fff 50%,transparent 51%),
+radial-gradient(1px 1px at 28% 62%,#ffeec2 50%,transparent 51%),
+radial-gradient(1.5px 1.5px at 44% 9%,#fff 50%,transparent 51%),
+radial-gradient(1px 1px at 63% 34%,#d9ccff 50%,transparent 51%),
+radial-gradient(1.5px 1.5px at 78% 14%,#fff 50%,transparent 51%),
+radial-gradient(1px 1px at 88% 48%,#ffeec2 50%,transparent 51%),
+radial-gradient(1px 1px at 8% 78%,#d9ccff 50%,transparent 51%),
+radial-gradient(1.5px 1.5px at 92% 82%,#fff 50%,transparent 51%),
+radial-gradient(1px 1px at 55% 88%,#fff 50%,transparent 51%),
+radial-gradient(1px 1px at 36% 40%,#fff 50%,transparent 51%);
+opacity:.7}
+.halo{position:fixed;top:-140px;right:-100px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,#f5e3b0 0%,rgba(245,227,176,.25) 45%,transparent 70%);pointer-events:none;z-index:0}
+.moon{position:fixed;top:34px;right:36px;width:54px;height:54px;border-radius:50%;background:#f7ecc8;box-shadow:0 0 34px rgba(247,236,200,.45),inset -10px -6px 0 rgba(214,192,130,.5);z-index:0;pointer-events:none}
+@media(max-width:640px){.moon{width:40px;height:40px;top:22px;right:20px}}
+
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:28px 18px 56px}
+.screen{display:none}.screen.on{display:block;animation:fade.45s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.screen.on{animation:none}}
+
+/* HOME */
+.home{padding-top:5vh;text-align:center}
+.kicker{letter-spacing:.35em;font-size:12px;color:var(--gold);text-transform:uppercase}
+.home h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:clamp(40px,9vw,58px);line-height:1.25;margin:18px 0 6px}
+.home h1 em{font-style:normal;color:var(--lilac)}
+.home.sub{color:var(--muted);font-size:16px;line-height:1.9;max-width:440px;margin:14px auto 0}
+.dreamline{margin:30px auto 0;max-width:460px;border:1px solid var(--line);background:rgba(33,29,58,.75);border-radius:14px;padding:16px 20px;text-align:left}
+.dreamline p{margin:0;font-size:14px;line-height:1.9;color:var(--muted)}
+.dreamline b{color:var(--ink)}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.meta span{font-size:12.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 13px;background:rgba(33,29,58,.6)}
+.cta{margin-top:30px;background:var(--gold);color:#241d08;border:none;border-radius:999px;padding:0 44px;font-size:17px;font-weight:700;min-height:54px;box-shadow:0 10px 28px rgba(232,201,135,.25)}
+.cta:active{transform:scale(.98)}
+.note{margin-top:20px;font-size:12px;color:var(--faint);line-height:1.8;max-width:420px;margin-left:auto;margin-right:auto}
+.peek{margin-top:34px}
+.peek h3{font-size:13px;letter-spacing:.2em;color:var(--faint);font-weight:500}
+.peek.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.peek.chips span{font-family:"Noto Serif SC",serif;font-size:13.5px;color:var(--lilac);border:1px dashed rgba(184,166,232,.35);padding:8px 13px;border-radius:10px}
+
+/* QUIZ */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.back{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:0 16px;min-height:40px;font-size:14px}
+.qcount{font-size:13px;color:var(--faint);letter-spacing:.1em}
+.progress{height:6px;background:rgba(184,166,232,.15);border-radius:99px;overflow:hidden;margin:10px 0 30px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--lilac),var(--gold));border-radius:99px;transition:width.4s ease}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 24px 24px}
+.qtag{font-size:12px;color:var(--gold);letter-spacing:.25em}
+.qtext{font-family:"Noto Serif SC",serif;font-size:clamp(21px,5.4vw,26px);font-weight:700;line-height:1.65;margin:12px 0 6px}
+.qhint{font-size:13px;color:var(--faint);margin:0 0 20px}
+.opts{display:grid;gap:11px}
+.opt{display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%;background:var(--card2);border:1.5px solid transparent;border-radius:14px;padding:15px 16px;color:var(--ink);font-size:15.5px;line-height:1.65;transition:border-color.15s,background.15s}
+.opt.k{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:12.5px;color:var(--lilac);margin-top:2px}
+.opt:hover{border-color:rgba(184,166,232,.5)}
+.opt.sel{border-color:var(--gold);background:#332c52}
+.opt.sel.k{background:var(--gold);color:#241d08;border-color:var(--gold);font-weight:700}
+.tip{text-align:center;color:var(--faint);font-size:12.5px;margin-top:18px}
+
+/* RESULT poster */
+.poster{border-radius:22px;padding:2px;background:linear-gradient(160deg,var(--pc,#b8a6e8),rgba(255,255,255,.06) 55%,var(--pc,#b8a6e8))}
+.poster-in{background:linear-gradient(180deg,#241f42,#191630);border-radius:20px;padding:32px 26px 28px;position:relative;overflow:hidden}
+.poster-in::before{content:"";position:absolute;top:-70px;right:-70px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,var(--pc,#b8a6e8) 0%,transparent 68%);opacity:.28}
+.p-kicker{font-size:12px;letter-spacing:.3em;color:var(--gold)}
+.p-icon{font-size:44px;line-height:1;margin:16px 0 4px}
+.p-name{font-family:"Noto Serif SC",serif;font-size:clamp(29px,7.6vw,38px);font-weight:900;line-height:1.4;margin:6px 0 4px}
+.p-tag{font-family:"Noto Serif SC",serif;font-size:16.5px;color:var(--pc,#b8a6e8);line-height:1.7}
+.p-match{display:inline-block;margin-top:14px;font-size:12.5px;color:var(--gold);border:1px solid rgba(232,201,135,.4);border-radius:999px;padding:6px 13px}
+.sec{margin-top:24px}
+.sec h4{font-size:13px;letter-spacing:.22em;color:var(--gold);margin:0 0 9px;font-weight:700}
+.sec p{margin:0;font-size:15px;line-height:1.95;color:#e6e0f7}
+.traits{display:flex;flex-wrap:wrap;gap:8px}
+.traits span{background:rgba(184,166,232,.13);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:13.5px}
+.dims{display:grid;gap:10px}
+.dim{display:grid;grid-template-columns:86px 1fr 30px;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.dim.bar{height:7px;background:rgba(184,166,232,.14);border-radius:99px;overflow:hidden}
+.dim.bar i{display:block;height:100%;background:var(--pc,#b8a6e8);border-radius:99px}
+.dim b{color:var(--ink);font-weight:500;text-align:right}
+.motto{font-family:"Noto Serif SC",serif;font-size:18px;line-height:1.8;color:var(--ink);border-left:3px solid var(--gold);padding-left:14px}
+.egg{background:rgba(232,201,135,.08);border:1px dashed rgba(232,201,135,.4);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.85;color:#efe3c2}
+.p-foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}
+.actions button{border-radius:999px;font-size:15px;font-weight:700;padding:0 10px;min-height:50px}
+.btn-main{background:var(--gold);color:#241d08;border:none}
+.btn-ghost{background:none;border:1.5px solid var(--line);color:var(--ink)}
+.copied{text-align:center;color:var(--gold);font-size:13px;height:20px;margin-top:10px}
+.disclaimer{text-align:center;font-size:12px;color:var(--faint);line-height:1.8;margin-top:16px}
+@media(max-width:480px){.actions{grid-template-columns:1fr}.qcard{padding:24px 18px 20px}.poster-in{padding:28px 20px 24px}}
+</style>
+</head>
+<body>
+<div class="stars"></div><div class="halo"></div><div class="moon"></div>
+<div class="wrap">
+
+<!-- HOME -->
+<section class="screen on" id="s-home">
+<div class="home">
+<div class="kicker">A DREAM QUIZ · 梦境测试</div>
+<h1>你的<em>潜意识</em><br>人格</h1>
+<p class="sub">白天你扮演着自己，深夜里却住着另一个你。<br>20 道题，不用思考，跟着第一直觉走——<br>看看藏在梦境深处的那个人，到底是谁。</p>
+<div class="dreamline">
+<p>🌙 <b>答题方式：</b>没有对错，没有标准答案。看到题目的第一秒，心里冒出的那个选项，就是潜意识在替你说话。想得越久，答案越不像你。</p>
+</div>
+<div class="meta"><span>20 道直觉题</span><span>约 3 分钟</span><span>8 种潜意识人格</span><span>7 个深层维度</span></div>
+<button class="cta" id="btn-start">进入梦境 →</button>
+<p class="note">本测试为趣味娱乐性质，不是专业心理诊断，也不构成任何心理评估结论。结果仅供你会心一笑、截图分享。</p>
+<div class="peek">
+<h3>— 你可能是他们中的一个 —</h3>
+<div class="chips">
+<span>渴望避风港的远航者</span><span>披着盔甲的小孩</span><span>向往旷野的风</span><span>深海里的观察者</span><span>寻找同类的星星</span><span>把心事锁进盒子的人</span><span>人群中央的月亮</span><span>守着篝火的人</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- QUIZ -->
+<section class="screen" id="s-quiz">
+<div class="topbar">
+<button class="back" id="btn-back">← 上一题</button>
+<span class="qcount" id="qcount"></span>
+</div>
+<div class="progress"><i id="bar" style="width:0%"></i></div>
+<div class="qcard" id="qcard">
+<div class="qtag" id="qtag"></div>
+<div class="qtext" id="qtext"></div>
+<p class="qhint">凭第一直觉选，别想超过 3 秒</p>
+<div class="opts" id="opts"></div>
+</div>
+<p class="tip">你的潜意识正在浮出水面……</p>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="s-result">
+<div class="poster" id="poster">
+<div class="poster-in">
+<div class="p-kicker">你的潜意识人格是</div>
+<div class="p-icon" id="r-icon"></div>
+<div class="p-name" id="r-name"></div>
+<div class="p-tag" id="r-tag"></div>
+<span class="p-match" id="r-match"></span>
+
+<div class="sec"><h4>深 层 解 读</h4><p id="r-desc"></p></div>
+<div class="sec"><h4>性 格 特 点</h4><div class="traits" id="r-traits"></div></div>
+<div class="sec"><h4>你 的 潜 意 识 坐 标</h4><div class="dims" id="r-dims"></div></div>
+<div class="sec"><h4>隐 藏 优 势</h4><p id="r-adv"></p></div>
+<div class="sec"><h4>给 自 己 的 一 句 话</h4><div class="motto" id="r-motto"></div></div>
+<div class="sec"><h4>趣 味 彩 蛋</h4><div class="egg" id="r-egg"></div></div>
+
+<div class="p-foot"><span>《你的潜意识人格》</span><span>20 题 · 梦境版</span></div>
+</div>
+</div>
+<div class="actions">
+<button class="btn-main" id="btn-copy">复制我的结果文案</button>
+<button class="btn-ghost" id="btn-again">再测一次</button>
+</div>
+<div class="copied" id="copied"></div>
+<p class="disclaimer">截图保存这张卡片，分享给朋友猜猜你是谁。<br>本测试仅供娱乐，不是专业心理诊断。</p>
+</section>
+</div>
+
+<script>
+/* dims: safe安全感 free自由 ctrl掌控 love被爱 explore探索 belong归属 depth内省 */
+var DIMNAMES={safe:"安全感需求",free:"自由渴望",ctrl:"掌控欲",love:"被爱需求",explore:"探索欲",belong:"归属感",depth:"内省深度"};
+
+var QUESTIONS=[
+{t:"一幅画里有海、船、灯塔和飞鸟，你第一眼被什么吸引？",o:[
+["远处那座亮着的灯塔",{safe:3,belong:1}],["扬帆远航的船",{explore:3,free:1}],["无边无际的海面",{free:3,depth:1}],["盘旋的飞鸟",{free:2,explore:2}]]},
+{t:"你做了一个很长的梦，醒来时最记得哪个场景？",o:[
+["一间温暖的小屋，窗外下着雨",{safe:3,love:1}],["在陌生的城市里自由地跑",{free:3,explore:1}],["站在高处，看着脚下的世界",{ctrl:3,depth:1}],["和一群人围着篝火说笑",{belong:3,love:1}]]},
+{t:"此刻让你选一种天气，你想身处哪一种？",o:[
+["雨后初晴，空气湿润清新",{safe:2,depth:2}],["大风天，衣角被吹得猎猎作响",{free:3,explore:1}],["冬日暖阳，晒得人犯困",{safe:2,love:2}],["深夜飘雪，世界安安静静",{depth:3,ctrl:1}]]},
+{t:"如果你的心情是一种颜色，它现在最接近？",o:[
+["雾蓝色——安静，有点距离感",{depth:3,safe:1}],["橘黄色——温暖，想靠近人",{love:2,belong:2}],["草绿色——想出去透透气",{free:2,explore:2}],["深紫色——神秘，连自己都看不透",{depth:2,ctrl:2}]]},
+{t:"深夜睡不着时，你的脑子里通常在放什么？",o:[
+["回放白天说错的某一句话",{ctrl:2,depth:2}],["想象自己在另一个城市生活",{free:2,explore:2}],["想念某个具体的人",{love:3,belong:1}],["什么都不想，就是单纯睡不着",{safe:2,depth:2}]]},
+{t:"给你一间只能属于你的房间，你先放什么进去？",o:[
+["一张舒服的床和厚厚的毯子",{safe:3,love:1}],["一扇能看很远的落地窗",{free:2,depth:2}],["上锁的抽屉，放只属于我的东西",{ctrl:3,depth:1}],["一张大桌子，朋友来了能围坐",{belong:3,love:1}]]},
+{t:"旅行时，你最容易被哪种瞬间击中？",o:[
+["当地人随口的一句关心",{love:2,belong:2}],["地图上没有的野路和小店",{explore:3,free:1}],["站在高处，整座城尽收眼底",{ctrl:2,free:2}],["傍晚的海边，什么都不用做",{safe:2,depth:2}]]},
+{t:"朋友突然不回消息，你的第一反应是？",o:[
+["可能在忙吧，过会儿再说",{safe:2,free:2}],["忍不住想：我是不是说错话了",{love:3,ctrl:1}],["翻翻聊天记录，找找线索",{ctrl:2,depth:2}],["正好，我也享受一下清静",{depth:2,free:2}]]},
+{t:"如果可以变成一种自然事物，你选？",o:[
+["一棵树，扎根在一个地方",{safe:3,belong:1}],["一阵风，去哪儿都不用报备",{free:3,explore:1}],["一条深海里的鱼，自在又安静",{depth:3,safe:1}],["一颗星星，远远地亮着就好",{depth:2,love:2}]]},
+{t:"小时候的你，最常幻想的是什么？",o:[
+["有一个谁也找不到的秘密基地",{safe:2,ctrl:2}],["长大后去很远很远的地方",{free:3,explore:1}],["被很多人喜欢和围着",{love:3,belong:1}],["拥有一种别人没有的超能力",{explore:2,ctrl:2}]]},
+{t:"选一个地方，度过完全属于你的一天：",o:[
+["老家的旧屋子，慢慢收拾回忆",{safe:2,belong:2}],["没去过的城市，随便走走",{explore:3,free:1}],["海边的民宿，听一天的浪",{depth:2,safe:2}],["热闹的夜市，从街头吃到巷尾",{belong:2,love:2}]]},
+{t:"你的手机相册里，哪类照片最多？",o:[
+["风景和天空，随手拍的",{free:2,depth:2}],["和朋友家人的合照",{belong:3,love:1}],["截图——怕忘掉的重要信息",{ctrl:3,safe:1}],["好吃的和好看的店",{love:2,explore:2}]]},
+{t:"遇到一件完全失控的事，你通常会？",o:[
+["先列个清单，一件件捋顺",{ctrl:3,safe:1}],["躲起来静一静，自己消化",{depth:3,safe:1}],["找最亲近的人说一说",{love:2,belong:2}],["船到桥头自然直，先睡一觉",{free:2,safe:2}]]},
+{t:"下面哪句话，最像在说你？",o:[
+["“我看起来没事，其实想了很多”",{depth:3,ctrl:1}],["“别管我，我自己待会儿就好”",{free:2,safe:2}],["“你们都在，我就安心了”",{belong:3,love:1}],["“世界那么大，我还没看够”",{explore:3,free:1}]]},
+{t:"如果梦里出现一扇门，你希望门后是？",o:[
+["小时候住过的那个家",{safe:3,belong:1}],["一片没见过的旷野",{free:3,explore:1}],["一个装满我秘密的房间",{ctrl:2,depth:2}],["所有我想见的人，都在里面",{love:3,belong:1}]]},
+{t:"你更容易被哪种人吸引？",o:[
+["情绪稳定、让人踏实的人",{safe:3,love:1}],["有趣、总有新点子的人",{explore:3,free:1}],["懂我，但不会靠太近的人",{depth:2,free:2}],["热烈直接、爱就说出口的人",{love:3,belong:1}]]},
+{t:"独处对你来说，更像是？",o:[
+["充电——不见人才能回血",{depth:2,safe:2}],["自由——终于不用配合任何人",{free:3,ctrl:1}],["有点慌——安静久了会胡思乱想",{love:2,belong:2}],["整理时间——把生活重新归位",{ctrl:3,depth:1}]]},
+{t:"选一件东西，作为你的“护身符”：",o:[
+["一把家里的钥匙",{safe:3,belong:1}],["一张随时能出发的车票",{free:3,explore:1}],["一本写满字的日记本",{depth:3,ctrl:1}],["一条朋友送的旧手链",{love:2,belong:2}]]},
+{t:"如果人生是一部电影，你希望自己的戏份是？",o:[
+["主角——故事围着我转",{ctrl:2,love:2}],["浪迹天涯的配角，出场不多但难忘",{free:3,depth:1}],["温暖的群像，每个人都有光",{belong:3,love:1}],["幕后的人，掌控着整个故事",{ctrl:3,depth:1}]]},
+{t:"最后，闭上眼：你希望今晚梦见什么？",o:[
+["回到一个让我安心的地方",{safe:3,belong:1}],["飞起来，飞过没去过的山海",{free:3,explore:1}],["和想念的人，好好说说话",{love:3,belong:1}],["一个谁也不认识我的新世界",{explore:2,depth:2}]]}
+];
+
+var RESULTS=[
+{id:"harbor",icon:"⛵",name:"渴望避风港的远航者",color:"#7fc4c9",
+tag:"“我走得再远，也想留一盏回家的灯。”",
+prof:{safe:8,free:6,ctrl:4,love:6,explore:9,belong:5,depth:6},
+desc:"你的潜意识一直在过两种生活：一边想去看更大的世界，一边想在累的时候有个地方靠岸。你不是真的贪心，你只是既舍不得远方的风，也放不下心里的岸。别人眼里你独立又能干，只有你自己知道，每次出发前，你都会悄悄确认一遍——回来的路，还在不在。",
+traits:["好奇心旺盛","独立但恋家","累了不爱说","对“回来”二字很敏感"],
+adv:"你拥有一种稀缺的能力：在漂泊和安定之间找到自己的节奏。你走过的每一段路，最后都会变成你安顿自己的底气——你的见识，就是你的避风港。",
+motto:"去看世界吧，也别怕回头——岸一直都在，你也是别人的岸。",
+egg:"🎲 彩蛋：你的手机里一定存着至少一张“家附近”的照片。远航者的小秘密：走得最远的人，往往最想家。"},
+{id:"armor",icon:"🛡",name:"披着盔甲的小孩",color:"#e8a6c3",
+tag:"“盔甲是我穿的，柔软是我藏的。”",
+prof:{safe:9,free:3,ctrl:5,love:9,explore:3,belong:6,depth:7},
+desc:"你的潜意识里住着一个很懂事的小孩：很早就学会了自己消化情绪、自己解决问题，把“我没事”练成了口头禅。但盔甲之下，你对一句真诚的关心毫无抵抗力——你不是不需要被爱，你只是需要先确认：卸下盔甲，是安全的。",
+traits:["报喜不报忧","慢热但长情","对温柔毫无抵抗力","安全感自己给，也想要人给"],
+adv:"你的坚强不是逞强，是温柔的另一种形态：你总先照顾好所有人。更难得的是，你的柔软从未消失，只是被你保护得很好——它会在对的人面前，自己探出头来。",
+motto:"你不用一直坚强。盔甲可以脱下来晾一晾，小孩也可以被人抱一抱。",
+egg:"🎲 彩蛋：你大概率有一个“深夜才舍得发”的朋友圈习惯——白天的大人，半夜的小孩，说的就是你。"},
+{id:"wind",icon:"🍃",name:"向往旷野的风",color:"#9fd48a",
+tag:"“别问我去哪儿，风也不知道。”",
+prof:{safe:2,free:10,ctrl:3,love:4,explore:8,belong:2,depth:5},
+desc:"你的潜意识对一切“被安排”都有点过敏：固定的路线、重复的日子、过早定型的人生，都会让你莫名焦躁。你不是不负责任，你只是确信——人活着，舒展比正确更重要。你的快乐来源很简单：随时能走，永远有下一站。",
+traits:["讨厌被安排","说走就走型选手","新鲜感驱动","越开阔越快乐"],
+adv:"你天生自带“重启键”：别人困在原地纠结时，你已经换条路走出去了。这种不被困住的能力，会让你的人生比同龄人多活好几段。",
+motto:"别把自己拴在任何地方。你是风，旷野才是你的地址。",
+egg:"🎲 彩蛋：你的收藏夹里一定躺着不止一篇旅行攻略，而且大概率还没去成——没关系，风从不按时出发。"},
+{id:"deepsea",icon:"🐋",name:"深海里的观察者",color:"#8aa8e8",
+tag:"“我不说话的时候，正在看整个世界。”",
+prof:{safe:6,free:4,ctrl:6,love:3,explore:6,belong:3,depth:10},
+desc:"你的潜意识住在很深的地方：热闹对你来说是背景音，观察才是主场。你很少急于表达，却总能一眼看穿气氛里没说出口的东西。你不是冷漠，你只是把热情留给了真正值得的人和事——你的世界安静，但从不贫瘠。",
+traits:["观察力惊人","话不多但句句在点上","享受独处","内心世界极其丰富"],
+adv:"你是人群里的“高清镜头”：别人看到的是表面，你看到的是动机、情绪和真相。这份洞察力让你在做判断时极少失手，是天生的参谋型选手。",
+motto:"不必合群，也不必解释。深海自有深海的光，安静的人也有回响。",
+egg:"🎲 彩蛋：你一定有过“在群里潜水三天，突然一句话总结全场”的高光时刻。深海观察者，出手必中。"},
+{id:"star",icon:"✦",name:"寻找同类的星星",color:"#e8c987",
+tag:"“我发光，是为了让同类找到我。”",
+prof:{safe:5,free:4,ctrl:3,love:8,explore:5,belong:10,depth:9},
+desc:"你的潜意识一直在发送一种信号：有没有人，和我想的是一回事？你对“懂”字有近乎执着的渴望——比起被很多人喜欢，你更想要被少数人真正理解。你看起来合群，心里却一直在人群里辨认同类的频率。",
+traits:["极度渴望被理解","认人不认场","朋友贵精不贵多","对“懂我”毫无抵抗力"],
+adv:"你对人的感知像天线一样灵敏，总能在一群人里精准找到同频的人。你组建的圈子不大，但每一个都是能交心的——这是很多人羡慕不来的能力。",
+motto:"别急着合群。你的同类也在找你，你们会在某个深夜的话题里相认。",
+egg:"🎲 彩蛋：你发出“懂我的人还没睡吗”这类动态时，通常已经有人秒回了——看，同类一直在，只是你没数过。"},
+{id:"box",icon:"🗝",name:"把心事锁进盒子的人",color:"#b8a6e8",
+tag:"“我的心事有锁，但钥匙一直在我口袋里。”",
+prof:{safe:8,free:3,ctrl:9,love:5,explore:3,belong:4,depth:8},
+desc:"你的潜意识里有一只收拾得整整齐齐的盒子：开心的、难过的、没说出口的，都分门别类放好，轻易不给人看。你不是不信任谁，你只是觉得，情绪是自己的功课，不想麻烦别人。你的生活也一样——有序、可控、心里有数，你才安心。",
+traits:["情绪自理能力满分","秩序感强","秘密只跟自己说","失控感是你的天敌"],
+adv:"你是天生的“收纳大师”，不只是物品，更是生活：再乱的局面，你都能理出头绪。这份掌控力让你成为身边人眼里最靠谱的存在，没有之一。",
+motto:"盒子可以锁着，但别忘了偶尔打开晒晒太阳——心事不会坏，放久了会沉。",
+egg:"🎲 彩蛋：你的备忘录或收藏夹里，一定躺着一些“永远不会发出去”的文字。那不是矫情，那是你的私人博物馆。"},
+{id:"moon",icon:"🌙",name:"人群中央的月亮",color:"#f0d9a0",
+tag:"“我不抢太阳的光，我有自己的亮。”",
+prof:{safe:4,free:7,ctrl:6,love:8,explore:6,belong:7,depth:2},
+desc:"你的潜意识喜欢被注视，也懂得如何发光：你在人群里是自然的中心，气氛因为你而升温。但月亮的另一面是：热闹散场后，你也会享受一个人的清净。你不是在表演，你只是天生知道——光，要亮给值得的人看。",
+traits:["天生的气氛中心","亲和力拉满","热闹与独处自由切换","被需要时特别有成就感"],
+adv:"你有一种让人舒服的感染力：和你在一起，场子不会冷，朋友不会散。这种“聚光又暖人”的气质，是社交场上最稀缺的天赋。",
+motto:"继续发光吧，不必怕太亮——月亮从不为谁收敛光芒。",
+egg:"🎲 彩蛋：合照里站在中间的经常是你，而且你假装是“随便站的”。月亮的小心机，大家都懂。"},
+{id:"fire",icon:"🔥",name:"守着篝火的人",color:"#eda26a",
+tag:"“世界再大，也大不过一圈围坐的人。”",
+prof:{safe:9,free:3,ctrl:6,love:7,explore:2,belong:9,depth:6},
+desc:"你的潜意识对“我们”两个字毫无抵抗力：朋友的局、家里的饭、一群人围坐的夜晚，就是你心中最顶级的幸福。你不追逐远方，因为你深信，幸福不在别处，就在身边这圈人中间。你是那个默默添柴的人——篝火不灭，是因为有你在。",
+traits:["重感情","天生的组织者","幸福感阈值很低","朋友有事第一个到"],
+adv:"你是关系的“定海神针”：群会散、局会黄，但只要有你在，重要的人就散不了。这种凝聚力，是用多少热闹都换不来的福气。",
+motto:"守好你的火，也守好围着火的人。平凡日子里的相聚，就是最大的远方。",
+egg:"🎲 彩蛋：朋友群里的聚会，十次有八次是你攒的局。承认吧，没有你，那个群早就安静如鸡了。"}
+];
+
+var idx=0, answers=[];
+var $=function(id){return document.getElementById(id)};
+function show(id){["s-home","s-quiz","s-result"].forEach(function(s){$(s).classList.toggle("on",s===id)});window.scrollTo(0,0)}
+
+function renderQ(){
+var q=QUESTIONS[idx];
+$("qcount").textContent="第 "+(idx+1)+" / "+QUESTIONS.length+" 题";
+$("bar").style.width=((idx)/QUESTIONS.length*100)+"%";
+$("qtag").textContent="DREAM · 0"+(idx+1);
+$("qtext").textContent=q.t;
+$("btn-back").style.visibility=idx===0?"hidden":"visible";
+var box=$("opts");box.innerHTML="";
+var card=$("qcard");card.style.animation="none";void card.offsetWidth;card.style.animation="fade.35s ease";
+q.o.forEach(function(op,i){
+var b=document.createElement("button");b.className="opt"+(answers[idx]===i?" sel":"");
+b.innerHTML='<span class="k">'+("ABCD"[i])+'</span><span>'+op[0]+'</span>';
+b.onclick=function(){pick(i)};
+box.appendChild(b);
+});
+}
+function pick(i){
+answers[idx]=i;
+var opts=$("opts").children;for(var j=0;j<opts.length;j++)opts[j].classList.toggle("sel",j===i);
+setTimeout(function(){
+if(idx<QUESTIONS.length-1){idx++;renderQ()}else{finish()}
+},280);
+}
+function finish(){
+$("bar").style.width="100%";
+var scores={safe:0,free:0,ctrl:0,love:0,explore:0,belong:0,depth:0};
+answers.forEach(function(a,qi){var w=QUESTIONS[qi].o[a][1];for(var k in w)scores[k]+=w[k]});
+function cos(p){var dot=0,na=0,nb=0;for(var k in scores){dot+=scores[k]*p[k];na+=scores[k]*scores[k];nb+=p[k]*p[k]}return dot/(Math.sqrt(na)*Math.sqrt(nb)||1)}
+var best=RESULTS[0],bs=-1;
+RESULTS.forEach(function(r){var c=cos(r.prof);if(c>bs){bs=c;best=r}});
+var match=Math.round(84+bs*15);
+/* top3 dims */
+var dims=Object.keys(scores).sort(function(a,b){return scores[b]-scores[a]}).slice(0,3);
+var maxS=Math.max.apply(null,Object.values(scores))||1;
+$("poster").style.setProperty("--pc",best.color);
+$("r-icon").textContent=best.icon;
+$("r-name").textContent=best.name;
+$("r-tag").textContent=best.tag;
+$("r-match").textContent="潜意识契合度 "+match+"%";
+$("r-desc").textContent=best.desc;
+$("r-traits").innerHTML=best.traits.map(function(t){return "<span>"+t+"</span>"}).join("");
+$("r-dims").innerHTML=dims.map(function(d){var v=Math.round(scores[d]/maxS*100);return '<div class="dim"><span>'+DIMNAMES[d]+'</span><span class="bar"><i style="width:'+v+'%"></i></span><b>'+v+'</b></div>'}).join("");
+$("r-adv").textContent=best.adv;
+$("r-motto").textContent=best.motto;
+$("r-egg").textContent=best.egg;
+window._result=best;window._match=match;
+show("s-result");
+}
+$("btn-start").onclick=function(){idx=0;answers=[];show("s-quiz");renderQ()};
+$("btn-back").onclick=function(){if(idx>0){idx--;renderQ()}};
+$("btn-again").onclick=function(){idx=0;answers=[];$("copied").textContent="";show("s-home")};
+$("btn-copy").onclick=function(){
+var r=window._result;if(!r)return;
+var text="我的潜意识人格是"+r.tag+" 契合度"+window._match+"%｜"+r.motto+" ——《你的潜意识人格》";
+function done(){$("copied").textContent="已复制，去分享给朋友猜猜你是谁吧 ✓"}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(function(){fallback()})}else{fallback()}
+function fallback(){var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){$("copied").textContent=text}document.body.removeChild(ta)}
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>情侣适配度测试</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2rem; }
+    </style>
+    <style>
+      :root{
+        --bg:#fdf4f1;
+        --bg-soft:#fbe9e4;
+        --surface:#ffffff;
+        --surface-2:#fff7f4;
+        --ink:#40222e;
+        --ink-soft:#7c5566;
+        --ink-faint:#a97f8f;
+        --line:#f3d5cd;
+        --rose:#d63d63;
+        --rose-deep:#b02348;
+        --rose-soft:#fbe3e8;
+        --gold:#c08a2d;
+        --gold-soft:#f7ecd4;
+        --plum:#7a3b57;
+        --shadow:0 18px 44px rgba(176,35,72,.14);
+        --shadow-sm:0 6px 18px rgba(176,35,72,.10);
+        --radius:20px;
+      }
+      @media (prefers-color-scheme: dark){
+        :root{
+          --bg:#1c1116;
+          --bg-soft:#26161e;
+          --surface:#2b1a22;
+          --surface-2:#33202a;
+          --ink:#f7e8ec;
+          --ink-soft:#d3a7b4;
+          --ink-faint:#a87b8b;
+          --line:#4a2c3a;
+          --rose:#f06a8a;
+          --rose-deep:#ff8fab;
+          --rose-soft:#452231;
+          --gold:#e3b45c;
+          --gold-soft:#3d3018;
+          --plum:#d99ab2;
+          --shadow:0 18px 44px rgba(0,0,0,.45);
+          --shadow-sm:0 6px 18px rgba(0,0,0,.35);
+        }
+      }
+      *{ box-sizing:border-box; }
+      html{ -webkit-text-size-adjust:100%; }
+      body{
+        margin:0;
+        font-family:"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+        background:
+          radial-gradient(560px 380px at 12% -60px, var(--bg-soft), transparent 70%),
+          radial-gradient(620px 420px at 95% 8%, var(--rose-soft), transparent 65%),
+          var(--bg);
+        color:var(--ink);
+        min-height:100vh;
+      }
+      .serif{ font-family:"Noto Serif SC","Songti SC","SimSun",serif; }
+      .wrap{ max-width:600px; margin:0 auto; padding:22px 16px 48px; }
+
+      /* ---------- screens ---------- */
+      .screen{ display:none; }
+      .screen.active{ display:block; animation:screenIn .45s cubic-bezier(.22,.8,.32,1) both; }
+      @keyframes screenIn{ from{ opacity:0; transform:translateY(14px);} to{ opacity:1; transform:none;} }
+      @media (prefers-reduced-motion: reduce){
+        .screen.active{ animation:none; }
+        *{ transition:none !important; }
+      }
+
+      /* ---------- home ---------- */
+      .home-heart{ display:flex; justify-content:center; margin:14px 0 6px; }
+      .home-heart svg{ width:64px; height:64px; }
+      .home-kicker{ text-align:center; color:var(--rose); font-weight:700; letter-spacing:.35em; font-size:12px; margin:6px 0 0; text-indent:.35em; }
+      h1.title{
+        text-align:center; margin:10px 0 0; font-size:clamp(34px,9vw,46px); font-weight:900; line-height:1.2; color:var(--ink);
+      }
+      .title .amp{ color:var(--rose); }
+      .home-sub{ text-align:center; color:var(--ink-soft); font-size:15px; line-height:1.8; margin:14px auto 0; max-width:420px; }
+      .home-card{
+        background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+        box-shadow:var(--shadow); padding:24px 20px 22px; margin-top:26px;
+      }
+      .field-label{ font-size:13px; font-weight:700; color:var(--ink-soft); margin:0 0 8px; letter-spacing:.06em; }
+      .name-row{ display:flex; align-items:center; gap:10px; }
+      .name-row + .name-row{ margin-top:14px; }
+      .name-badge{
+        flex:0 0 auto; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+        font-family:"Noto Serif SC",serif; font-weight:900; font-size:17px; color:#fff;
+      }
+      .badge-a{ background:var(--rose); }
+      .badge-b{ background:var(--gold); }
+      .name-input{
+        flex:1 1 auto; min-width:0; height:48px; border:1.5px solid var(--line); border-radius:12px;
+        background:var(--surface-2); color:var(--ink); font-size:16px; padding:0 14px; outline:none;
+        font-family:inherit;
+      }
+      .name-input:focus{ border-color:var(--rose); }
+      .name-input::placeholder{ color:var(--ink-faint); }
+      .vs-mark{ text-align:center; color:var(--rose); font-size:18px; margin:10px 0 2px; }
+      .btn{
+        display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+        border:none; cursor:pointer; font-family:inherit; font-weight:700; border-radius:14px;
+        transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .btn:active{ transform:scale(.985); }
+      .btn-primary{
+        background:linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+        color:#fff; font-size:17px; padding:15px 20px; margin-top:22px; box-shadow:0 10px 24px rgba(214,61,99,.35);
+        min-height:54px;
+      }
+      .btn-ghost{
+        background:var(--surface); color:var(--rose-deep); border:1.5px solid var(--line);
+        font-size:15px; padding:12px 18px; min-height:48px;
+      }
+      .btn-ghost:hover{ border-color:var(--rose); }
+      .home-notes{ margin:20px 4px 0; padding:0; list-style:none; }
+      .home-notes li{
+        display:flex; gap:10px; align-items:flex-start; color:var(--ink-soft); font-size:13.5px; line-height:1.7; margin-top:8px;
+      }
+      .home-notes .dot{ color:var(--rose); flex:0 0 auto; margin-top:1px; }
+      .fineprint{ text-align:center; color:var(--ink-faint); font-size:12px; margin-top:22px; line-height:1.7; }
+
+      /* ---------- quiz ---------- */
+      .quiz-head{
+        background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+        box-shadow:var(--shadow-sm); padding:16px 18px 14px;
+      }
+      .quiz-who{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+      .who-chip{
+        display:inline-flex; align-items:center; gap:8px; font-weight:700; font-size:14.5px; color:var(--ink);
+      }
+      .who-chip .name-badge{ width:30px; height:30px; font-size:13px; }
+      .quiz-count{ color:var(--ink-faint); font-size:13px; font-weight:500; white-space:nowrap; }
+      .progress-track{ height:8px; background:var(--rose-soft); border-radius:99px; margin-top:12px; overflow:hidden; }
+      .progress-fill{
+        height:100%; width:0%; border-radius:99px;
+        background:linear-gradient(90deg, var(--gold), var(--rose));
+        transition:width .45s cubic-bezier(.22,.8,.32,1);
+      }
+      .q-card{
+        background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+        box-shadow:var(--shadow); padding:26px 20px 20px; margin-top:16px;
+      }
+      .q-card.slide{ animation:qIn .38s cubic-bezier(.22,.8,.32,1) both; }
+      @keyframes qIn{ from{ opacity:0; transform:translateX(26px);} to{ opacity:1; transform:none;} }
+      .q-num{ color:var(--rose); font-weight:700; font-size:12.5px; letter-spacing:.22em; margin:0 0 8px; }
+      .q-text{ font-size:20px; font-weight:700; line-height:1.55; margin:0 0 20px; }
+      .options{ display:flex; flex-direction:column; gap:10px; }
+      .opt{
+        display:flex; align-items:center; gap:12px; text-align:left; width:100%;
+        background:var(--surface-2); border:1.5px solid var(--line); border-radius:14px;
+        padding:13px 14px; font-size:15.5px; line-height:1.5; color:var(--ink); cursor:pointer;
+        font-family:inherit; min-height:52px;
+        transition:border-color .15s ease, background .15s ease, transform .15s ease;
+      }
+      .opt:hover{ border-color:var(--rose); }
+      .opt .letter{
+        flex:0 0 auto; width:28px; height:28px; border-radius:50%; border:1.5px solid var(--line);
+        display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--ink-soft);
+        background:var(--surface); transition:all .15s ease;
+      }
+      .opt.selected{ border-color:var(--rose); background:var(--rose-soft); }
+      .opt.selected .letter{ background:var(--rose); border-color:var(--rose); color:#fff; }
+      .quiz-nav{ display:flex; justify-content:space-between; align-items:center; margin-top:16px; }
+      .back-btn{
+        background:none; border:none; color:var(--ink-faint); font-size:14px; cursor:pointer; font-family:inherit;
+        padding:10px 6px; min-height:40px; display:inline-flex; align-items:center; gap:4px;
+      }
+      .back-btn:disabled{ opacity:.35; cursor:default; }
+      .quiz-tip{ color:var(--ink-faint); font-size:12.5px; }
+
+      /* ---------- handoff ---------- */
+      .handoff-card{
+        background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+        box-shadow:var(--shadow); padding:38px 24px 28px; margin-top:34px; text-align:center;
+      }
+      .handoff-icon{ display:flex; justify-content:center; margin-bottom:14px; }
+      .handoff-icon svg{ width:72px; height:72px; animation:pulse 2.2s ease-in-out infinite; }
+      @keyframes pulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.08);} }
+      @media (prefers-reduced-motion: reduce){ .handoff-icon svg{ animation:none; } }
+      .handoff-card h2{ margin:0; font-size:26px; font-weight:900; }
+      .handoff-card p{ color:var(--ink-soft); line-height:1.85; font-size:15px; margin:14px auto 0; max-width:400px; }
+      .handoff-card p strong{ color:var(--rose-deep); }
+      .sealed{
+        display:inline-block; margin-top:18px; padding:8px 16px; border-radius:99px;
+        background:var(--gold-soft); color:var(--gold); font-size:13px; font-weight:700; letter-spacing:.05em;
+      }
+
+      /* ---------- result poster ---------- */
+      .poster{
+        border-radius:26px; overflow:hidden; box-shadow:0 24px 54px rgba(120,20,50,.32);
+        background:linear-gradient(160deg, #8e2443 0%, #6d1830 55%, #571227 100%);
+        color:#fdf3ec; position:relative;
+      }
+      .poster::before{
+        content:""; position:absolute; inset:10px; border:1px solid rgba(253,220,190,.35); border-radius:18px; pointer-events:none;
+      }
+      .poster-inner{ padding:34px 24px 28px; position:relative; }
+      .poster-kicker{ text-align:center; font-size:11.5px; letter-spacing:.5em; text-indent:.5em; color:#f3c98f; margin:0; }
+      .poster-names{
+        text-align:center; font-family:"Noto Serif SC",serif; font-weight:900;
+        font-size:clamp(24px,7vw,32px); margin:14px 0 0; line-height:1.35; word-break:break-all;
+      }
+      .poster-names .heart-inline{ color:#ff9db4; font-size:.8em; margin:0 .18em; }
+      .score-zone{ text-align:center; margin-top:8px; }
+      .ring-wrap{ position:relative; width:172px; height:172px; margin:6px auto 0; }
+      .ring-wrap svg{ width:172px; height:172px; transform:rotate(-90deg); }
+      .ring-bg{ fill:none; stroke:rgba(253,220,190,.22); stroke-width:9; }
+      .ring-fg{
+        fill:none; stroke:#f3c98f; stroke-width:9; stroke-linecap:round;
+        stroke-dasharray:465; stroke-dashoffset:465; transition:stroke-dashoffset 1.4s cubic-bezier(.22,.8,.32,1);
+      }
+      .ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+      .ring-num{ font-family:"Noto Serif SC",serif; font-weight:900; font-size:56px; line-height:1; color:#fff; }
+      .ring-num small{ font-size:24px; color:#f3c98f; }
+      .ring-label{ font-size:12px; letter-spacing:.3em; text-indent:.3em; color:#f6d9b8; margin-top:6px; }
+      .poster-type{
+        text-align:center; font-family:"Noto Serif SC",serif; font-weight:900;
+        font-size:clamp(30px,8.5vw,38px); margin:16px 0 0; color:#fff; letter-spacing:.04em;
+      }
+      .poster-tagline{ text-align:center; color:#f6d9b8; font-size:15px; line-height:1.8; margin:10px auto 0; max-width:400px; }
+      .poster-divider{ display:flex; align-items:center; gap:12px; margin:24px 2px 4px; color:#f3c98f; }
+      .poster-divider::before,.poster-divider::after{ content:""; flex:1; height:1px; background:rgba(243,201,143,.4); }
+      .poster-divider span{ font-size:12px; letter-spacing:.35em; text-indent:.35em; }
+      .poster-sec{ margin-top:18px; }
+      .poster-sec h3{
+        margin:0 0 8px; font-size:14px; letter-spacing:.18em; color:#f3c98f; font-weight:700;
+        display:flex; align-items:center; gap:8px;
+      }
+      .poster-sec p{ margin:0; font-size:14.5px; line-height:1.85; color:#fdeee2; }
+      .poster-sec ul{ margin:0; padding:0; list-style:none; }
+      .poster-sec li{ font-size:14.5px; line-height:1.8; color:#fdeee2; padding-left:18px; position:relative; margin-top:4px; }
+      .poster-sec li::before{ content:"♥"; position:absolute; left:0; top:0; font-size:10px; color:#ff9db4; line-height:2.1; }
+      .poster-sec.friction li::before{ content:"✦"; color:#f3c98f; }
+      .dims{ margin-top:6px; }
+      .dim-row{ margin-top:12px; }
+      .dim-head{ display:flex; justify-content:space-between; font-size:12.5px; color:#f6d9b8; margin-bottom:5px; }
+      .dim-head b{ color:#fff; font-weight:700; }
+      .dim-bars{ display:flex; flex-direction:column; gap:4px; }
+      .dim-bar{ height:7px; border-radius:99px; background:rgba(255,255,255,.16); overflow:hidden; }
+      .dim-bar i{ display:block; height:100%; border-radius:99px; width:0; transition:width 1s cubic-bezier(.22,.8,.32,1) .2s; }
+      .dim-bar.a i{ background:#ff8fab; }
+      .dim-bar.b i{ background:#f3c98f; }
+      .dim-legend{ display:flex; gap:16px; font-size:12px; color:#f6d9b8; margin-top:4px; flex-wrap:wrap; }
+      .dim-legend .sw{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+      .egg-box{
+        margin-top:22px; background:rgba(255,255,255,.09); border:1px dashed rgba(243,201,143,.55);
+        border-radius:14px; padding:14px 16px;
+      }
+      .egg-box .egg-title{ font-size:12.5px; letter-spacing:.2em; color:#f3c98f; font-weight:700; margin:0 0 6px; }
+      .egg-box p{ margin:0; font-size:14px; line-height:1.8; color:#fdeee2; }
+      .poster-foot{ text-align:center; margin-top:22px; font-size:11.5px; color:rgba(246,217,184,.75); letter-spacing:.14em; line-height:1.9; }
+      .result-actions{ display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+      .copy-tip{ text-align:center; font-size:13px; color:var(--rose-deep); min-height:20px; margin-top:2px; font-weight:500; }
+      @media (min-width:560px){
+        .result-actions{ flex-direction:row; }
+        .result-actions .btn{ flex:1; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- ============ 首页 ============ -->
+      <section class="screen active" id="screen-home">
+        <div class="home-heart" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none"><path d="M32 55S8 39.6 8 22.9C8 14.6 14.4 9 21.6 9c4.6 0 8.5 2.4 10.4 6C33.9 11.4 37.8 9 42.4 9 49.6 9 56 14.6 56 22.9 56 39.6 32 55 32 55Z" fill="#d63d63"/><path d="M32 55S8 39.6 8 22.9C8 14.6 14.4 9 21.6 9c4.6 0 8.5 2.4 10.4 6v40Z" fill="#b02348" opacity=".55"/></svg>
+        </div>
+        <p class="home-kicker">双 人 趣 味 测 试</p>
+        <h1 class="title serif">情侣适配度<span class="amp">测试</span></h1>
+        <p class="home-sub">同一部手机，两个人轮流答 20 道生活题。<br />不考三观大题，只看你们过日子的默契——<br />测测你们到底是天作之合，还是欢喜冤家。</p>
+
+        <div class="home-card">
+          <p class="field-label">先写下两个人的名字（可跳过）</p>
+          <div class="name-row">
+            <span class="name-badge badge-a serif">甲</span>
+            <input class="name-input" id="name-a" type="text" maxlength="8" placeholder="第一位答题者，如：小明" autocomplete="off" />
+          </div>
+          <div class="vs-mark" aria-hidden="true">♥</div>
+          <div class="name-row">
+            <span class="name-badge badge-b serif">乙</span>
+            <input class="name-input" id="name-b" type="text" maxlength="8" placeholder="第二位答题者，如：小红" autocomplete="off" />
+          </div>
+          <button class="btn btn-primary" id="btn-start" type="button">开始测试 · 第一位先答</button>
+          <ul class="home-notes">
+            <li><span class="dot">♥</span><span>流程：第一位答完 20 题 → 把手机递给对方 → 第二位答同样的 20 题 → 自动生成你们的适配度海报。</span></li>
+            <li><span class="dot">♥</span><span>凭第一感觉选，没有对错；答题时不要偷看对方的答案哦。</span></li>
+            <li><span class="dot">♥</span><span>不填名字也没关系，默认称呼是「甲方」和「乙方」。</span></li>
+          </ul>
+        </div>
+        <p class="fineprint">趣味测试，仅供娱乐，不是专业心理诊断。<br />结果不许拿来吵架，只许拿来撒糖。</p>
+      </section>
+
+      <!-- ============ 答题 ============ -->
+      <section class="screen" id="screen-quiz">
+        <div class="quiz-head">
+          <div class="quiz-who">
+            <span class="who-chip"><span class="name-badge" id="who-badge">甲</span><span id="who-text">正在答题</span></span>
+            <span class="quiz-count" id="quiz-count">第 1 / 20 题</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+        <div class="q-card" id="q-card">
+          <p class="q-num" id="q-num">QUESTION 01</p>
+          <p class="q-text serif" id="q-text"></p>
+          <div class="options" id="options"></div>
+        </div>
+        <div class="quiz-nav">
+          <button class="back-btn" id="btn-back" type="button">← 上一题</button>
+          <span class="quiz-tip">凭第一感觉选，别商量</span>
+        </div>
+      </section>
+
+      <!-- ============ 交接 ============ -->
+      <section class="screen" id="screen-handoff">
+        <div class="handoff-card">
+          <div class="handoff-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64" fill="none"><path d="M32 55S8 39.6 8 22.9C8 14.6 14.4 9 21.6 9c4.6 0 8.5 2.4 10.4 6C33.9 11.4 37.8 9 42.4 9 49.6 9 56 14.6 56 22.9 56 39.6 32 55 32 55Z" fill="#c08a2d"/><path d="M32 55S8 39.6 8 22.9C8 14.6 14.4 9 21.6 9c4.6 0 8.5 2.4 10.4 6v40Z" fill="#d63d63" opacity=".6"/></svg>
+          </div>
+          <h2 class="serif">第一棒，交接！</h2>
+          <p><strong id="handoff-done"></strong> 的答卷已经封存好啦。<br />现在请把手机递给 <strong id="handoff-next"></strong>，<br />轮到 TA 回答同样的 20 道题。</p>
+          <div><span class="sealed">答卷已密封 · 对方看不到你的答案</span></div>
+          <button class="btn btn-primary" id="btn-handoff" type="button">我是下一位，开始答题</button>
+        </div>
+        <p class="fineprint">小提示：答题时保持独立思考，<br />撞答案的快乐，要留到结果页揭晓。</p>
+      </section>
+
+      <!-- ============ 结果 ============ -->
+      <section class="screen" id="screen-result">
+        <div class="poster" id="poster">
+          <div class="poster-inner">
+            <p class="poster-kicker">情 侣 适 配 度 报 告</p>
+            <p class="poster-names serif" id="r-names"></p>
+            <div class="score-zone">
+              <div class="ring-wrap">
+                <svg viewBox="0 0 172 172"><circle class="ring-bg" cx="86" cy="86" r="74"/><circle class="ring-fg" id="ring-fg" cx="86" cy="86" r="74"/></svg>
+                <div class="ring-center">
+                  <div class="ring-num"><span id="r-score">0</span><small>%</small></div>
+                  <div class="ring-label">适 配 度</div>
+                </div>
+              </div>
+            </div>
+            <p class="poster-type serif" id="r-type"></p>
+            <p class="poster-tagline" id="r-tagline"></p>
+
+            <div class="poster-divider"><span>你 们 的 相 处 画 像</span></div>
+            <div class="poster-sec">
+              <p id="r-portrait"></p>
+            </div>
+
+            <div class="poster-sec">
+              <h3>六维默契图谱</h3>
+              <div class="dim-legend">
+                <span><i class="sw" style="background:#ff8fab"></i><span id="legend-a"></span></span>
+                <span><i class="sw" style="background:#f3c98f"></i><span id="legend-b"></span></span>
+              </div>
+              <div class="dims" id="r-dims"></div>
+            </div>
+
+            <div class="poster-sec">
+              <h3>你们的优势</h3>
+              <ul id="r-strengths"></ul>
+            </div>
+
+            <div class="poster-sec friction">
+              <h3>需要磨合的小地方</h3>
+              <ul id="r-friction"></ul>
+            </div>
+
+            <div class="egg-box">
+              <p class="egg-title">趣 味 彩 蛋</p>
+              <p id="r-egg"></p>
+            </div>
+
+            <p class="poster-foot">《情侣适配度测试》 · 趣味测试，仅供娱乐<br />截图分享给朋友，看看谁的适配度更高</p>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" id="btn-copy" type="button" style="margin-top:0">复制结果文案</button>
+          <button class="btn btn-ghost" id="btn-restart" type="button">重新测试</button>
+        </div>
+        <p class="copy-tip" id="copy-tip"></p>
+      </section>
+
+    </div>
+
+    <script>
+    /* ================= 维度定义 ================= */
+    var DIMS = [
+      { key:'hot',  name:'热烈度' },
+      { key:'calm', name:'理性度' },
+      { key:'home', name:'居家度' },
+      { key:'rom',  name:'浪漫度' },
+      { key:'ind',  name:'独立性' },
+      { key:'tol',  name:'包容度' }
+    ];
+
+    /* ================= 题目（20题，每项标注维度得分） ================= */
+    var QUESTIONS = [
+      { q:'周末早上，你理想的打开方式是？', opts:[
+        { t:'睡到自然醒，赖在床上刷手机', s:{home:2, ind:1} },
+        { t:'早起做一顿丰盛的早餐', s:{home:3} },
+        { t:'拉上对方出门，逛吃逛吃一整天', s:{hot:2, rom:1} },
+        { t:'各忙各的，互不打扰也很舒服', s:{ind:3} }
+      ]},
+      { q:'吵架之后，你通常会怎么做？', opts:[
+        { t:'立刻沟通，当天就把话说开', s:{hot:2, tol:1} },
+        { t:'先冷静一下，想清楚了再谈', s:{calm:3} },
+        { t:'主动递个台阶，拿零食哄人', s:{tol:2, rom:1} },
+        { t:'等对方先来找我', s:{ind:2} }
+      ]},
+      { q:'发了工资 / 拿到一笔钱，你的第一反应是？', opts:[
+        { t:'先存起来，安全感最重要', s:{calm:2, home:1} },
+        { t:'给对方买个 TA 惦记很久的礼物', s:{rom:3, hot:1} },
+        { t:'约上朋友大吃一顿庆祝', s:{hot:2} },
+        { t:'存进旅行基金，计划下一次出发', s:{rom:2, ind:1} }
+      ]},
+      { q:'纪念日，你更想要哪种过法？', opts:[
+        { t:'仪式感拉满：鲜花、晚餐、礼物全套', s:{rom:3, hot:1} },
+        { t:'两个人在家做顿饭就很好', s:{home:3} },
+        { t:'一场说走就走的短途旅行', s:{rom:2, ind:1} },
+        { t:'记不记得都行，平常心', s:{calm:2, ind:1} }
+      ]},
+      { q:'对方加班到很晚，你会？', opts:[
+        { t:'去接 TA 下班，路上买好宵夜', s:{hot:2, rom:2} },
+        { t:'发消息叮嘱 TA 早点休息', s:{tol:2} },
+        { t:'在家把饭热好，等 TA 回来', s:{home:3} },
+        { t:'很理解，各自忙事业很正常', s:{ind:2, calm:1} }
+      ]},
+      { q:'一起旅行时，你更喜欢哪种节奏？', opts:[
+        { t:'攻略做满，景点一个都不能落', s:{calm:3} },
+        { t:'走到哪算哪，随缘', s:{ind:2, tol:1} },
+        { t:'主打吃和拍照，行程松松的', s:{rom:2, hot:1} },
+        { t:'找个民宿躺平，换个地方睡觉', s:{home:3} }
+      ]},
+      { q:'关于管钱，你理想的模式是？', opts:[
+        { t:'共同账户，收支透明公开', s:{calm:2, tol:1} },
+        { t:'各管各的，大额支出一起商量', s:{ind:3} },
+        { t:'一方主理，另一方放心交出去', s:{tol:2, home:1} },
+        { t:'设个梦想基金，为共同目标攒钱', s:{rom:2, home:1} }
+      ]},
+      { q:'对方心情不好时，你会怎么陪？', opts:[
+        { t:'抱抱 TA，听 TA 把话说完', s:{hot:2, tol:2} },
+        { t:'默默陪着，不说话也行', s:{tol:2, ind:1} },
+        { t:'帮 TA 分析问题、想办法', s:{calm:3} },
+        { t:'带 TA 去吃好吃的，美食治愈一切', s:{rom:2, home:1} }
+      ]},
+      { q:'朋友聚会，你更喜欢哪种状态？', opts:[
+        { t:'两个人一起，热热闹闹', s:{hot:3} },
+        { t:'偶尔参加，更多时候想过二人世界', s:{home:2, rom:1} },
+        { t:'各玩各的，朋友圈子不必重合', s:{ind:3} },
+        { t:'在家里组局，朋友来家里玩', s:{home:2, hot:1} }
+      ]},
+      { q:'关于「报备行程」，你的态度是？', opts:[
+        { t:'主动分享，这是安全感的来源', s:{hot:2, tol:1} },
+        { t:'大事报备，小事自由', s:{calm:2, ind:1} },
+        { t:'不需要报备，信任最重要', s:{ind:2, tol:1} },
+        { t:'随口提一句就行，别太刻意', s:{tol:2} }
+      ]},
+      { q:'给对方挑礼物时，你更看重什么？', opts:[
+        { t:'实用，天天能用上才好', s:{calm:2, home:1} },
+        { t:'惊喜感，猜不到才有意思', s:{rom:3} },
+        { t:'心意，自己动手做的最好', s:{rom:2, hot:1} },
+        { t:'直接问 TA 想要什么，不踩雷', s:{calm:2, tol:1} }
+      ]},
+      { q:'未来五年，你更倾向于哪种规划？', opts:[
+        { t:'先拼事业，站稳脚跟再说', s:{calm:2, ind:1} },
+        { t:'安稳生活，攒钱买房安家', s:{home:3} },
+        { t:'体验优先，多去看看世界', s:{rom:2, ind:1} },
+        { t:'顺其自然，计划赶不上变化', s:{tol:2} }
+      ]},
+      { q:'面对对方的小缺点，你的态度是？', opts:[
+        { t:'能改的直说，一起进步', s:{calm:2, hot:1} },
+        { t:'包容，缺点也是 TA 的一部分', s:{tol:3} },
+        { t:'偶尔吐槽一下，但不当真', s:{hot:1, tol:1} },
+        { t:'各自保留，互不干涉', s:{ind:2} }
+      ]},
+      { q:'「晚饭吃什么」你一般怎么决定？', opts:[
+        { t:'提前计划好，一周菜单不重样', s:{calm:2, home:1} },
+        { t:'看心情，谁有想法听谁的', s:{tol:2} },
+        { t:'打开外卖软件，现场纠结半小时', s:{home:2} },
+        { t:'出门边走边看，哪家人多去哪家', s:{hot:2} }
+      ]},
+      { q:'你心里最浪漫的事是？', opts:[
+        { t:'一起慢慢变老，平平淡淡', s:{home:2, rom:1} },
+        { t:'在特别的日子给对方一个惊喜', s:{rom:3} },
+        { t:'陪对方完成 TA 的梦想', s:{hot:2, rom:1} },
+        { t:'给彼此留足空间，各自发光', s:{ind:3} }
+      ]},
+      { q:'两个人意见不合时，你倾向于？', opts:[
+        { t:'摆事实、讲道理', s:{calm:3} },
+        { t:'先照顾对方情绪，再谈事情', s:{tol:2, hot:1} },
+        { t:'各退一步，找个折中方案', s:{tol:2, calm:1} },
+        { t:'先放一放，明天再说', s:{ind:1, calm:1} }
+      ]},
+      { q:'休息日有朋友要来家里，你会？', opts:[
+        { t:'提前大扫除，体体面面待客', s:{home:3} },
+        { t:'随便收拾收拾，舒服最重要', s:{tol:1, home:1} },
+        { t:'更愿意约在外面见面', s:{ind:2} },
+        { t:'热情张罗一桌好菜', s:{hot:2, home:1} }
+      ]},
+      { q:'关于个人空间，你觉得？', opts:[
+        { t:'亲密无间，什么都可以分享', s:{hot:3} },
+        { t:'再亲密，也要有边界感', s:{ind:2, calm:1} },
+        { t:'每天需要一段独处时间充电', s:{ind:3} },
+        { t:'黏度适中，平衡最好', s:{tol:2} }
+      ]},
+      { q:'遇到开心的事，你第一时间会？', opts:[
+        { t:'立刻分享给对方', s:{hot:3} },
+        { t:'先发条朋友圈，再告诉 TA', s:{ind:1, hot:1} },
+        { t:'留着等见面时当面说', s:{rom:2} },
+        { t:'记在心里，慢慢回味', s:{calm:1, ind:1} }
+      ]},
+      { q:'用一种天气形容你想要的爱情？', opts:[
+        { t:'晴空万里，热烈明亮', s:{hot:3} },
+        { t:'微风细雨，温润绵长', s:{home:2, tol:1} },
+        { t:'晴雨交替，有起伏才真实', s:{hot:1, tol:1} },
+        { t:'四季如常，各有各的美', s:{calm:2, ind:1} }
+      ]}
+    ];
+
+    /* ================= 组合类型（7种） ================= */
+    var TYPES = {
+      resonance: {
+        name:'灵魂共振',
+        tagline:'不用开口，对方就懂——你们的默契，是心跳同频。',
+        portrait:'你们像两台调到同一频率的收音机：一个眼神，就知道对方在想什么。生活习惯高度合拍，情绪节奏严丝合缝，连「晚饭吃什么」这种世纪难题，在你们这里都很少纠结。',
+        strengths:['情绪同频，对方一个表情你就懂','生活习惯高度合拍，摩擦成本极低','浪漫的打开方式一致，惊喜从不落空'],
+        friction:['太合拍容易一起摆烂，记得互相推一把','偶尔也要听听不同的声音，别活成连体婴'],
+        egg:'彩蛋：你们大概率会撞衫、撞歌单，甚至同时说出同一句话。建议下次异口同声时立刻击掌——这是灵魂共振的实体证据。'
+      },
+      perfect: {
+        name:'天作之合',
+        tagline:'老天爷牵的线，你们负责把它过成日子。',
+        portrait:'你们是那种会被朋友拿来当「恋爱范本」的组合：该热烈时热烈，该过日子时踏实。性格画像大面积重合，偶尔的小差异刚好用来调味，不伤筋骨。',
+        strengths:['三观底盘稳，大事小事都好商量','既有烟火气，也舍得为对方花心思','吵架不过夜，修复速度惊人'],
+        friction:['日子太顺时容易忘了经营，纪念日该有的仪式感别省','偶尔给对方一点小惊喜，别让「老夫老妻」来得太早'],
+        egg:'彩蛋：你们的适配度已经高到可以去民政局门口发喜糖了。如果还没领证，朋友们都在等你们的请柬。'
+      },
+      bicker: {
+        name:'欢喜冤家',
+        tagline:'吵吵闹闹是你们的情话，越斗嘴越离不开。',
+        portrait:'一个爱得热烈外放，一个收得内敛克制；一个急性子，一个慢热型。你们的日常画风是斗嘴三百回合，转头又黏在一起——外人看是吵架，你们自己知道，那是独一份的亲昵。',
+        strengths:['生活永远不无聊，每天都有新段子','吸引力拉满，越了解越上头','情绪表达直接，有事不当隔夜仇'],
+        friction:['斗嘴要留分寸，别让玩笑话戳到真痛处','热烈的一方多给回应，内敛的一方多开口说爱'],
+        egg:'彩蛋：你们上辈子大概是相声搭档，一个逗哏一个捧哏。建议把经典斗嘴语录记下来，老了以后能笑出眼泪。'
+      },
+      complement: {
+        name:'互补搭档',
+        tagline:'你缺的我刚好有，我慌的时候你最稳。',
+        portrait:'你们是标准的拼图型组合：一块向外冲，一块守后方；一个负责浪漫造梦，一个负责落地执行。单看画像差异不小，拼在一起却严丝合缝，谁也替代不了谁。',
+        strengths:['能力互补，组队打怪效率翻倍','能从对方身上看到完全不同的世界','分工天然形成，很少抢同一件事'],
+        friction:['别把「互补」过成「理所当然」，对方的付出要看见','遇到分歧时，先假设对方的办法也有道理'],
+        egg:'彩蛋：你们适合一起开个小店、养只猫，或者合伙干任何事——一个出想法，一个管账，天选合伙人。'
+      },
+      steady: {
+        name:'细水长流',
+        tagline:'没有轰轰烈烈，只有把日子过成喜欢的样子。',
+        portrait:'你们的爱情不靠烟花靠日常：一顿热饭、一句晚安、下雨天多带的一把伞。适配度稳稳当当，像一条流速刚好的河——不汹涌，但从没想过改道。',
+        strengths:['安全感给得足，彼此都是对方的定心丸','过日子的能力强，幸福感藏在细节里','情绪稳定，很少有大起大落的内耗'],
+        friction:['平稳久了容易缺新鲜感，偶尔安排一次「出逃计划」','浪漫不用贵，一束花、一封手写小纸条就够了'],
+        egg:'彩蛋：你们的相处模式是各大恋爱博主最想偷师的「教科书级日常」。平平淡淡又如何？细水长流才是最高级的浪漫。'
+      },
+      grinding: {
+        name:'磨合期选手',
+        tagline:'棱角还在，但已经开始为对方留位置了。',
+        portrait:'你们还在互相适应的路上：有些习惯南辕北辙，有些想法一时半会儿对不上。但这不代表不合适——愿意为对方调整本身，就是最实在的爱。磨合期不是减分项，是必修课。',
+        strengths:['都愿意为这段关系花心思，不摆烂','差异摆在明面上，反而好解决','成长空间巨大，越处越有默契的潜力股'],
+        friction:['先从小事对齐：比如「晚饭吃什么」和「周末怎么过」','吵架时对事不对人，禁止翻旧账和冷战到底'],
+        egg:'彩蛋：恭喜解锁「爱情进修班」体验卡。别慌，所有天作之合都是从磨合期毕业的——你们只是还在上大二。'
+      },
+      freerange: {
+        name:'放养式情侣',
+        tagline:'你们的爱是散养的——自由，却总能找回彼此。',
+        portrait:'你们是画风最独特的组合：各自有各自的世界，想法经常不在一个频道。但奇妙的是，放得越开，黏得越牢。你们的适配不靠合拍，靠的是「我懂你的自由，也信你会回来」。',
+        strengths:['给彼此的空间感拉满，绝不窒息','独立又相爱，谁也不依附谁','新鲜感保质期长，永远有新话题'],
+        friction:['自由不等于失联，重要的事还是要同步一下','偶尔也要主动靠近，别让「习惯独立」变成「懒得亲近」'],
+        egg:'彩蛋：你们的相处模式领先版本五十年。别人谈恋爱像连体婴，你们像两只猫——各自晒太阳，饭点准时出现。'
+      }
+    };
+
+    /* 维度契合 / 差异的个性化文案 */
+    var DIM_ALIGNED = {
+      hot:'你们表达爱意的方式出奇一致，热情从不落空。',
+      calm:'你们都是讲道理的人，分歧来了也不怕。',
+      home:'你们对「家」的想象高度重合，过日子特别合拍。',
+      rom:'你们心里的浪漫是同一种，惊喜永远送对地方。',
+      ind:'你们都懂给彼此留空间，分寸感刚刚好。',
+      tol:'你们都愿意让一步，小摩擦从不升级。'
+    };
+    var DIM_GAP = {
+      hot:'一个爱得热烈外放，一个爱得内敛克制——别让「我以为你懂」代替开口说出来。',
+      calm:'一个遇事先讲道理，一个先要情绪价值——吵架时记得先安抚，再复盘。',
+      home:'你们对居家生活的期待不太一样：家务和休息日的安排，值得坐下来聊一次。',
+      rom:'一个觉得仪式感很重要，一个觉得平平淡淡才是真——纪念日可以取个中间值。',
+      ind:'一个需要更多独处充电，一个更想黏在一起——约好彼此的「独处时段」会舒服很多。',
+      tol:'你们处理小摩擦的耐心程度不同——小事别较真，让一步的人值得一个拥抱。'
+    };
+
+    /* ================= 状态 ================= */
+    var state = {
+      nameA:'甲方', nameB:'乙方',
+      phase:0,           /* 0=第一位答题 1=第二位答题 */
+      idx:0,
+      answersA:[], answersB:[]
+    };
+    var LETTERS = ['A','B','C','D'];
+    var CIRC = 465; /* 2πr, r=74 */
+
+    function $(id){ return document.getElementById(id); }
+    function show(id){
+      var screens = document.querySelectorAll('.screen');
+      for (var i=0;i<screens.length;i++) screens[i].classList.remove('active');
+      $(id).classList.add('active');
+      window.scrollTo(0,0);
+    }
+    function currentName(){ return state.phase===0 ? state.nameA : state.nameB; }
+    function currentAnswers(){ return state.phase===0 ? state.answersA : state.answersB; }
+
+    /* ================= 评分 ================= */
+    function dimMax(){
+      var max = {};
+      DIMS.forEach(function(d){ max[d.key]=0; });
+      QUESTIONS.forEach(function(q){
+        DIMS.forEach(function(d){
+          var m = 0;
+          q.opts.forEach(function(o){ if(o.s[d.key] && o.s[d.key]>m) m=o.s[d.key]; });
+          max[d.key]+=m;
+        });
+      });
+      return max;
+    }
+    var MAX = dimMax();
+    /* 每道题选项间的最大维度距离，用于逐题契合度 */
+    var QMAX = QUESTIONS.map(function(q){
+      var mx = 0;
+      for (var i=0;i<q.opts.length;i++) for (var j=0;j<q.opts.length;j++){
+        var s = 0;
+        DIMS.forEach(function(d){ s += Math.abs((q.opts[i].s[d.key]||0) - (q.opts[j].s[d.key]||0)); });
+        if (s>mx) mx = s;
+      }
+      return mx;
+    });
+    function profile(answers){
+      var raw = {};
+      DIMS.forEach(function(d){ raw[d.key]=0; });
+      answers.forEach(function(ai, qi){
+        if (ai==null) return;
+        var s = QUESTIONS[qi].opts[ai].s;
+        for (var k in s) raw[k]+=s[k];
+      });
+      var p = {};
+      DIMS.forEach(function(d){ p[d.key] = Math.round(raw[d.key]/MAX[d.key]*100); });
+      return p;
+    }
+    function compute(){
+      var pa = profile(state.answersA), pb = profile(state.answersB);
+      var diffs = {}, sumEff = 0, compCount = 0;
+      DIMS.forEach(function(d){
+        var diff = Math.abs(pa[d.key]-pb[d.key]);
+        diffs[d.key]=diff;
+        var eff = (d.key==='hot'||d.key==='ind') ? (diff<=40 ? diff : 40+(diff-40)*0.5) : diff;
+        sumEff += eff;
+        if (diff>=28) compCount++;
+      });
+      var meanEff = sumEff / DIMS.length;
+      var profileScore = 100 - meanEff*0.72;
+      /* 逐题契合度：两人每道题所选项的维度距离 */
+      var ratioSum = 0;
+      for (var qi=0; qi<QUESTIONS.length; qi++){
+        var va = QUESTIONS[qi].opts[state.answersA[qi]].s;
+        var vb = QUESTIONS[qi].opts[state.answersB[qi]].s;
+        var dist = 0;
+        DIMS.forEach(function(d){ dist += Math.abs((va[d.key]||0) - (vb[d.key]||0)); });
+        ratioSum += dist / QMAX[qi];
+      }
+      var questionScore = 100 - (ratioSum / QUESTIONS.length) * 90;
+      var score = Math.round(profileScore*0.65 + questionScore*0.35);
+      if (score>99) score=99;
+      if (score<42) score=42;
+
+      var typeKey;
+      if (score>=93) typeKey='resonance';
+      else if (score>=86) typeKey='perfect';
+      else if (diffs.hot>=32 && score>=68) typeKey='bicker';
+      else if (compCount>=2 && score>=64) typeKey='complement';
+      else if (score>=74) typeKey='steady';
+      else if (score>=60) typeKey='grinding';
+      else typeKey='freerange';
+
+      var minDim=DIMS[0].key, maxDim=DIMS[0].key;
+      DIMS.forEach(function(d){
+        if (diffs[d.key]<diffs[minDim]) minDim=d.key;
+        if (diffs[d.key]>diffs[maxDim]) maxDim=d.key;
+      });
+      return { score:score, typeKey:typeKey, pa:pa, pb:pb, diffs:diffs, minDim:minDim, maxDim:maxDim };
+    }
+
+    /* ================= 答题流程 ================= */
+    function renderQuestion(animate){
+      var answers = currentAnswers();
+      var q = QUESTIONS[state.idx];
+      var badge = $('who-badge');
+      badge.textContent = state.phase===0 ? '甲' : '乙';
+      badge.className = 'name-badge ' + (state.phase===0 ? 'badge-a' : 'badge-b');
+      $('who-text').textContent = currentName() + ' 正在答题';
+      $('quiz-count').textContent = '第 ' + (state.idx+1) + ' / ' + QUESTIONS.length + ' 题';
+      $('progress-fill').style.width = ((state.idx)/QUESTIONS.length*100) + '%';
+      $('q-num').textContent = 'QUESTION ' + (state.idx+1<10?'0':'') + (state.idx+1);
+      $('q-text').textContent = q.q;
+      var box = $('options');
+      box.innerHTML = '';
+      q.opts.forEach(function(o, i){
+        var b = document.createElement('button');
+        b.type='button';
+        b.className = 'opt' + (answers[state.idx]===i ? ' selected' : '');
+        var letter = document.createElement('span');
+        letter.className='letter'; letter.textContent = LETTERS[i];
+        var txt = document.createElement('span'); txt.textContent = o.t;
+        b.appendChild(letter); b.appendChild(txt);
+        b.addEventListener('click', function(){ pick(i); });
+        box.appendChild(b);
+      });
+      $('btn-back').disabled = state.idx===0;
+      if (animate){
+        var card = $('q-card');
+        card.classList.remove('slide'); void card.offsetWidth; card.classList.add('slide');
+      }
+    }
+    var picking = false;
+    function pick(i){
+      if (picking) return;
+      picking = true;
+      currentAnswers()[state.idx] = i;
+      var opts = $('options').children;
+      for (var k=0;k<opts.length;k++) opts[k].classList.toggle('selected', k===i);
+      $('progress-fill').style.width = ((state.idx+1)/QUESTIONS.length*100) + '%';
+      setTimeout(function(){
+        picking = false;
+        if (state.idx < QUESTIONS.length-1){
+          state.idx++;
+          renderQuestion(true);
+        } else {
+          finishPhase();
+        }
+      }, 280);
+    }
+    function finishPhase(){
+      if (state.phase===0){
+        state.phase = 1;
+        state.idx = 0;
+        $('handoff-done').textContent = state.nameA;
+        $('handoff-next').textContent = state.nameB;
+        $('btn-handoff').textContent = '我是' + state.nameB + '，开始答题';
+        show('screen-handoff');
+      } else {
+        renderResult();
+        show('screen-result');
+      }
+    }
+
+    /* ================= 结果页 ================= */
+    var lastResult = null;
+    function renderResult(){
+      var r = compute();
+      lastResult = r;
+      var t = TYPES[r.typeKey];
+      $('r-names').innerHTML = '';
+      var n1 = document.createElement('span'); n1.textContent = state.nameA;
+      var heart = document.createElement('span'); heart.className='heart-inline'; heart.textContent='♥';
+      var n2 = document.createElement('span'); n2.textContent = state.nameB;
+      $('r-names').appendChild(n1); $('r-names').appendChild(heart); $('r-names').appendChild(n2);
+      $('r-type').textContent = t.name;
+      $('r-tagline').textContent = t.tagline;
+      $('r-portrait').textContent = t.portrait + DIM_ALIGNED[r.minDim];
+      $('legend-a').textContent = state.nameA;
+      $('legend-b').textContent = state.nameB;
+
+      var dimsBox = $('r-dims');
+      dimsBox.innerHTML = '';
+      DIMS.forEach(function(d){
+        var row = document.createElement('div'); row.className='dim-row';
+        var head = document.createElement('div'); head.className='dim-head';
+        var nm = document.createElement('b'); nm.textContent = d.name;
+        var vals = document.createElement('span');
+        vals.textContent = state.nameA + ' ' + r.pa[d.key] + ' · ' + state.nameB + ' ' + r.pb[d.key];
+        head.appendChild(nm); head.appendChild(vals);
+        var bars = document.createElement('div'); bars.className='dim-bars';
+        var ba = document.createElement('div'); ba.className='dim-bar a';
+        var ia = document.createElement('i'); ia.setAttribute('data-w', r.pa[d.key]); ba.appendChild(ia);
+        var bb = document.createElement('div'); bb.className='dim-bar b';
+        var ib = document.createElement('i'); ib.setAttribute('data-w', r.pb[d.key]); bb.appendChild(ib);
+        bars.appendChild(ba); bars.appendChild(bb);
+        row.appendChild(head); row.appendChild(bars);
+        dimsBox.appendChild(row);
+      });
+
+      var ulS = $('r-strengths'); ulS.innerHTML='';
+      t.strengths.forEach(function(s){
+        var li=document.createElement('li'); li.textContent=s; ulS.appendChild(li);
+      });
+      var ulF = $('r-friction'); ulF.innerHTML='';
+      var friction = t.friction.slice();
+      friction.push(DIM_GAP[r.maxDim]);
+      friction.forEach(function(s){
+        var li=document.createElement('li'); li.textContent=s; ulF.appendChild(li);
+      });
+      $('r-egg').textContent = t.egg;
+      $('copy-tip').textContent = '';
+
+      /* 数字滚动 + 圆环 + 维度条动画 */
+      var ring = $('ring-fg');
+      ring.style.strokeDashoffset = CIRC;
+      var numEl = $('r-score');
+      numEl.textContent = '0';
+      requestAnimationFrame(function(){
+        setTimeout(function(){
+          ring.style.strokeDashoffset = CIRC * (1 - r.score/100);
+          var start = null, dur = 1300;
+          function step(ts){
+            if (!start) start = ts;
+            var p = Math.min((ts-start)/dur, 1);
+            var eased = 1 - Math.pow(1-p, 3);
+            numEl.textContent = Math.round(r.score * eased);
+            if (p<1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+          var bars = dimsBox.querySelectorAll('.dim-bar i');
+          for (var i=0;i<bars.length;i++) bars[i].style.width = bars[i].getAttribute('data-w') + '%';
+        }, 60);
+      });
+    }
+
+    /* ================= 事件绑定 ================= */
+    $('btn-start').addEventListener('click', function(){
+      var a = $('name-a').value.trim(), b = $('name-b').value.trim();
+      state.nameA = a ? a : '甲方';
+      state.nameB = b ? b : '乙方';
+      state.phase = 0; state.idx = 0;
+      state.answersA = []; state.answersB = [];
+      show('screen-quiz');
+      renderQuestion(false);
+    });
+    $('btn-handoff').addEventListener('click', function(){
+      show('screen-quiz');
+      renderQuestion(false);
+    });
+    $('btn-back').addEventListener('click', function(){
+      if (state.idx>0){ state.idx--; renderQuestion(true); }
+    });
+    $('btn-restart').addEventListener('click', function(){
+      state.phase=0; state.idx=0; state.answersA=[]; state.answersB=[];
+      show('screen-home');
+    });
+    $('btn-copy').addEventListener('click', function(){
+      if (!lastResult) return;
+      var t = TYPES[lastResult.typeKey];
+      var text = '我和' + state.nameB + '的情侣适配度是 ' + lastResult.score + '%，组合类型是「' + t.name + '」！' +
+        t.tagline + '——《情侣适配度测试》，快来测测你和TA的适配度！';
+      if (state.nameA !== '甲方' || state.nameB !== '乙方'){
+        text = state.nameA + ' ♥ ' + state.nameB + ' 的情侣适配度是 ' + lastResult.score + '%，组合类型是「' + t.name + '」！' +
+          t.tagline + '——《情侣适配度测试》，快来测测你和TA的适配度！';
+      }
+      function done(){ $('copy-tip').textContent = '文案已复制，去分享给朋友吧 ♥'; }
+      function fail(){ $('copy-tip').textContent = '复制失败，截图海报分享也一样好看 ♥'; }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, function(){
+          fallbackCopy(text) ? done() : fail();
+        });
+      } else {
+        fallbackCopy(text) ? done() : fail();
+      }
+    });
+    function fallbackCopy(text){
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+      } catch(e){ return false; }
+    }
+    </script>
+  </body>
+</html>

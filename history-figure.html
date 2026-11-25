@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<link rel="icon" href="data:,"/>
+<title>测测你的灵魂对应哪位中国历史人物</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#f6efe0; --paper2:#efe4cb; --card:#fffaf0; --ink:#2b2118; --ink2:#6b5d4f; --line:#d8c9a3;
+--cinnabar:#9e2b25; --cinnabar2:#b8452e; --gold:#b8862e; --gold2:#d9b45c; --jade:#3f6b5c; --indigo:#2f4a5e;
+--shadow:0 10px 30px rgba(60,40,10,.14);
+}
+@media (prefers-color-scheme: dark){
+:root{ --paper:#1c1812; --paper2:#241e15; --card:#2a2318; --ink:#f0e6d2; --ink2:#c4b49a; --line:#4a3f2c; --shadow:0 10px 30px rgba(0,0,0,.4);}
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Serif SC",serif;background:var(--paper);color:var(--ink);
+background-image:radial-gradient(ellipse at 20% 0%,rgba(184,134,46,.12),transparent 55%),radial-gradient(ellipse at 90% 100%,rgba(158,43,37,.08),transparent 50%);}
+button{font-family:inherit;min-height:44px;cursor:pointer}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+.hidden{display:none!important}
+/* ---------- HOME ---------- */
+.home{text-align:center;padding:28px 6px 0}
+.seal{display:inline-flex;align-items:center;justify-content:center;width:66px;height:66px;background:var(--cinnabar);color:#fff;border-radius:8px;font-family:"Ma Shan Zheng",cursive;font-size:21px;line-height:1.25;padding:6px;box-shadow:var(--shadow);transform:rotate(-3deg);text-align:center}
+.kicker{letter-spacing:.35em;font-size:12px;color:var(--gold);margin:20px 0 10px;font-weight:700}
+h1.title{font-family:"Ma Shan Zheng",cursive;font-weight:400;font-size:clamp(38px,9vw,58px);line-height:1.25;margin:6px 0 10px}
+.title.accent{color:var(--cinnabar)}
+.subtitle{color:var(--ink2);font-size:15px;line-height:1.9;max-width:480px;margin:0 auto}
+.divider{display:flex;align-items:center;gap:12px;max-width:340px;margin:24px auto;color:var(--gold)}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.figures{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 26px}
+.fig-chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--ink2)}
+.fig-chip b{color:var(--ink)}
+.btn-primary{background:var(--cinnabar);color:#fff;border:none;border-radius:999px;padding:14px 44px;font-size:18px;font-weight:700;letter-spacing:.15em;box-shadow:0 8px 20px rgba(158,43,37,.35);transition:transform.15s,background.15s}
+.btn-primary:hover{background:var(--cinnabar2);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:12px 28px;font-size:15px}
+.meta{margin-top:16px;font-size:12.5px;color:var(--ink2);line-height:1.8}
+.howto{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:28px auto 0;max-width:520px}
+.howto h3{margin:0 0 10px;font-size:15px;letter-spacing:.1em}
+.howto li{font-size:13.5px;color:var(--ink2);line-height:1.9}
+/* ---------- QUIZ ---------- */
+.quiz-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px}
+.qcount{font-size:14px;color:var(--ink2);white-space:nowrap}.qcount b{color:var(--cinnabar);font-size:20px}
+.btn-back{background:none;border:none;color:var(--ink2);font-size:14px;padding:10px 6px;min-height:44px}
+.btn-back:disabled{opacity:.3;cursor:default}
+.progress{height:8px;background:var(--paper2);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--cinnabar));border-radius:99px;transition:width.45s ease}
+.qtheme{font-size:12px;letter-spacing:.25em;color:var(--gold);font-weight:700;margin:22px 0 8px}
+.qtext{font-size:clamp(20px,5.4vw,25px);font-weight:700;line-height:1.55;margin:0 0 22px;min-height:2.6em}
+.qcard{animation:slideIn.35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.qcard{animation:none}.progress>i{transition:none}}
+.opts{display:grid;gap:12px}
+.opt{display:flex;gap:14px;align-items:flex-start;text-align:left;width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px;font-size:15.5px;line-height:1.65;color:var(--ink);transition:border-color.15s,background.15s,transform.1s}
+.opt:hover{border-color:var(--gold)}
+.opt:active{transform:scale(.99)}
+.opt.letter{flex:0 0 auto;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;margin-top:1px}
+.opt.picked{border-color:var(--cinnabar);background:rgba(158,43,37,.07)}
+.opt.picked.letter{background:var(--cinnabar);border-color:var(--cinnabar);color:#fff}
+.qtip{text-align:center;color:var(--ink2);font-size:12.5px;margin-top:20px}
+/* ---------- LOADING ---------- */
+.loading{text-align:center;padding:90px 10px}
+.loading.seal{animation:pulse 1s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:rotate(-3deg) scale(1)}to{transform:rotate(3deg) scale(1.1)}}
+.loading p{color:var(--ink2);margin-top:22px;letter-spacing:.2em;font-size:14px}
+/* ---------- RESULT ---------- */
+.poster{background:var(--card);border:2px solid var(--gold);outline:1px solid var(--line);outline-offset:5px;border-radius:10px;padding:30px 24px 26px;position:relative;overflow:hidden;margin-top:14px;box-shadow:var(--shadow)}
+.poster::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 85% 0%,rgba(184,134,46,.14),transparent 55%);pointer-events:none}
+.poster.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.poster.lbl{font-size:12px;letter-spacing:.3em;color:var(--gold);font-weight:700}
+.poster.match{text-align:right;font-size:12px;color:var(--ink2)}
+.poster.match b{display:block;font-size:30px;color:var(--cinnabar);line-height:1.1}
+.rname{font-family:"Ma Shan Zheng",cursive;font-size:clamp(52px,15vw,76px);line-height:1.15;margin:12px 0 2px;color:var(--ink)}
+.rdyn{color:var(--ink2);font-size:14px;letter-spacing:.15em}
+.rtype{display:inline-block;margin-top:12px;background:var(--cinnabar);color:#fff;font-size:13px;letter-spacing:.2em;padding:6px 16px;border-radius:4px}
+.rslogan{font-size:clamp(17px,4.8vw,20px);font-weight:700;line-height:1.7;margin:20px 0 4px;color:var(--cinnabar)}
+.rquote{color:var(--ink2);font-size:13.5px;font-style:normal;line-height:1.8;border-left:3px solid var(--gold2);padding-left:12px;margin:14px 0}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.tag{border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:5px 13px;font-size:13px;font-weight:700}
+.rsec{margin-top:20px;text-align:left}
+.rsec h4{margin:0 0 7px;font-size:14px;letter-spacing:.2em;color:var(--gold)}
+.rsec p{margin:0;font-size:14.5px;line-height:1.95;color:var(--ink)}
+.egg{background:rgba(184,134,46,.1);border:1px dashed var(--gold);border-radius:10px;padding:13px 15px}
+.bars{margin-top:8px}
+.bar-row{display:grid;grid-template-columns:52px 1fr 34px;gap:10px;align-items:center;font-size:13px;margin:7px 0;color:var(--ink2)}
+.bar-track{height:9px;background:var(--paper2);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold2),var(--cinnabar));border-radius:99px}
+.runner{margin-top:18px;font-size:13px;color:var(--ink2);line-height:1.9;text-align:left}
+.poster.foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink2);letter-spacing:.12em;text-align:center}
+.actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:11px 22px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:9}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.note{text-align:center;font-size:12px;color:var(--ink2);margin-top:18px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="screen-home" class="home">
+<div class="seal">灵魂<br>印记</div>
+<p class="kicker">四 十 题 · 见 本 心</p>
+<h1 class="title">测测你的灵魂<br>对应哪位<span class="accent">中国历史人物</span></h1>
+<p class="subtitle">没有一道历史题，全是生活题。<br>你的习惯、脾气、选择和向往，早已写好了答案——<br>看看千年之前，谁和你共用一个灵魂。</p>
+<div class="divider">◆</div>
+<div class="figures">
+<span class="fig-chip"><b>诸葛亮</b> · 谋士</span>
+<span class="fig-chip"><b>李世民</b> · 帝王</span>
+<span class="fig-chip"><b>苏轼</b> · 文人</span>
+<span class="fig-chip"><b>荆轲</b> · 侠客</span>
+<span class="fig-chip"><b>李白</b> · 诗人</span>
+<span class="fig-chip"><b>岳飞</b> · 将领</span>
+<span class="fig-chip"><b>陶渊明</b> · 隐士</span>
+</div>
+<button class="btn-primary" id="btn-start">开始测试</button>
+<p class="meta">共 40 题 · 约 3 分钟 · 凭第一直觉选，没有对错</p>
+<div class="howto">
+<h3>玩法说明</h3>
+<ol style="margin:0;padding-left:20px">
+<li>每题 4 个选项，选最像你的那个，会自动进入下一题；</li>
+<li>题目聊的都是日常：聚会、旅行、花钱、熬夜、被误解……</li>
+<li>答完后按七个性格维度综合计分，匹配你的灵魂人物，并生成一张可截图分享的结果卡。</li>
+</ol>
+</div>
+<p class="note">趣味人格测试，仅供娱乐，不是历史考试，也不是专业心理诊断。</p>
+</section>
+
+<!-- QUIZ -->
+<section id="screen-quiz" class="hidden">
+<div class="quiz-head">
+<button class="btn-back" id="btn-back">← 上一题</button>
+<span class="qcount">第 <b id="q-now">1</b> / 40 题</span>
+</div>
+<div class="progress"><i id="q-bar"></i></div>
+<div class="qcard" id="q-card">
+<p class="qtheme" id="q-theme"></p>
+<p class="qtext" id="q-text"></p>
+<div class="opts" id="q-opts"></div>
+</div>
+<p class="qtip">凭第一直觉选 · 选完自动进入下一题</p>
+</section>
+
+<!-- LOADING -->
+<section id="screen-loading" class="loading hidden">
+<div class="seal">推<br>演</div>
+<p id="loading-text">正在翻阅千年人物谱……</p>
+</section>
+
+<!-- RESULT -->
+<section id="screen-result" class="hidden">
+<div class="poster" id="poster">
+<div class="top">
+<div>
+<div class="lbl">你的灵魂人物</div>
+<div class="rname" id="r-name"></div>
+<div class="rdyn" id="r-dyn"></div>
+<span class="rtype" id="r-type"></span>
+</div>
+<div class="match">灵魂契合度<b id="r-match"></b></div>
+</div>
+<p class="rslogan" id="r-slogan"></p>
+<p class="rquote" id="r-quote"></p>
+<div class="tags" id="r-tags"></div>
+<div class="rsec"><h4>为什么是你</h4><p id="r-reason"></p></div>
+<div class="rsec"><h4>隐藏优势</h4><p id="r-hidden"></p></div>
+<div class="rsec"><h4>你的性格图谱</h4><div class="bars" id="r-bars"></div></div>
+<div class="rsec"><div class="egg"><h4 style="margin:0 0 6px;font-size:14px;letter-spacing:.2em;color:var(--gold)">趣味彩蛋</h4><p id="r-egg" style="margin:0;font-size:14px;line-height:1.9"></p></div></div>
+<p class="runner" id="r-runner"></p>
+<div class="foot">测测你的灵魂对应哪位中国历史人物 · 40 题趣味测试</div>
+</div>
+<div class="actions">
+<button class="btn-primary" id="btn-copy" style="padding:12px 30px;font-size:16px">复制结果文案</button>
+<button class="btn-ghost" id="btn-again">重新测试</button>
+</div>
+<p class="note">长按或截图上方卡片，即可分享到小红书 / 朋友圈。<br>趣味测试仅供娱乐，结果不代表对历史人物的定论。</p>
+</section>
+</div>
+<div class="toast" id="toast">已复制，去分享给朋友吧</div>
+
+<script>
+/* 维度: M谋士 D帝王 W文人 X侠客 S诗人 J将领 Y隐士 */
+var DIM={M:"谋略",D:"统御",W:"才情",X:"侠义",S:"豪情",J:"忠勇",Y:"淡泊"};
+var QUESTIONS=[
+{t:"日常习惯",q:"周末早上自然醒，你做的第一件事是？",o:[["赖床刷手机，把一周的懒一次补够","S"],["起床列个今日清单，休闲也要有规划","M"],["泡杯茶坐会儿，看看窗外发发呆","Y"],["收拾屋子、做顿像样的早餐，生活要有仪式感","W"]]},
+{t:"社交模式",q:"朋友聚会上，你通常是哪个角色？",o:[["气氛组组长，段子和笑声都靠我","S"],["组织者，定地方、控流程、照顾所有人","D"],["倾听者，谁有心事都爱跟我说","Y"],["观察者，默默看透每个人的小心思","M"]]},
+{t:"处事方式",q:"遇到一件棘手的麻烦事，你的第一反应是？",o:[["先拆解问题，列出几种方案再动手","M"],["直接上，边做边调整，行动比想重要","J"],["找信得过的人商量，集思广益","D"],["先放一放，睡一觉也许就有答案了","Y"]]},
+{t:"情绪反应",q:"被人当众误解时，你会？",o:[["当场把话说清楚，是非必须分明","X"],["笑笑不解释，清者自清","Y"],["心里记下，找合适时机再沟通","M"],["有点委屈，但很快被别的事冲淡","W"]]},
+{t:"兴趣偏好",q:"旅行时你最喜欢哪种打开方式？",o:[["说走就走，路线随缘，惊喜最重要","S"],["提前做满攻略，景点美食一个不落","M"],["找个小城住几天，融入当地慢生活","Y"],["专挑有故事的地方，边走边脑补历史大戏","W"]]},
+{t:"日常习惯",q:"你的朋友圈 / 动态画风最接近？",o:[["诗和远方：风景、感悟、偶尔矫情","S"],["美食日常：好吃的就是正义","W"],["很少发，潜水看别人热闹","Y"],["干货转发：观点鲜明，自带气场","D"]]},
+{t:"处事方式",q:"团队合作时，你最想抢的活是？",o:[["出谋划策定方向的","M"],["拍板做决定的","D"],["冲在最前面攻坚的","J"],["润物细无声补位的","Y"]]},
+{t:"情绪反应",q:"压力大到爆时，你的解压方式是？",o:[["大吃一顿或大醉一场，醒来又是好汉","S"],["运动暴汗，把烦恼甩出去","J"],["一个人待着，谁都别理我","Y"],["写下来 / 说出来，把情绪倒干净","W"]]},
+{t:"兴趣偏好",q:"穿衣风格上，你最在意的是？",o:[["舒服自在，宽松随性不束缚","Y"],["有质感有气场，出场自带压迫感","D"],["有点小心思，细节里藏着品味","W"],["利落干练，方便随时行动","J"]]},
+{t:"处事方式",q:"面对强劲的竞争对手，你的态度是？",o:[["研究他、拆解他，找到破绽再出手","M"],["正面刚，赢要赢得光明正大","J"],["欣赏他，顺便偷师几招","W"],["不比了，我走我的路","Y"]]},
+{t:"情绪反应",q:"被领导 / 长辈批评了，你心里想的是？",o:[["先反思，有道理就改，没毛病","J"],["表面接受，心里默默复盘对错","M"],["有点不服，但不会当场顶撞","X"],["无所谓，我又不是为评价活着","S"]]},
+{t:"兴趣偏好",q:"如果能自由选，你最想住在哪里？",o:[["山水之间的小院，种花养猫","Y"],["繁华都市中心，资源都在手边","D"],["江边湖畔的房子，推窗见水","W"],["四海为家，哪里都是落脚点","X"]]},
+{t:"日常习惯",q:"你的消费习惯更像哪一种？",o:[["千金散尽还复来，开心最重要","S"],["精打细算，每笔钱都要花在刀刃上","M"],["极简主义，少买但买好的","Y"],["该省省该花花，大事上从不抠门","D"]]},
+{t:"社交模式",q:"在陌生场合结识新朋友，你会？",o:[["主动破冰，天生自来熟","S"],["等人来搭话，但聊起来很深入","W"],["观察全场，先判断谁值得深交","M"],["能躲就躲，社交使我疲惫","Y"]]},
+{t:"处事方式",q:"做重要决定时，你最依赖什么？",o:[["逻辑推演，把利弊算清楚","M"],["直觉和胆量，看准了就下注","D"],["内心的感受，违心的事做不长久","W"],["经验与承诺，答应的事必须算数","X"]]},
+{t:"兴趣偏好",q:"休息日只能选一种消遣，你选？",o:[["登山远足，在自然里充电","J"],["看书观影，在故事里过几辈子","W"],["呼朋唤友，小酌畅聊","S"],["睡到自然醒，什么都不安排","Y"]]},
+{t:"兴趣偏好",q:"你最容易被哪类内容吸引？",o:[["权谋博弈、烧脑反转的剧情","M"],["英雄热血、快意恩仇的故事","X"],["诗词歌赋、风花雪月的文字","S"],["治愈系日常、岁月静好的画面","Y"]]},
+{t:"社交模式",q:"和朋友起了争执，你通常会？",o:[["把道理掰开揉碎讲到对方服气","M"],["先低头和好，面子不如情谊","W"],["梗着脖子，但事后偷偷后悔","X"],["冷处理，时间会冲淡一切","Y"]]},
+{t:"处事方式",q:"下面哪句话最戳你？",o:[["运筹帷幄之中，决胜千里之外","M"],["天生我材必有用","S"],["先天下之忧而忧","J"],["采菊东篱下，悠然见南山","Y"]]},
+{t:"日常习惯",q:"赶 deadline 时你的状态是？",o:[["越到最后越冷静，按优先级逐个击破","M"],["肾上腺素拉满，通宵也要干完","J"],["提前焦虑，但总能按时交差","W"],["佛系赶工，实在不行就……再说","Y"]]},
+{t:"社交模式",q:"最好的朋友遇到难处，你会？",o:[["二话不说，两肋插刀也要帮","X"],["帮他分析局势，出主意找资源","M"],["陪着他、听他说，情绪价值拉满","W"],["默默把事办了，不声张","J"]]},
+{t:"处事方式",q:"你对金钱的态度最接近？",o:[["钱是工具，用来成事和布局","D"],["够用就好，多了是负担","Y"],["该享受就享受，人生得意须尽欢","S"],["钱要花在家人和在乎的人身上","J"]]},
+{t:"日常习惯",q:"独处一整天，你最可能在干什么？",o:[["读书写字，和自己的内心对话","W"],["研究感兴趣的领域，越钻越深","M"],["做饭、收拾、侍弄花草","Y"],["放空听歌，思绪到处飘","S"]]},
+{t:"社交模式",q:"想表达对一个人的欣赏，你会？",o:[["直接夸出口，从不吝啬赞美","S"],["写进文字里，含蓄但真诚","W"],["用行动表示，请吃饭、帮个忙","X"],["默默记在心里，欣赏不必声张","Y"]]},
+{t:"情绪反应",q:"努力很久的事失败了，你会？",o:[["复盘到底，输也要输得明白","M"],["难过一阵，但绝不认命，重头再来","J"],["自嘲一笑，人生不如意十之八九","W"],["看淡了，得之我幸失之我命","Y"]]},
+{t:"处事方式",q:"让你组织一次活动，你最在意？",o:[["流程和预案，绝不能出乱子","M"],["排面和效果，要办就办得漂亮","D"],["大家开不开心，氛围第一","S"],["别太累，随意就好","Y"]]},
+{t:"兴趣偏好",q:"学一项新技能，你的动力来自？",o:[["好奇心，纯粹觉得有意思","W"],["将来能派上大用场，提前布局","M"],["想证明自己，说到就要做到","J"],["打发时间，顺其自然","Y"]]},
+{t:"日常习惯",q:"吃饭这件事上，你是哪一派？",o:[["无美食不欢，愿意为一顿好吃的跑半个城","W"],["对酒当歌，吃什么不如和谁吃","S"],["粗茶淡饭，自家做的最安心","Y"],["效率优先，吃饱就行不挑","J"]]},
+{t:"日常习惯",q:"你的手机使用画风是？",o:[["消息秒回，在线冲浪达人","S"],["工作消息优先，私人消息随缘","D"],["常年免打扰，想起来才看","Y"],["备忘录和笔记 app 里全是我的小宇宙","W"]]},
+{t:"处事方式",q:"对于规则和规矩，你的态度是？",o:[["规则用来理解，不是用来盲从的","M"],["大是大非上，规矩就是底线","J"],["合不合理另说，先看看能不能变通","D"],["不触碰也不较劲，绕开走最省心","Y"]]},
+{t:"情绪反应",q:"被当众夸奖时，你的反应是？",o:[["大方收下，我值得","D"],["表面谦虚，内心狂喜","W"],["有点不好意思，想赶紧翻篇","Y"],["淡定，这才哪到哪","M"]]},
+{t:"处事方式",q:"如果人生可以许一个愿，你最想要？",o:[["施展抱负，干一番大事业","D"],["知己两三人，把酒话平生","X"],["才华被看见，留下点作品","W"],["家人安康，日子平淡顺遂","J"]]},
+{t:"情绪反应",q:"心情低落时，你最想听的话是？",o:[["「别怕，有我在」","X"],["「没事，吃点好的就过去了」","W"],["什么都别说，陪我待会儿就好","Y"],["「咱们一起想办法」","M"]]},
+{t:"兴趣偏好",q:"你最可能长期坚持的爱好是？",o:[["书法、绘画、写作这类手上功夫","W"],["棋类、策略游戏，爱动脑","M"],["骑行、武术、户外这类身体力行的","X"],["园艺、钓鱼、茶道这类慢功夫","Y"]]},
+{t:"社交模式",q:"你的说话风格更像？",o:[["一针见血，话不多但句句在点上","M"],["妙语连珠，自带幽默感","S"],["温和有分寸，让人如沐春风","W"],["直来直去，有一说一不绕弯","J"]]},
+{t:"处事方式",q:"一个难得的机会摆在面前，但风险不小，你会？",o:[["先算胜率，七成把握就出手","M"],["机不可失，先抓住再说","D"],["宁可错过，也不冒进","Y"],["赌一把，人生难得几回搏","S"]]},
+{t:"日常习惯",q:"睡前最后一小时，你通常在？",o:[["复盘今天、规划明天","M"],["看书刷视频，放松大脑","W"],["和重要的人聊聊天","X"],["早睡养生，雷打不动","J"]]},
+{t:"处事方式",q:"你对「名声」这件事怎么看？",o:[["身后名不如生前酒，开心最重要","S"],["名声是做事的资本，要珍惜羽毛","D"],["是非成败转头空，无所谓","Y"],["名声不重要，问心无愧最重要","J"]]},
+{t:"社交模式",q:"在路上遇到陌生人求助，你会？",o:[["能帮就帮，出门在外都不容易","X"],["先判断真假，再决定帮不帮","M"],["帮个小忙可以，深度介入就免了","W"],["有点警惕，通常会婉拒","Y"]]},
+{t:"处事方式",q:"难得一天完全没安排，你会怎么过？",o:[["睡到自然醒，随缘晃悠","Y"],["临时起意，来场说走就走的出游","S"],["约上三五好友，热闹一天","X"],["终于有空，把搁置的计划推进一下","D"]]}
+];
+var FIGURES={
+M:{name:"诸葛亮",dyn:"三国 · 蜀汉丞相",type:"谋 士 型",slogan:"「你不是不行动，你只是在等一阵东风。」",quote:"诸葛亮：淡泊明志，宁静致远。未出茅庐，已知三分天下。",tags:["深谋远虑","冷静克制","大局观强","靠谱担当"],reason:"你的答案里，「谋略」维度一路领先：遇事先拆解、做决定靠推演、连赶工都越到最后越冷静。你不是反应最快的人，但往往是看得最远的人——别人还在纠结眼前，你已经在想第三步了。",hidden:"你的隐藏优势是「让人安心」：只要你在场，团队的焦虑就会自动降一半。这种被信任的稳定感，是装不出来的领导力。",egg:"彩蛋：诸葛亮其实是个发明家，木牛流马、诸葛连弩都出自他手，还据说发明了馒头。所以别惊讶——你那种「顺手就把生活小麻烦解决了」的天赋，是有出处的。"},
+D:{name:"李世民",dyn:"唐朝 · 唐太宗",type:"帝 王 型",slogan:"「你天生是坐在主位上的人，只是还没登基。」",quote:"李世民：以铜为镜，可以正衣冠；以人为镜，可以明得失。",tags:["天生领袖","敢拍板","用人不疑","格局开阔"],reason:"你的「统御」维度得分最高：组织活动在意排面和效果，机会面前敢下注，做决定有胆量也有分寸。你享受把一盘散沙捏成一个团队的过程，而且你确实捏得动。",hidden:"你的隐藏优势是「纳谏」：你有主见却不固执，能听进不同意见再拍板。这种组合极其稀缺——大多数人要么没主见，要么听不进话。",egg:"彩蛋：李世民不只是皇帝，还是顶级书法爱好者和「被历史耽误的诗人」，他的坐骑昭陵六骏每一匹都有名字和战功。硬核又浪漫，说的就是你们这类人。"},
+W:{name:"苏轼",dyn:"宋朝 · 文学大家",type:"文 人 型",slogan:"「把日子过成诗的人，运气都不会太差。」",quote:"苏轼：人生如逆旅，我亦是行人。一蓑烟雨任平生。",tags:["热爱生活","才华横溢","自愈力强","人间清醒"],reason:"你的「才情」维度最为突出：你对文字、美食和日常之美天然敏感，情绪低落时一顿好吃的就能满血复活。你不是逃避现实，你是真心觉得——把生活过好，本身就是了不起的本事。",hidden:"你的隐藏优势是「钝感力里的韧性」：被贬、被批、被误解，你都能自嘲一笑然后该吃吃该睡睡。这种不内耗的体质，是中年以后最值钱的天赋。",egg:"彩蛋：苏轼被贬到海南时没什么可吃的，硬是把没人敢碰的生蚝吃成了美味，还写信炫耀让儿子别告诉别人——怕大家都来抢。吃货的顶级境界：把流放过成美食之旅。"},
+X:{name:"荆轲",dyn:"战国 · 燕国侠士",type:"侠 客 型",slogan:"「你答应的事，风萧萧兮也拦不住。」",quote:"荆轲：风萧萧兮易水寒。重然诺，轻生死，是侠者的信条。",tags:["重情重义","一诺千金","胆识过人","为朋友两肋插刀"],reason:"你的「侠义」维度遥遥领先：朋友有难你二话不说，做决定时「答应的事必须算数」排在第一位。你的世界里没有那么多利弊计算，只有一条线——这个人，值不值得我出手。",hidden:"你的隐藏优势是「号召力」：你平时可能话不多，但关键时刻你一站出来，身边的人就愿意跟你走。因为大家都知道，你从不食言。",egg:"彩蛋：荆轲出发前等的那位朋友迟迟未到，他宁可带着不太靠谱的秦舞阳上路也不肯误期——不是莽，是在他的世界里，「守时守信」比胜算更重要。你是不是也这样？"},
+S:{name:"李白",dyn:"唐朝 · 诗仙",type:"诗 人 型",slogan:"「你的灵魂不设围墙，天地都是你的酒桌。」",quote:"李白：天生我材必有用，千金散尽还复来。",tags:["自由不羁","才华外溢","乐观浪漫","活在当下"],reason:"你的「豪情」维度一骑绝尘：说走就走、千金散尽、被夸时大大方方收下。你对世界的好奇心永远大于恐惧心，人生信条写在脸上——先尽兴，再说别的。",hidden:"你的隐藏优势是「感染力」：你的快乐有传染性，和你在一起的人会不自觉地放松、敢做梦。在一个人人紧绷的时代，这是稀缺的治愈力。",egg:"彩蛋：李白一辈子没参加过科举，却靠才华被皇帝征召入京，连杨贵妃都为他研过墨。他的简历投递方式放在今天叫「个人品牌」——你的才华，也值得被这样看见。"},
+J:{name:"岳飞",dyn:"宋朝 · 抗金名将",type:"将 领 型",slogan:"「你认定的事，十二道金牌也召不回。」",quote:"岳飞：莫等闲，白了少年头，空悲切。三十功名尘与土。",tags:["意志如铁","言出必行","责任心爆棚","正直坦荡"],reason:"你的「忠勇」维度得分最高：面对对手要赢得光明正大，失败了绝不认命、重头再来，规矩和底线在你这里从不打折。你是那种把「靠谱」两个字刻进骨子里的人。",hidden:"你的隐藏优势是「逆境续航」：顺境时人人都能跑，你的特别之处是越难越稳、越挫越勇。把你放在任何团队里，你都是最后倒下的那个。",egg:"彩蛋：岳飞不只是武将，还写得一手好词、好字，《满江红》只是其一；他带兵时军纪严明到「冻死不拆屋，饿死不掳掠」。能文能武还自律——你身上的那股较真劲儿，有传承。"},
+Y:{name:"陶渊明",dyn:"东晋 · 田园诗人",type:"隐 士 型",slogan:"「全世界都在赶路，你已经到了。」",quote:"陶渊明：采菊东篱下，悠然见南山。不为五斗米折腰。",tags:["内心丰盈","不慕名利","情绪稳定","自得其乐"],reason:"你的「淡泊」维度稳居第一：被误解了笑笑不解释，心情不好时独处就能自愈，对名利的态度是「够用就好」。你不是没有能力争，你是真的觉得——平静的日子，比赢更重要。",hidden:"你的隐藏优势是「低耗高续航」：你不内耗、不攀比、不被外界节奏绑架，所以你的快乐成本极低、续航极长。别人跑累了回头一看，你还在原地喝茶，而且走得并不比谁慢。",egg:"彩蛋：陶渊明辞职不是一时冲动——他前后辞官好几次，最后一次因为不肯穿正装迎接督邮，一句「不为五斗米折腰」直接走人。这种「此处不留爷」的干脆，你是不是也心有戚戚？"}
+};
+var ORDER=["M","D","W","X","S","J","Y"];
+var idx=0, answers=[], scores={}, locked=false;
+ORDER.forEach(function(k){scores[k]=0});
+function $(id){return document.getElementById(id)}
+function show(id){["screen-home","screen-quiz","screen-loading","screen-result"].forEach(function(s){$(s).classList.toggle("hidden",s!==id)})}
+function renderQ(){
+locked=false;
+var item=QUESTIONS[idx];
+$("q-now").textContent=idx+1;
+$("q-bar").style.width=((idx)/QUESTIONS.length*100)+"%";
+$("q-theme").textContent="— "+item.t+" —";
+$("q-text").textContent=item.q;
+$("btn-back").disabled=(idx===0);
+var box=$("q-opts"); box.innerHTML="";
+var letters=["甲","乙","丙","丁"];
+item.o.forEach(function(opt,i){
+var b=document.createElement("button");
+b.className="opt"; b.type="button";
+b.innerHTML='<span class="letter">'+letters[i]+'</span><span></span>';
+b.querySelector("span:last-child").textContent=opt[0];
+b.addEventListener("click",function(){pick(i,b)});
+box.appendChild(b);
+});
+var card=$("q-card"); card.style.animation="none"; void card.offsetWidth; card.style.animation="";
+window.scrollTo({top:0,behavior:"smooth"});
+}
+function pick(i,btn){
+if(locked) return; locked=true;
+btn.classList.add("picked");
+answers[idx]=i;
+setTimeout(function(){
+idx++;
+if(idx>=QUESTIONS.length){finish()} else {renderQ()}
+},260);
+}
+function dimCounts(){
+var c={}; ORDER.forEach(function(k){c[k]=0});
+QUESTIONS.forEach(function(q){q.o.forEach(function(o){c[o[1]]++})});
+return c;
+}
+function computeScores(){
+ORDER.forEach(function(k){scores[k]=0});
+answers.forEach(function(a,qi){
+if(a==null) return;
+scores[QUESTIONS[qi].o[a][1]]+=3;
+});
+/* 归一化:各维度在题库中出现次数不同,按「得分/该维度满分」比较,避免题目数量带偏结果 */
+var counts=dimCounts(), norm={};
+ORDER.forEach(function(k){norm[k]=counts[k]? scores[k]/(counts[k]*3):0});
+return norm;
+}
+function finish(){
+show("screen-loading");
+var msgs=["正在翻阅千年人物谱……","正在比对你的七维性格……","东风已至，人物将现……"];
+var mi=0;
+var timer=setInterval(function(){mi=(mi+1)%msgs.length;$("loading-text").textContent=msgs[mi]},600);
+setTimeout(function(){
+clearInterval(timer);
+var norm=computeScores();
+var sorted=ORDER.slice().sort(function(a,b){return norm[b]-norm[a]});
+var top=sorted[0], f=FIGURES[top];
+var pct=Math.round(72 + norm[top]*38); if(pct>97)pct=97; if(pct<78)pct=78;
+$("r-name").textContent=f.name;
+$("r-dyn").textContent=f.dyn;
+$("r-type").textContent=f.type;
+$("r-match").textContent=pct+"%";
+$("r-slogan").textContent=f.slogan;
+$("r-quote").textContent=f.quote;
+$("r-tags").innerHTML=f.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join("");
+$("r-reason").textContent=f.reason;
+$("r-hidden").textContent=f.hidden;
+$("r-egg").textContent=f.egg;
+/* bars: top4 dims normalized */
+var barKeys=sorted.slice(0,4);
+$("r-bars").innerHTML=barKeys.map(function(k){
+var v=Math.round(norm[k]*100);
+return '<div class="bar-row"><span>'+DIM[k]+(k===top?' ★':'')+'</span><div class="bar-track"><div class="bar-fill" style="width:'+v+'%"></div></div><span>'+v+'%</span></div>';
+}).join("");
+var r1=FIGURES[sorted[1]], r2=FIGURES[sorted[2]];
+$("r-runner").innerHTML="你的灵魂里还住着两位「邻居」：<b>"+r1.name+"</b>（"+r1.type.replace(/\s/g,"")+"）与 <b>"+r2.name+"</b>（"+r2.type.replace(/\s/g,"")+"）——在某些时刻，他们也会接管你的人生。";
+show("screen-result");
+window.scrollTo({top:0});
+$("btn-copy").dataset.text="我的灵魂对应历史人物是（"+f.type.replace(/\s/g,"")+"），契合度"+pct+"%。"+f.slogan+" 你是哪一位？来测测你的灵魂对应哪位中国历史人物（40题）";
+},1900);
+}
+$("btn-start").addEventListener("click",function(){idx=0;answers=[];show("screen-quiz");renderQ()});
+$("btn-back").addEventListener("click",function(){if(idx>0){idx--;renderQ()}});
+$("btn-again").addEventListener("click",function(){idx=0;answers=[];ORDER.forEach(function(k){scores[k]=0});show("screen-home");window.scrollTo({top:0})});
+$("btn-copy").addEventListener("click",function(){
+var text=this.dataset.text||"";
+function done(){var t=$("toast");t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2200)}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(done)}else{
+var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);done();
+}
+});
+</script>
+</body>
+</html>

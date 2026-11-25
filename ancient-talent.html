@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>你的古代天赋技能</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#f6efe0;
+    --paper-2:#efe4cd;
+    --card:#fbf7ec;
+    --ink:#2e241a;
+    --ink-soft:#5d4f3d;
+    --ink-faint:#8a7a5f;
+    --line:#d8c9a6;
+    --cinnabar:#a63a2e;
+    --cinnabar-deep:#8c2f24;
+    --gold:#a97f35;
+    --jade:#46685a;
+    --shadow:0 18px 44px rgba(74,54,20,.16);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#171512;
+      --paper-2:#1e1b16;
+      --card:#23201a;
+      --ink:#ece1cb;
+      --ink-soft:#c9b995;
+      --ink-faint:#9a8a68;
+      --line:#4a4030;
+      --cinnabar:#d4695b;
+      --cinnabar-deep:#e07a6a;
+      --gold:#c9a557;
+      --jade:#7ba893;
+      --shadow:0 18px 44px rgba(0,0,0,.5);
+      color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:"Noto Serif SC","Songti SC","STSong",serif;
+    background:
+      radial-gradient(1100px 500px at 85% -10%, rgba(169,127,53,.14), transparent 60%),
+      radial-gradient(900px 480px at -10% 110%, rgba(166,58,46,.10), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  button{font-family:inherit;cursor:pointer;min-height:44px;}
+  .wrap{max-width:660px;margin:0 auto;padding:28px 18px 56px;}
+  .screen{display:none;}
+  .screen.active{display:block;animation:rise .45s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: reduce){
+    .screen.active{animation:none;}
+    *{transition:none !important;}
+  }
+
+  /* ---------- 首页 ---------- */
+  .hero{text-align:center;padding:26px 6px 8px;}
+  .hero .seal-top{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:54px;height:54px;border-radius:10px;
+    background:var(--cinnabar);color:#fdf6e3;
+    font-family:"Ma Shan Zheng",serif;font-size:30px;line-height:1;
+    box-shadow:0 8px 20px rgba(166,58,46,.35);
+    transform:rotate(-4deg);
+    margin-bottom:20px;
+  }
+  .hero h1{
+    font-family:"Ma Shan Zheng","Noto Serif SC",serif;
+    font-size:clamp(40px,9.5vw,58px);
+    font-weight:400;margin:0 0 6px;letter-spacing:.04em;line-height:1.25;
+  }
+  .hero .sub{font-size:17px;color:var(--ink-soft);margin:0 0 4px;letter-spacing:.14em;}
+  .hero .rule{width:64px;height:2px;background:var(--gold);margin:20px auto;border-radius:2px;position:relative;}
+  .hero .rule::after{content:"";position:absolute;left:50%;top:-3px;width:8px;height:8px;background:var(--cinnabar);transform:translateX(-50%) rotate(45deg);}
+  .hero p.lead{font-size:16px;line-height:1.9;color:var(--ink-soft);margin:0 auto 8px;max-width:30em;text-align:center;}
+  .hero p.lead b{color:var(--cinnabar-deep);}
+  .meta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0 26px;}
+  .meta-chip{
+    border:1px solid var(--line);background:var(--card);border-radius:999px;
+    padding:8px 16px;font-size:13.5px;color:var(--ink-soft);letter-spacing:.06em;
+  }
+  .meta-chip b{color:var(--ink);}
+  .btn-main{
+    display:inline-block;border:none;border-radius:12px;
+    background:linear-gradient(180deg,var(--cinnabar),var(--cinnabar-deep));
+    color:#fdf6e3;font-size:18px;font-weight:700;letter-spacing:.22em;
+    padding:15px 52px 15px 58px;box-shadow:0 12px 26px rgba(166,58,46,.32);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-main:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(166,58,46,.38);}
+  .btn-main:active{transform:translateY(0);}
+  .skill-cloud{margin:34px auto 0;max-width:520px;}
+  .skill-cloud .cap{font-size:13px;color:var(--ink-faint);letter-spacing:.3em;text-align:center;margin-bottom:14px;}
+  .cloud-tags{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
+  .cloud-tags span{
+    font-size:14px;padding:7px 14px;border-radius:4px;
+    border:1px solid var(--line);color:var(--ink-soft);background:color-mix(in srgb, var(--card) 82%, transparent);
+  }
+  .cloud-tags span:nth-child(odd){transform:rotate(-1.2deg);}
+  .cloud-tags span:nth-child(even){transform:rotate(1deg);}
+  .fineprint{margin-top:30px;text-align:center;font-size:12.5px;color:var(--ink-faint);line-height:1.8;}
+
+  /* ---------- 答题 ---------- */
+  .quiz-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;}
+  .q-count{font-size:14px;color:var(--ink-soft);letter-spacing:.12em;white-space:nowrap;}
+  .q-count b{color:var(--cinnabar-deep);font-size:19px;}
+  .btn-back{
+    border:1px solid var(--line);background:var(--card);color:var(--ink-soft);
+    border-radius:999px;padding:6px 18px;font-size:14px;min-height:40px;
+  }
+  .btn-back:disabled{opacity:.35;cursor:default;}
+  .progress{height:8px;border-radius:99px;background:var(--paper-2);border:1px solid var(--line);overflow:hidden;margin-bottom:28px;}
+  .progress i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--cinnabar));transition:width .45s ease;}
+  .q-card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:30px 24px 26px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  .q-card::before{content:"";position:absolute;inset:7px;border:1px solid var(--line);border-radius:11px;pointer-events:none;opacity:.65;}
+  .q-tag{display:inline-block;font-size:12.5px;letter-spacing:.28em;color:var(--gold);border:1px solid var(--line);padding:4px 12px 4px 15px;border-radius:3px;margin-bottom:16px;background:var(--paper);}
+  .q-text{font-size:clamp(19px,4.6vw,22px);font-weight:700;line-height:1.65;margin:0 0 24px;}
+  .opts{display:grid;gap:12px;}
+  .opt{
+    display:flex;align-items:flex-start;gap:13px;text-align:left;width:100%;
+    background:var(--paper);border:1.5px solid var(--line);border-radius:12px;
+    padding:15px 16px;font-size:16px;line-height:1.6;color:var(--ink);
+    transition:border-color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .opt:hover{border-color:var(--gold);transform:translateX(3px);}
+  .opt .letter{
+    flex:0 0 auto;width:27px;height:27px;border-radius:6px;margin-top:1px;
+    border:1.5px solid var(--gold);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;background:var(--card);
+  }
+  .opt.picked{border-color:var(--cinnabar);background:color-mix(in srgb, var(--cinnabar) 9%, var(--paper));}
+  .opt.picked .letter{background:var(--cinnabar);border-color:var(--cinnabar);color:#fdf6e3;}
+  .q-card.swap{animation:qswap .38s ease both;}
+  @keyframes qswap{from{opacity:0;transform:translateX(26px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: reduce){.q-card.swap{animation:none;}}
+
+  /* ---------- 结果海报 ---------- */
+  .result-kicker{text-align:center;font-size:13.5px;letter-spacing:.34em;color:var(--ink-faint);margin:8px 0 16px;}
+  .poster{
+    --accent:#a63a2e;
+    position:relative;border-radius:18px;overflow:hidden;
+    background:linear-gradient(165deg, color-mix(in srgb, var(--accent) 13%, var(--card)) 0%, var(--card) 52%, color-mix(in srgb, var(--accent) 7%, var(--card)) 100%);
+    border:1.5px solid color-mix(in srgb, var(--accent) 55%, var(--line));
+    box-shadow:var(--shadow);
+    padding:36px 28px 30px;text-align:center;
+  }
+  .poster::before{content:"";position:absolute;inset:9px;border:1px solid color-mix(in srgb, var(--accent) 40%, var(--line));border-radius:12px;pointer-events:none;}
+  .poster .side-word{
+    position:absolute;top:50%;transform:translateY(-50%);
+    writing-mode:vertical-rl;font-family:"Ma Shan Zheng",serif;
+    font-size:15px;letter-spacing:.5em;color:color-mix(in srgb, var(--accent) 55%, transparent);
+    pointer-events:none;user-select:none;
+  }
+  .poster .side-word.l{left:15px;}
+  .poster .side-word.r{right:15px;}
+  .poster .p-label{font-size:13px;letter-spacing:.4em;color:var(--accent);margin-bottom:12px;font-weight:700;}
+  .poster h2{
+    font-family:"Ma Shan Zheng","Noto Serif SC",serif;font-weight:400;
+    font-size:clamp(42px,10.5vw,56px);line-height:1.2;margin:0 0 8px;color:var(--ink);
+  }
+  .poster .p-skill{font-size:19px;font-weight:900;letter-spacing:.3em;color:var(--accent);margin-bottom:18px;}
+  .poster .p-slogan{
+    font-size:16.5px;line-height:1.85;color:var(--ink-soft);
+    max-width:21em;margin:0 auto 20px;
+  }
+  .poster .p-slogan::before,.poster .p-slogan::after{content:"「";color:var(--accent);font-weight:700;}
+  .poster .p-slogan::after{content:"」";}
+  .poster .traits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:6px;}
+  .poster .traits span{
+    font-size:13.5px;padding:6px 13px;border-radius:999px;
+    border:1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+    color:var(--ink);background:color-mix(in srgb, var(--card) 75%, transparent);
+  }
+  .poster .seal{
+    position:absolute;right:22px;top:20px;width:52px;height:52px;border-radius:9px;
+    background:var(--accent);color:#fdf6e3;transform:rotate(5deg);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Ma Shan Zheng",serif;font-size:24px;line-height:1.05;
+    box-shadow:0 6px 16px rgba(0,0,0,.22);opacity:.92;
+  }
+  .poster .p-foot{margin-top:20px;font-size:12px;letter-spacing:.26em;color:var(--ink-faint);}
+
+  .detail{
+    margin-top:22px;background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:26px 24px;box-shadow:var(--shadow);
+  }
+  .detail h3{
+    font-size:15px;letter-spacing:.3em;color:var(--cinnabar-deep);
+    margin:26px 0 10px;display:flex;align-items:center;gap:10px;
+  }
+  .detail h3:first-child{margin-top:0;}
+  .detail h3::after{content:"";flex:1;height:1px;background:var(--line);}
+  .detail p{font-size:15.5px;line-height:1.95;color:var(--ink-soft);margin:0;}
+  .detail p b{color:var(--ink);}
+  .egg-box{
+    border:1.5px dashed color-mix(in srgb, var(--gold) 65%, var(--line));
+    border-radius:12px;padding:16px 18px;background:color-mix(in srgb, var(--gold) 7%, var(--card));
+  }
+  .egg-box p{color:var(--ink);}
+  .dim-list{display:grid;gap:11px;margin-top:4px;}
+  .dim-row{display:grid;grid-template-columns:64px 1fr 34px;align-items:center;gap:10px;font-size:14px;}
+  .dim-row .dn{color:var(--ink);letter-spacing:.08em;white-space:nowrap;}
+  .dim-row .bar{height:9px;border-radius:99px;background:var(--paper-2);border:1px solid var(--line);overflow:hidden;}
+  .dim-row .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--cinnabar));width:0;transition:width .8s ease;}
+  .dim-row .dv{color:var(--ink-faint);text-align:right;font-variant-numeric:tabular-nums;}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+  .btn-ghost{
+    flex:1;min-width:140px;border:1.5px solid var(--cinnabar);color:var(--cinnabar-deep);
+    background:transparent;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:.14em;padding:13px 10px;
+    transition:background .15s ease;
+  }
+  .btn-ghost:hover{background:color-mix(in srgb, var(--cinnabar) 8%, transparent);}
+  .btn-solid{
+    flex:1;min-width:140px;border:none;border-radius:12px;
+    background:linear-gradient(180deg,var(--cinnabar),var(--cinnabar-deep));color:#fdf6e3;
+    font-size:16px;font-weight:700;letter-spacing:.14em;padding:13px 10px;
+    box-shadow:0 10px 22px rgba(166,58,46,.28);
+  }
+  .share-tip{text-align:center;font-size:13px;color:var(--ink-faint);margin-top:16px;line-height:1.8;}
+  .toast{
+    position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);
+    background:var(--ink);color:var(--paper);font-size:14.5px;letter-spacing:.06em;
+    padding:12px 24px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;z-index:50;box-shadow:0 12px 30px rgba(0,0,0,.3);
+    max-width:88vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  @media (max-width:480px){
+    .wrap{padding:20px 13px 44px;}
+    .q-card{padding:24px 17px 20px;}
+    .poster{padding:32px 20px 28px;}
+    .poster .side-word{display:none;}
+    .detail{padding:22px 18px;}
+    .btn-main{padding:14px 40px 14px 46px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 首页 -->
+  <section class="screen active" id="screen-home">
+    <div class="hero">
+      <div class="seal-top">赋</div>
+      <p class="sub">趣味人格测试 · 二十问见天赋</p>
+      <h1>你的古代天赋技能</h1>
+      <div class="rule"></div>
+      <p class="lead">生错了时代不可怕，可怕的是<b>一身本事没地方使</b>。<br/>
+      你随手就能做好的小事——记路、劝架、拼家具、闻香识菜——<br/>
+      放到古代，可能就是一门<b>名震江湖的绝活</b>。</p>
+      <div class="meta-row">
+        <span class="meta-chip">共 <b>20</b> 道生活题</span>
+        <span class="meta-chip">约 <b>3</b> 分钟</span>
+        <span class="meta-chip"><b>9</b> 种天赋技能待揭晓</span>
+      </div>
+      <button class="btn-main" id="btn-start">开始测试</button>
+      <div class="skill-cloud">
+        <p class="cap">— 天 赋 名 录 —</p>
+        <div class="cloud-tags">
+          <span>过目不忘</span><span>丹青妙手</span><span>舌战群儒</span>
+          <span>百步穿杨</span><span>妙手回春</span><span>听声辨位</span>
+          <span>机关巧匠</span><span>酿酒绝活</span><span>飞檐走壁</span>
+        </div>
+      </div>
+      <p class="fineprint">本测试为趣味娱乐，不构成任何专业心理诊断。<br/>凭第一直觉作答，测出来的才最像你。</p>
+    </div>
+  </section>
+
+  <!-- 答题 -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-head">
+      <button class="btn-back" id="btn-prev">← 上一题</button>
+      <span class="q-count">第 <b id="q-now">1</b> / 20 题</span>
+    </div>
+    <div class="progress"><i id="progress-bar"></i></div>
+    <div class="q-card" id="q-card">
+      <span class="q-tag" id="q-tag">日常篇</span>
+      <p class="q-text" id="q-text"></p>
+      <div class="opts" id="q-opts"></div>
+    </div>
+  </section>
+
+  <!-- 结果 -->
+  <section class="screen" id="screen-result">
+    <p class="result-kicker">— 天 赋 揭 晓 —</p>
+    <div class="poster" id="poster">
+      <span class="side-word l">天生我材</span>
+      <span class="side-word r">必有用处</span>
+      <p class="p-label">你的古代天赋技能</p>
+      <h2 id="r-name"></h2>
+      <p class="p-skill" id="r-skill"></p>
+      <p class="p-slogan" id="r-slogan"></p>
+      <div class="traits" id="r-traits"></div>
+      <p class="p-foot">《你的古代天赋技能》· 趣味测试</p>
+      <div class="seal" id="r-seal">赋</div>
+    </div>
+
+    <div class="detail">
+      <h3>技能说明</h3>
+      <p id="r-desc"></p>
+      <h3>性格特点</h3>
+      <p id="r-persona"></p>
+      <h3>为什么是这个技能</h3>
+      <p id="r-why"></p>
+      <h3>隐藏优势</h3>
+      <p id="r-hidden"></p>
+      <h3>趣味彩蛋</h3>
+      <div class="egg-box"><p id="r-egg"></p></div>
+      <h3>你的天赋图谱</h3>
+      <div class="dim-list" id="dim-list"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-ghost" id="btn-restart">再测一次</button>
+      <button class="btn-solid" id="btn-copy">复制结果文案</button>
+    </div>
+    <p class="share-tip">长按或截图上方海报卡，分享到小红书 / 朋友圈，<br/>看看朋友们都是什么古代天赋。</p>
+  </section>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* 维度：eye 观察 / mem 记忆 / hand 巧手 / talk 口才 / plan 谋算 / body 体魄 / sense 感官乐感 / wit 悟性 */
+var DIMS = [
+  {k:"eye",   n:"观察力"},
+  {k:"mem",   n:"记忆力"},
+  {k:"hand",  n:"巧手"},
+  {k:"talk",  n:"口才"},
+  {k:"plan",  n:"谋算"},
+  {k:"body",  n:"体魄身手"},
+  {k:"sense", n:"感官乐感"},
+  {k:"wit",   n:"悟性"}
+];
+
+var QUESTIONS = [
+ {tag:"日常篇", q:"周末逛超市，你通常是这个画风：", opts:[
+   {t:"目标明确，进门直奔货架，十分钟结账走人", s:{plan:2, mem:1}},
+   {t:"慢慢溜达，新出的零食饮料一个不落全看一遍", s:{sense:2, eye:1}},
+   {t:"总能一眼扫到藏在角落里的买一送一和临期特价", s:{eye:2, plan:1}},
+   {t:"挑瓜先拍一拍、听听声，手感对了才下手", s:{sense:1, hand:2}}
+ ]},
+ {tag:"日常篇", q:"手机相册里占比最高的照片是：", opts:[
+   {t:"美食特写，每道菜都要留下“遗照”", s:{sense:2, eye:1}},
+   {t:"随手拍的猫猫狗狗和路边的小花", s:{eye:2, wit:1}},
+   {t:"截图：聊天记录、攻略、停车位置，全靠它找回来", s:{mem:2, plan:1}},
+   {t:"自己动手做的东西：烘焙、手账、改造前后对比", s:{hand:2, sense:1}}
+ ]},
+ {tag:"社交篇", q:"朋友聚会上，你最常担任的角色是：", opts:[
+   {t:"气氛组组长，冷场三秒必有人接梗，那个人是我", s:{talk:2, sense:1}},
+   {t:"默默观察型，谁和谁有点不对劲我第一个发现", s:{eye:2, wit:1}},
+   {t:"后勤总管，订位、点菜、算账、叫车一条龙", s:{plan:2, hand:1}},
+   {t:"体力担当，搬酒、开瓶、送醉友回家全包", s:{body:2, hand:1}}
+ ]},
+ {tag:"动手篇", q:"新买的拼装家具/乐高到家，你的第一反应是：", opts:[
+   {t:"说明书先通读一遍，零件按大小排好再开工", s:{plan:2, mem:1}},
+   {t:"说明书是什么？上手就拼，拼错了再拆", s:{hand:2, body:1}},
+   {t:"先盯着成品图看半天，在脑子里预演一遍结构", s:{eye:1, wit:2}},
+   {t:"拼到一半开始魔改，加个灯、换个色，必须独一无二", s:{hand:1, wit:2}}
+ ]},
+ {tag:"感官篇", q:"戴上耳机听歌时，你真正在听的是：", opts:[
+   {t:"歌词，一字一句跟着默唱，错一个字都难受", s:{mem:2, talk:1}},
+   {t:"编曲里的细节：哪件乐器第几秒进来都门儿清", s:{sense:2, eye:1}},
+   {t:"情绪，旋律一起眼泪/鸡皮疙瘩就来了", s:{sense:1, wit:2}},
+   {t:"节奏，脚和头根本停不下来，自带律动", s:{body:2, sense:1}}
+ ]},
+ {tag:"出行篇", q:"在陌生城市迷路了，你会：", opts:[
+   {t:"不慌，来过一次的路我基本记得，凭印象往回走", s:{mem:2, eye:1}},
+   {t:"抬头看太阳和建筑朝向，先分清东南西北", s:{eye:2, wit:1}},
+   {t:"拦住路人问路，顺便聊两句还能打听好吃的", s:{talk:2, sense:1}},
+   {t:"随便选个方向走，腿脚好，走错了就当逛街", s:{body:2, plan:1}}
+ ]},
+ {tag:"记忆篇", q:"关于记东西，你最有发言权的一句是：", opts:[
+   {t:"朋友的生日、忌口、口头禅，我都记得清清楚楚", s:{mem:2, talk:1}},
+   {t:"看一遍菜单就能背下来，点菜不用再翻", s:{mem:1, eye:2}},
+   {t:"数字记不住，但谁穿什么衣服坐哪个位置全记得", s:{eye:2, mem:1}},
+   {t:"记性一般，但我会用备忘录和清单把自己管好", s:{plan:2, hand:1}}
+ ]},
+ {tag:"下厨篇", q:"轮到你下厨，你的风格是：", opts:[
+   {t:"严格按菜谱克数走，多一克盐都要纠结", s:{plan:1, mem:2}},
+   {t:"全凭手感和鼻子，尝一口就知道差什么调料", s:{sense:2, hand:1}},
+   {t:"刀工担当，土豆丝切得能穿针，摆盘必须好看", s:{hand:2, eye:1}},
+   {t:"颠勺、控火、爆炒一气呵成，厨房就是我的练武场", s:{body:2, hand:1}}
+ ]},
+ {tag:"娱乐篇", q:"打游戏时，你最容易上头的是哪类玩法：", opts:[
+   {t:"解谜推理，卡关一晚上也要自己想通", s:{wit:2, plan:1}},
+   {t:"竞技对战，手速和反应就是我的本命", s:{body:2, eye:1}},
+   {t:"经营建造，布局、资源、路线全要最优解", s:{plan:2, hand:1}},
+   {t:"剧情向，台词配音听到入戏，还会学角色说话", s:{talk:1, sense:2}}
+ ]},
+ {tag:"娱乐篇", q:"追剧/看电影时，你属于：", opts:[
+   {t:"预言家，凶手/反转通常一半就被我猜中", s:{wit:2, eye:1}},
+   {t:"细节控，穿帮镜头和伏笔一个都逃不过", s:{eye:2, mem:1}},
+   {t:"台词收集者，经典对白张口就来，还能模仿语气", s:{talk:2, mem:1}},
+   {t:"共情型，跟着主角哭笑，散场半天出不来", s:{sense:2, wit:1}}
+ ]},
+ {tag:"出行篇", q:"出门旅行收拾行李，你是：", opts:[
+   {t:"清单派，提前三天列好表，一项一项打勾", s:{plan:2, mem:1}},
+   {t:"全能派，针线、药、工具、转换插头，百宝箱本箱", s:{hand:2, plan:1}},
+   {t:"轻装派，一个背包走天下，缺什么到了再说", s:{body:2, wit:1}},
+   {t:"氛围派，衣服按拍照场景配色，行李箱像个调色盘", s:{eye:2, sense:1}}
+ ]},
+ {tag:"社交篇", q:"两个朋友吵起来了，你通常会：", opts:[
+   {t:"三言两语把两边都说笑，气消了事也就了了", s:{talk:2, wit:1}},
+   {t:"先分开冷静，再逐个分析利害，帮他们算明白账", s:{plan:2, talk:1}},
+   {t:"一眼看穿谁在嘴硬谁在委屈，对症下药", s:{eye:1, wit:2}},
+   {t:"直接把两人拉去撸串，天大的事吃完再说", s:{body:1, sense:2}}
+ ]},
+ {tag:"学习篇", q:"学一样新本事，你最顺手的路径是：", opts:[
+   {t:"看一遍演示就上手，剩下的靠自己琢磨通", s:{wit:2, hand:1}},
+   {t:"先把原理和口诀背熟，再慢慢练", s:{mem:2, plan:1}},
+   {t:"反复模仿高手的动作/说法，像到八九分再创新", s:{eye:2, body:1}},
+   {t:"找人当面教，边学边问，顺便把老师的话术也学走", s:{talk:2, sense:1}}
+ ]},
+ {tag:"运动篇", q:"要选一项运动长期练，你最想选：", opts:[
+   {t:"射箭/飞镖/投篮，盯住目标一击命中的感觉太爽", s:{eye:2, body:1}},
+   {t:"跑步/游泳/爬山，耐力和肺活量就是底气", s:{body:2, plan:1}},
+   {t:"舞蹈/瑜伽，跟着音乐舒展身体最治愈", s:{sense:2, body:1}},
+   {t:"球类团战，跑位、配合、预判，全是脑子的活", s:{plan:2, eye:1}}
+ ]},
+ {tag:"日常篇", q:"你的房间/桌面通常是什么状态：", opts:[
+   {t:"乱中有序，别人看是乱摊子，我伸手就能摸到要的东西", s:{mem:2, hand:1}},
+   {t:"极简清爽，每样东西都有固定位置，错位就难受", s:{plan:1, eye:2}},
+   {t:"手作角落：工具、材料、半成品，随时开工", s:{hand:2, wit:1}},
+   {t:"绿植香薰小夜灯，氛围感必须拉满", s:{sense:2, eye:1}}
+ ]},
+ {tag:"感官篇", q:"走进一家没去过的餐厅，你最先注意到的是：", opts:[
+   {t:"味道！一进门就知道这家主打什么、火候到不到家", s:{sense:2, wit:1}},
+   {t:"环境和摆盘，灯光餐具不对味，菜再好也减分", s:{eye:2, sense:1}},
+   {t:"菜单结构和价格带，心里默默算它靠什么赚钱", s:{plan:2, mem:1}},
+   {t:"服务员的状态和上菜速度，细节里藏着口碑", s:{eye:1, talk:2}}
+ ]},
+ {tag:"临场篇", q:"遇到突发状况（比如家里跳闸、水管漏水），你会：", opts:[
+   {t:"先冷静拆解：总闸在哪、漏点在哪，一步步来", s:{plan:2, wit:1}},
+   {t:"袖子一挽直接上手，能修的绝不叫师傅", s:{hand:2, body:1}},
+   {t:"耳朵贴上去听、鼻子闻闻有没有焦味，先定位问题", s:{sense:2, eye:1}},
+   {t:"立刻打电话摇人，顺便把情况描述得清清楚楚", s:{talk:2, mem:1}}
+ ]},
+ {tag:"动手篇", q:"朋友的自行车链条掉了/小家电坏了，大家会看向谁：", opts:[
+   {t:"看我。拆开看看就知道毛病出在哪", s:{hand:2, wit:1}},
+   {t:"看我。我能一边修一边把原理讲明白", s:{talk:1, hand:1, wit:1}},
+   {t:"看我。我记性好，上次怎么修的步骤全记得", s:{mem:2, plan:1}},
+   {t:"看我。力气活交给我，抬、扛、拧都不在话下", s:{body:2, hand:1}}
+ ]},
+ {tag:"表达篇", q:"需要当众讲一段话（发言、讲故事、汇报），你：", opts:[
+   {t:"脱稿也能讲得起伏跌宕，包袱和金句不断", s:{talk:2, sense:1}},
+   {t:"提前把要点背得滚瓜烂熟，一个字不错", s:{mem:2, plan:1}},
+   {t:"结构先行：一二三点逻辑拉满，谁听都服", s:{plan:2, talk:1}},
+   {t:"临场悟性型，讲着讲着自己就悟了，越讲越顺", s:{wit:2, talk:1}}
+ ]},
+ {tag:"向往篇", q:"理想中的周末，你最想把时间花在：", opts:[
+   {t:"鼓捣我的小爱好：画画、木工、拼模型，手上有活心里不慌", s:{hand:2, eye:1}},
+   {t:"约三五好友喝茶聊天，天南海北聊到天黑", s:{talk:2, sense:1}},
+   {t:"去户外撒野：骑行、徒步、露营，把电量耗光再回来", s:{body:2, eye:1}},
+   {t:"一个人静静看书听雨，想通几个一直没想通的问题", s:{wit:2, mem:1}}
+ ]}
+];
+</script>
+<script>
+/* 结果：profile 为与八维的契合权重，得分 = Σ(维度分 × 权重)，取最高 */
+var RESULTS = [
+{ id:"guomu", name:"过目不忘", skill:"活 体 藏 书 阁", seal:"忆", accent:"#7a5c2e",
+profile:{mem:5, wit:2, eye:1},
+slogan:"你随口背出的旧事，是别人翻烂相册也找不回的时光。",
+desc:"看过一遍的东西，就像刻进了脑子：路线走一次就认得，台词听一遍就能复述，三年前谁在哪家店说了什么话，你张口就来。放在古代，这就是行走的藏书阁——孤本秘籍交给你翻一遍，原书烧了都不怕。",
+traits:["记忆宫殿常住居民","人形导航兼点菜机","细节回收率惊人","答应过的事很少忘"],
+why:"你的答案里，<b>记忆力</b>一路领跑：菜单看一遍能背、旧步骤记得分毫不差、朋友的生日忌口全在脑子里。这种“存得住、调得出”的本事不是死记硬背，而是天生的信息收纳天赋。",
+hidden:"你的记性自带“人情账本”功能：记得住别人的好，也记得住随口的承诺。在古代这是谋士和账房的命根子，在现代，这是让人觉得“跟你打交道特别踏实”的稀缺品质。",
+egg:"彩蛋：古代真有位过目成诵的张松，据说把兵书倒背如流。你和他差的，只是一匹马和一次献图的机会——以及一位愿意收你的主公。"
+},
+{ id:"danqing", name:"丹青妙手", skill:"一 手 好 丹 青", seal:"绘", accent:"#3f6b5c",
+profile:{hand:4, eye:3, wit:1},
+slogan:"别人拍照靠滤镜，你落笔就是原图直出。",
+desc:"你的眼睛负责捕捉，手负责还原：光影、比例、神韵，到了你手里都能变成线条和色彩。放在古代，帝王将相要画像留影、通缉令要画影图形、山河舆图要精描细绘——你这一手，就是那个时代的“高清相机加修图师”。",
+traits:["眼睛自带取景框","手稳心细落笔准","对颜色和比例敏感","作品必须有自己的味道"],
+why:"你的<b>巧手</b>与<b>观察力</b>双高：拼装要魔改、摆盘要好看、行李箱能收拾成调色盘。你不是单纯手巧，而是先看懂、再做准——这正是丹青之道：眼到，手到，心到。",
+hidden:"你有个隐藏技能叫“复刻”：看一眼别人的作品，大致做法就猜得八九不离十。学新手工对你来说从来不是从零开始，而是把库存里的手法重新组装。",
+egg:"彩蛋：古代画师画通缉令全凭证人口述，你若在场，大概能凭一句“左边眉毛有痣”画出本尊，让逃犯无所遁形——衙门得给你发锦旗。"
+},
+{ id:"shezhan", name:"舌战群儒", skill:"铁 齿 铜 牙", seal:"辩", accent:"#a63a2e",
+profile:{talk:5, plan:2, wit:1},
+slogan:"你的嘴，是谈判桌上唯一不需要上膛的武器。",
+desc:"反应快、逻辑稳、包袱还密：三句话化解尴尬，五句话说服固执的人，一场剑拔弩张的争执，你到场十分钟就能聊成茶话会。放在古代，这就是纵横家的本钱——两国交兵不斩来使，而你，就是那个最不能斩的来使。",
+traits:["冷场绝缘体","劝架一级选手","金句随口就来","越是大场面越稳"],
+why:"你的<b>口才</b>维度一骑绝尘：聚会气氛靠你、吵架靠你劝、发言脱稿也能讲得起伏跌宕。更难得的是你还搭着<b>谋算</b>——不是能说会道而已，是知道哪句话该在什么时候说。",
+hidden:"你的话术里藏着共情雷达：你总能先接住对方的情绪，再递上道理。所以你说的话人爱听、听得进——这比单纯的伶牙俐齿高出一个段位。",
+egg:"彩蛋：诸葛亮舌战群儒，靠的是一张嘴退了东吴满堂文士。你缺的只是一条船和一阵东风——嘴，你已经自备了。"
+},
+{ id:"baibu", name:"百步穿杨", skill:"神 射 之 眼", seal:"箭", accent:"#31556e",
+profile:{eye:5, body:3},
+slogan:"目标在百步之外，而你的眼神，已经先到了。",
+desc:"你的动态视力和专注力异于常人：飞过的球、闪过的细节、藏在角落的折扣，都逃不过你的锁定。放在古代，校场比武你挽弓搭箭，百步之外柳叶应声而落——这门手艺靠的不是力气，是眼、心、手合一的绝对专注。",
+traits:["细节扫描仪","锁定目标不分神","手眼协调天花板","越关键越冷静"],
+why:"你的<b>观察力</b>是全场最高：穿帮镜头、隐藏特价、谁的表情不对劲，你总是第一个发现。再配上不俗的<b>体魄身手</b>，眼到手到——神射手的两大件，你都齐了。",
+hidden:"你的专注力是“狙击手模式”：平时随和散漫，一旦锁定目标，周遭自动静音。这种瞬间进入心流的能力，放在任何竞技场都是大杀器。",
+egg:"彩蛋：养由基百步穿杨，靠的是日复一日的苦练。你若生在古代，大概率是校场上那个让教头又爱又恨的人——天赋太好，还总想偷懒。"
+},
+{ id:"miaoshou", name:"妙手回春", skill:"杏 林 圣 手", seal:"医", accent:"#4a7a4f",
+profile:{wit:5, sense:2, mem:1},
+slogan:"别人慌成一团的时候，你已经摸到病灶了。",
+desc:"你有一种近乎直觉的诊断力：听听声音、闻闻味道、看看脸色，问题出在哪儿，心里就有谱了。放在古代，这就是游走乡野的神医——不靠仪器，全凭望闻问切和一颗稳得住的心，药到病除，百姓送匾。",
+traits:["遇事不慌先诊断","对气味声音异常敏感","直觉准得像经验","照顾人于无形"],
+why:"你的<b>悟性</b>高居榜首：解谜要自己想通、学东西看一遍就悟、突发状况先定位问题。再加上敏锐的<b>感官</b>替你收集线索——望闻问切四门功课，你天生占了三门半。",
+hidden:"你有个容易被低估的天赋：安抚人心。病人一半的病在心上，而你说话做事自带镇定感。和你相处久了的人，遇到事先想给你打个电话——这就是医者仁心的现代版。",
+egg:"彩蛋：华佗看一眼曹操就知病根，差点因为太准丢了命。你比他多一分机灵：有些话，你懂得点到为止。"
+},
+{ id:"tingsheng", name:"听声辨位", skill:"绝 世 耳 力", seal:"聆", accent:"#5d4a7a",
+profile:{sense:6.5, eye:1, body:1},
+slogan:"世界在别人眼里是画面，在你这里，是带声道的。",
+desc:"你的耳朵是精密仪器：乐器第几秒进场、脚步声由远及近、水管里细微的异响、谁说话时嗓音发紧——都逃不过你。放在古代，守城听瓮辨敌军地道、乐坊听音正律、深夜听声辨位擒贼，这门天赋，千金难买。",
+traits:["人耳雷达全天在线","听得出弦外之音","对声音记忆超强","环境音里藏不住事"],
+why:"你的<b>感官乐感</b>维度断层领先：挑瓜听声、听歌辨乐器、进餐厅先闻味、下厨全凭鼻子。你的世界信息入口主要开在耳朵和鼻子上，而且分辨率远高于常人。",
+hidden:"你其实能“听”出情绪：同一句话，语气差一分你立刻察觉。这让你在人际关系里很少踩雷——不是情商刻意修炼，是硬件自带。",
+egg:"彩蛋：古代有位乐师师旷，双目失明却听得出琴弦里藏着的新声。你的眼睛可比他好用多了——属于老天追着喂饭，还给配了副好碗。"
+},
+{ id:"jiguan", name:"机关巧匠", skill:"鬼 斧 神 工", seal:"械", accent:"#8a6d3b",
+profile:{plan:4, hand:3.5},
+slogan:"给你一堆零件，你能还世界一个惊喜。",
+desc:"你对结构有天生的理解：东西为什么转、力往哪儿走、哪颗螺丝是关键，拆开看一眼就明白。放在古代，你就是公输班的传人——水车、连弩、机关锁、自动漏壶，经你的手，木头铁件都有了心机。",
+traits:["拆解欲旺盛","脑内有结构图","动手前先算三步","坏东西到手就想救活"],
+why:"你的<b>谋算</b>与<b>巧手</b>是全场最搭的一对：动手之前先在脑子里预演结构，收拾东西讲究最优路线，修东西一拆就找到病根。机关术的精髓就是“算在前面，做在巧处”，正是你的日常。",
+hidden:"你是天生的“系统优化师”：任何流程到了你手里，都会被默默改顺。古代守城器械经你改良能省三成人力，现代版就是——同事都爱把烂摊子流程交给你重组。",
+egg:"彩蛋：鲁班被草叶划伤手，悟出了锯子。你被生活划拉出的灵感也不少，只是大多停留在“回头我就动手”的备忘录里——动手啊，匠人。"
+},
+{ id:"niangjiu", name:"酿酒绝活", skill:"琼 浆 之 手", seal:"酿", accent:"#7c3f4d",
+profile:{sense:5, hand:3, mem:1},
+slogan:"时间是最好的原料，而你，恰好最懂等待。",
+desc:"你的舌头和鼻子是天生的品鉴仪：差一分糖、少一分火候、多一分杂味，一尝便知。更难得的是你有耐心——粮食、水、曲和时辰，在你手里慢慢变成一坛开封满院香的好酒。放在古代，酒坊掌柜靠你这一手，能把招牌挂满一条街。",
+traits:["味觉记忆体","对火候分寸极敏感","耐得住性子等发酵","讲究原料和水源"],
+why:"你的答案透着一股“品鉴家”气质：<b>感官</b>敏锐、<b>巧手</b>稳当、<b>记性</b>还好——尝一口就知道差什么，每一坛的年份配比都记在心里。酿酒七分靠天赋三分靠等，你的天赋已经占满了。",
+hidden:"你有种“慢功夫”天赋：越是需要时间和耐心的事，你做得越出色。快时代里人人求速成，而你手里握着最稀缺的东西——把日子过出回甘的本事。",
+egg:"彩蛋：杜康造酒，醉了三天三夜的刘伶。你若在古代开酒坊，门口大概要立块牌子：“酒香不怕巷子深，醉倒概不外送。”"
+},
+{ id:"feiyan", name:"飞檐走壁", skill:"绝 顶 轻 功", seal:"行", accent:"#37505e",
+profile:{body:5.5, eye:2, sense:1},
+slogan:"墙是给别人看的路，对你而言，只是另一条路。",
+desc:"身手矫捷、反应奇快、平衡感惊人：迷路不慌因为腿脚好，竞技游戏靠反应吃饭，爬山下水如履平地。放在古代，屋檐不是障碍是通道——夜行千里、踏雪无痕，说的就是你这种骨骼清奇的身法型选手。",
+traits:["反应速度一流","耐力与爆发力兼备","方向感自带平衡","越动越精神"],
+why:"你的<b>体魄身手</b>维度遥遥领先：聚会负责搬抬护送、旅行轻装说走就走、运动只挑高强度。再加上不弱的<b>观察力</b>替你看清落点——轻功的两要素，身法与眼力，你都点满了。",
+hidden:"你的身体有惊人的“省电模式”：平时看着懒洋洋，真到需要爆发的时刻，速度和耐力让所有人吃惊。深藏不露，说的就是这种反差。",
+egg:"彩蛋：古代轻功高手夜探皇宫如入无人之境。你若穿越回去，建议先从自家小区练起——毕竟现在到处都是摄像头，飞檐走壁容易上社会新闻。"
+}
+];
+
+var current = 0;
+var answers = [];
+var locked = false;
+
+function $(id){ return document.getElementById(id);}
+function show(id){
+var screens = document.querySelectorAll(".screen");
+for (var i=0;i<screens.length;i++) screens[i].classList.remove("active");
+$(id).classList.add("active");
+window.scrollTo(0,0);
+}
+
+function startQuiz(){
+current = 0; answers = []; locked = false;
+show("screen-quiz");
+renderQuestion(true);
+}
+
+function renderQuestion(first){
+var q = QUESTIONS[current];
+$("q-now").textContent = current + 1;
+$("progress-bar").style.width = ((current) / QUESTIONS.length * 100) + "%";
+$("btn-prev").disabled = current === 0;
+$("q-tag").textContent = q.tag;
+$("q-text").textContent = q.q;
+var box = $("q-opts");
+box.innerHTML = "";
+var letters = ["A","B","C","D"];
+q.opts.forEach(function(opt, idx){
+var b = document.createElement("button");
+b.className = "opt";
+b.type = "button";
+var l = document.createElement("span");
+l.className = "letter"; l.textContent = letters[idx];
+var s = document.createElement("span");
+s.textContent = opt.t;
+b.appendChild(l); b.appendChild(s);
+b.addEventListener("click", function(){ pick(idx, b);});
+box.appendChild(b);
+});
+var card = $("q-card");
+card.classList.remove("swap");
+if (!first){ void card.offsetWidth; card.classList.add("swap");}
+}
+
+function pick(idx, btn){
+if (locked) return;
+locked = true;
+answers[current] = idx;
+var opts = $("q-opts").children;
+for (var i=0;i<opts.length;i++) opts[i].classList.remove("picked");
+btn.classList.add("picked");
+$("progress-bar").style.width = ((current + 1) / QUESTIONS.length * 100) + "%";
+setTimeout(function(){
+locked = false;
+if (current < QUESTIONS.length - 1){
+current++;
+renderQuestion(false);
+} else {
+showResult();
+}
+}, 320);
+}
+
+function goPrev(){
+if (locked || current === 0) return;
+current--;
+renderQuestion(false);
+if (typeof answers[current] === "number"){
+var opts = $("q-opts").children;
+if (opts[answers[current]]) opts[answers[current]].classList.add("picked");
+}
+}
+
+function computeScores(){
+var scores = {};
+DIMS.forEach(function(d){ scores[d.k] = 0;});
+answers.forEach(function(a, qi){
+if (typeof a!== "number") return;
+var s = QUESTIONS[qi].opts[a].s;
+for (var k in s) scores[k] += s[k];
+});
+return scores;
+}
+
+/* 各维度满分不同，先归一化再按契合权重匹配，避免题量多的维度天然占优 */
+var DIM_MAX = {};
+DIMS.forEach(function(d){
+DIM_MAX[d.k] = QUESTIONS.reduce(function(sum, q){
+var m = 0;
+q.opts.forEach(function(o){ if ((o.s[d.k] || 0) > m) m = o.s[d.k] || 0; });
+return sum + m;
+}, 0) || 1;
+});
+
+function pickResult(scores){
+var best = null, bestScore = -1;
+RESULTS.forEach(function(r){
+var total = 0;
+for (var k in r.profile) total += ((scores[k] || 0) / DIM_MAX[k]) * r.profile[k];
+r._score = total;
+if (total > bestScore){ bestScore = total; best = r; }
+});
+return best;
+}
+
+/* 每种结果的性格特点（独立文案，与海报上的特点标签互补） */
+var PERSONA = {
+  guomu:"你属于安静靠谱型：话不多，但什么都看在眼里、记在心里。朋友们对你的评价出奇一致——“这事别问别人，问他，他肯定记得。”你不爱抢风头，却是所有人心里默认的“活档案”。",
+  danqing:"你是个感受力极强的手艺人：对美有执念，对粗糙零容忍。心情不好的时候你不爱说话，动手做点东西就痊愈了。在朋友眼里，你有点挑剔，但交到你手里的事，永远比预期更精致。",
+  shezhan:"你是天生的场面人：反应快、心态稳，幽默感像呼吸一样自然。越是尴尬僵硬的局面，你反而越来劲——因为你知道，三句话之后，场子就是你的了。",
+  baibu:"你冷静、专注，胜负心藏在骨子里。平时随和好说话，可一旦认定目标，整个人自动切换到“勿扰模式”，天大的热闹也勾不走你的注意力。",
+  miaoshou:"你是温和的定海神针：不抢风头、不说大话，却总能在别人慌乱时给出最稳的判断。身体不舒服、心里有事，身边人第一个想到的都是你——你的稳，就是他们的安全感。",
+  tingsheng:"你敏感而通透：别人说出口的是话，你听到的还有情绪、停顿和言外之意。所以你很少说错话，也很少看错人。独处时你也不孤单，你的世界自带原声带。",
+  jiguan:"你是好奇心驱动的拆解派：万物皆可拆，万事必问一句为什么。别人眼里的麻烦和烂摊子，在你眼里都是还没解开的有趣结构，解开的那一刻，快乐翻倍。",
+  niangjiu:"你不急不躁，自带时间感：坚信好东西都要慢慢来，越催越容易坏事。朋友说你像陈年的酒——刚认识时不显山不露水，相处越久，越觉得有味道、离不开。",
+  feiyan:"你是闲不住的行动派：身体永远比脑子先出发，热爱速度、高度和自由。安稳日子过久了你会浑身难受，必须出去撒个野、出一身汗，才算重新活过来。"
+};
+
+var lastResult = null;
+var lastScores = null;
+
+function showResult(){
+var scores = computeScores();
+var r = pickResult(scores);
+lastResult = r; lastScores = scores;
+
+var poster = $("poster");
+poster.style.setProperty("--accent", r.accent);
+$("r-name").textContent = r.name;
+$("r-skill").textContent = r.skill;
+$("r-slogan").textContent = r.slogan;
+$("r-seal").textContent = r.seal;
+var tr = $("r-traits"); tr.innerHTML = "";
+r.traits.forEach(function(t){
+var s = document.createElement("span"); s.textContent = t; tr.appendChild(s);
+});
+$("r-desc").textContent = r.desc;
+$("r-persona").textContent = PERSONA[r.id] || "";
+$("r-why").innerHTML = r.why;
+$("r-hidden").textContent = r.hidden;
+$("r-egg").textContent = r.egg;
+
+var max = 0;
+DIMS.forEach(function(d){ if (scores[d.k] > max) max = scores[d.k];});
+if (max === 0) max = 1;
+var list = $("dim-list"); list.innerHTML = "";
+var sorted = DIMS.slice().sort(function(a,b){ return scores[b.k] - scores[a.k];});
+sorted.forEach(function(d){
+var pct = Math.round(scores[d.k] / max * 100);
+var row = document.createElement("div"); row.className = "dim-row";
+var n = document.createElement("span"); n.className = "dn"; n.textContent = d.n;
+var bar = document.createElement("span"); bar.className = "bar";
+var fill = document.createElement("i"); bar.appendChild(fill);
+var v = document.createElement("span"); v.className = "dv"; v.textContent = pct;
+row.appendChild(n); row.appendChild(bar); row.appendChild(v);
+list.appendChild(row);
+setTimeout(function(){ fill.style.width = pct + "%";}, 60);
+});
+
+show("screen-result");
+}
+
+var toastTimer = null;
+function toast(msg){
+var t = $("toast");
+t.textContent = msg;
+t.classList.add("show");
+if (toastTimer) clearTimeout(toastTimer);
+toastTimer = setTimeout(function(){ t.classList.remove("show");}, 2400);
+}
+
+function copyResult(){
+if (!lastResult) return;
+var text = "我在《你的古代天赋技能》测出了——" + lastResult.slogan + " 你也来测测，看看你藏着哪门古代绝活！";
+function done(){ toast("结果文案已复制，去分享给朋友吧");}
+function fallback(){
+var ta = document.createElement("textarea");
+ta.value = text;
+ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();}
+catch(e){ toast("复制失败，截图海报分享也一样出片");}
+document.body.removeChild(ta);
+}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).then(done, fallback);
+} else { fallback();}
+}
+
+$("btn-start").addEventListener("click", startQuiz);
+$("btn-prev").addEventListener("click", goPrev);
+$("btn-restart").addEventListener("click", startQuiz);
+$("btn-copy").addEventListener("click", copyResult);
+</script>
+</body>
+</html>

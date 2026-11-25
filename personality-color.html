@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>你的性格底色测试</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet" />
+<style>
+:root{
+--bg:#f6f3ee; --bg2:#efe9e0; --card:#fffdf9; --ink:#221d18; --ink2:#5c5348; --ink3:#8a7f70;
+--line:#e3dacb; --accent:#b3402a; --accent-ink:#fff;
+--chip:#f0e9dc; --shadow:0 18px 50px rgba(60,40,20,.13);
+--radius:20px;
+}
+@media (prefers-color-scheme: dark){
+:root{
+--bg:#17140f; --bg2:#1e1a14; --card:#241f18; --ink:#f2ead9; --ink2:#c9bda6; --ink3:#9a8c74;
+--line:#3a332a; --accent:#e0684a; --chip:#2e2820; --shadow:0 18px 50px rgba(0,0,0,.45);
+}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Noto Sans SC",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);min-height:100vh}
+button{font:inherit;cursor:pointer;min-height:48px}
+.wrap{max-width:680px;margin:0 auto;padding:20px 18px 56px}
+.serif{font-family:"Noto Serif SC",serif}
+.view{display:none}
+.view.on{display:block;animation:in.45s ease both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.view.on{animation:none}.opt,.btn{transition:none!important}}
+
+/* ---------- HOME ---------- */
+.palette-strip{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:26px 0 8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.palette-strip i{flex:1}
+.kicker{letter-spacing:.35em;font-size:12px;color:var(--ink3);font-weight:700;margin-top:34px}
+h1.title{font-family:"Noto Serif SC",serif;font-size:clamp(38px,9vw,58px);line-height:1.15;font-weight:900;margin:14px 0 6px}
+h1.title em{font-style:normal;color:var(--accent)}
+.sub{font-size:16px;line-height:1.8;color:var(--ink2);margin:10px 0 0;max-width:34em}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}
+.meta span{background:var(--chip);border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-size:13px;color:var(--ink2);font-weight:500}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 26px}
+.sw{border-radius:14px;padding:12px 10px 10px;color:#fff;min-height:86px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.sw b{font-size:14px;display:block}
+.sw small{opacity:.85;font-size:11px;letter-spacing:.08em}
+.sw.light{color:#3a332a}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:99px;padding:0 30px;font-weight:700;font-size:16px;transition:transform.15s ease, box-shadow.15s ease;text-decoration:none}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:var(--bg);width:100%;padding:16px 30px;box-shadow:var(--shadow)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line);width:100%;padding:14px 30px}
+.note{font-size:12.5px;color:var(--ink3);line-height:1.7;text-align:center;margin-top:18px}
+.how{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-top:26px}
+.how h3{margin:0 0 10px;font-size:15px}
+.how p{margin:0;font-size:14px;line-height:1.85;color:var(--ink2)}
+
+/* ---------- QUIZ ---------- */
+.qtop{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink3);font-weight:700;letter-spacing:.06em;margin-top:10px}
+.bar{height:8px;background:var(--chip);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:12px 0 8px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#c8452c,#d9a441,#3e7d74,#33546e);border-radius:99px;transition:width.4s ease;width:0}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 22px;box-shadow:var(--shadow);margin-top:16px}
+.qtag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.15em;color:var(--accent);background:var(--chip);border-radius:99px;padding:6px 12px}
+.qtext{font-family:"Noto Serif SC",serif;font-size:clamp(20px,5.4vw,25px);font-weight:700;line-height:1.5;margin:16px 0 20px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--bg);border:1.5px solid var(--line);border-radius:16px;padding:15px 16px;font-size:15.5px;line-height:1.6;color:var(--ink);transition:border-color.15s, background.15s, transform.15s}
+.opt:hover{border-color:var(--ink3)}
+.opt.sel{border-color:var(--accent);background:var(--chip)}
+.opt.L{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--ink3);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--ink2);margin-top:1px}
+.opt.sel.L{background:var(--accent);border-color:var(--accent);color:#fff}
+.qnav{display:flex;gap:10px;margin-top:18px}
+.qnav.btn{flex:1}
+.btn-small{padding:12px 18px;font-size:14.5px}
+
+/* ---------- RESULT ---------- */
+.poster{border-radius:26px;overflow:hidden;box-shadow:var(--shadow);color:#fff;position:relative}
+.poster-in{padding:30px 26px 26px;position:relative}
+.poster.pk{letter-spacing:.35em;font-size:11.5px;font-weight:700;opacity:.85}
+.poster h2{font-family:"Noto Serif SC",serif;font-size:clamp(40px,11vw,56px);margin:12px 0 2px;font-weight:900;line-height:1.1}
+.poster.en{letter-spacing:.28em;font-size:12.5px;font-weight:700;opacity:.85;text-transform:uppercase}
+.poster.hex{margin-top:14px;display:inline-block;border:1.5px solid rgba(255,255,255,.55);border-radius:99px;padding:6px 14px;font-size:13px;font-weight:700;letter-spacing:.12em}
+.poster.slogan{font-family:"Noto Serif SC",serif;font-size:clamp(19px,5.4vw,23px);line-height:1.6;font-weight:700;margin:22px 0 4px}
+.poster.imagery{font-size:14px;line-height:1.8;opacity:.92;margin:8px 0 0}
+.poster.foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:24px;font-size:11.5px;letter-spacing:.2em;opacity:.8;font-weight:700}
+.seal{width:52px;height:52px;border:2px solid rgba(255,255,255,.75);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-size:22px;font-weight:900;transform:rotate(6deg)}
+.rcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:14px}
+.rcard h3{margin:0 0 12px;font-size:16px;display:flex;align-items:center;gap:9px}
+.rcard h3::before{content:"";width:9px;height:9px;border-radius:3px;background:var(--rc,#888);flex:0 0 auto}
+.rcard p{margin:0;font-size:15px;line-height:1.9;color:var(--ink2)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tags span{border-radius:99px;padding:7px 13px;font-size:13px;font-weight:700;color:#fff;background:var(--rc,#888)}
+.dim{margin:12px 0}
+.dim.row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin-bottom:5px}
+.dim.row b{color:var(--ink)}
+.dim.track{height:9px;border-radius:99px;background:var(--chip);overflow:hidden}
+.dim.track i{display:block;height:100%;border-radius:99px;background:var(--rc,#888);width:0;transition:width.8s ease}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:480px){.pair{grid-template-columns:1fr}}
+.pairbox{border:1.5px solid var(--line);border-radius:16px;padding:16px}
+.pairbox.dot{width:100%;height:52px;border-radius:10px;margin-bottom:10px}
+.pairbox b{font-size:15px}
+.pairbox p{font-size:13.5px;margin-top:6px}
+.egg{background:var(--chip);border:1.5px dashed var(--ink3)}
+.ractions{display:grid;gap:10px;margin-top:20px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:12px 22px;border-radius:99px;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:9;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section class="view on" id="v-home">
+<div class="kicker">趣味人格测试 · 色彩篇</div>
+<h1 class="title">你的性格<br /><em>底色</em>是什么颜色？</h1>
+<p class="sub">每个人都有一层藏不住的底色——它决定你发脾气的样子、爱人的方式、独处时的表情。20 道生活题，扒一扒你性格里那层最真实的颜色。</p>
+<div class="palette-strip" aria-hidden="true">
+<i style="background:#c73e2c"></i><i style="background:#274b63"></i><i style="background:#ece5d3"></i><i style="background:#4b3062"></i><i style="background:#7fc7a5"></i><i style="background:#d9a441"></i><i style="background:#9aa0a3"></i><i style="background:#7e2434"></i>
+</div>
+<div class="meta"><span>共 20 题</span><span>约 3 分钟</span><span>6 个性格维度</span><span>8 种性格底色</span></div>
+<div class="swatches" aria-hidden="true">
+<div class="sw" style="background:#c73e2c"><b>朱砂红</b><small>VERMILION</small></div>
+<div class="sw" style="background:#274b63"><b>深海蓝</b><small>DEEP SEA</small></div>
+<div class="sw light" style="background:#ece5d3"><b>月光白</b><small>MOONLIGHT</small></div>
+<div class="sw" style="background:#4b3062"><b>墨紫</b><small>INK PURPLE</small></div>
+<div class="sw" style="background:#7fc7a5"><b>薄荷绿</b><small>MINT</small></div>
+<div class="sw" style="background:#d9a441"><b>鎏金</b><small>GILDED GOLD</small></div>
+<div class="sw" style="background:#9aa0a3"><b>雾灰</b><small>FOG GREY</small></div>
+<div class="sw" style="background:#7e2434"><b>酒红</b><small>WINE RED</small></div>
+</div>
+<button class="btn btn-primary" id="btn-start">开始测试 →</button>
+<div class="how">
+<h3>怎么测？</h3>
+<p>没有对错，别想太多，选第一反应就好。系统会从<b>温度、明度、饱和度、稳定度、锐利度、疏离感</b>六个维度给你打分，再匹配出离你最近的那一种底色。</p>
+</div>
+<p class="note">本测试为趣味娱乐，不是专业心理诊断，结果仅供一笑与分享。</p>
+</section>
+
+<!-- QUIZ -->
+<section class="view" id="v-quiz">
+<div class="qtop"><span id="q-count">第 1 / 20 题</span><span id="q-pct">0%</span></div>
+<div class="bar"><i id="q-bar"></i></div>
+<div class="qcard" id="q-card">
+<span class="qtag" id="q-tag">情绪反应</span>
+<div class="qtext" id="q-text"></div>
+<div class="opts" id="q-opts"></div>
+</div>
+<div class="qnav">
+<button class="btn btn-ghost btn-small" id="btn-back">← 上一题</button>
+<button class="btn btn-ghost btn-small" id="btn-home1">回到首页</button>
+</div>
+</section>
+
+<!-- RESULT -->
+<section class="view" id="v-result">
+<div class="poster" id="poster">
+<div class="poster-in">
+<div class="pk">我 的 性 格 底 色</div>
+<h2 id="r-name"></h2>
+<div class="en" id="r-en"></div>
+<div><span class="hex" id="r-hex"></span></div>
+<div class="slogan" id="r-slogan"></div>
+<p class="imagery" id="r-imagery"></p>
+<div class="foot"><span>性格底色测试 · 趣味版</span><span class="seal" id="r-seal">色</span></div>
+</div>
+</div>
+
+<div class="rcard">
+<h3>底色解读</h3>
+<p id="r-desc"></p>
+</div>
+
+<div class="rcard">
+<h3>性格特点</h3>
+<div class="tags" id="r-tags"></div>
+<p id="r-traits"></p>
+</div>
+
+<div class="rcard">
+<h3>你的六维色谱</h3>
+<div id="r-dims"></div>
+</div>
+
+<div class="rcard">
+<h3>隐藏优势</h3>
+<p id="r-hidden"></p>
+</div>
+
+<div class="pair">
+<div class="pairbox">
+<div class="dot" id="r-match-dot"></div>
+<b>最搭：<span id="r-match-name"></span></b>
+<p id="r-match-txt"></p>
+</div>
+<div class="pairbox">
+<div class="dot" id="r-clash-dot"></div>
+<b>最冲：<span id="r-clash-name"></span></b>
+<p id="r-clash-txt"></p>
+</div>
+</div>
+
+<div class="rcard egg">
+<h3>趣味彩蛋</h3>
+<p id="r-egg"></p>
+</div>
+
+<div class="ractions">
+<button class="btn btn-primary" id="btn-copy">复制我的结果文案</button>
+<button class="btn btn-ghost" id="btn-again">重新测试</button>
+</div>
+<p class="note">截图上方海报卡，分享到小红书 / 朋友圈，看看朋友们都是什么底色。<br />本测试为趣味娱乐，不是专业心理诊断。</p>
+</section>
+</div>
+<div class="toast" id="toast">已复制，去分享给朋友吧</div>
+
+<script>
+/* ============ 维度与原型 ============
+维度顺序: [温度T, 明度L, 饱和S, 稳定St, 锐利R, 疏离D]，均为 0–100 */
+var DIM_NAMES = [
+["温度","冷感","热烈"],["明度","深沉","明亮"],["饱和度","素净","浓烈"],
+["稳定度","灵动多变","沉稳如山"],["锐利度","柔和圆润","果断锋利"],["疏离感","亲和黏人","独立疏离"]
+];
+var ARCH = { /* 每种答题气质对六维的推动 */
+cinnabar:[ 10, 2, 9,-4, 5,-5],
+deepblue:[-8,-3, 2,10, 0, 5],
+moon: [ 2,10,-7, 4,-8,-2],
+purple: [-4,-9, 5, 2, 5,10],
+mint: [ 5, 7, 4,-3,-5,-5],
+gold: [ 7, 9, 8, 0, 9,-3],
+fog: [-6, 1,-10,7,-3,10],
+wine: [ 9,-5, 7, 7, 3, 3]
+};
+var PROTO = {
+cinnabar:[95,60,95,35,70,30], deepblue:[20,30,55,90,45,70],
+moon:[55,95,15,75,15,45], purple:[35,20,70,60,65,85],
+mint:[60,80,60,55,30,35], gold:[85,90,85,50,80,40],
+fog:[30,55,10,80,25,90], wine:[80,35,80,70,60,55]
+};
+
+/* ============ 题目（tag, 题干, [选项文案, 气质]×4） ============ */
+var QUESTIONS = [
+["情绪反应","被当众夸奖时，你的第一反应是？",[
+["耳朵先红，摆摆手说“没有没有”，回家偷偷开心一整晚","cinnabar"],
+["大方接住，还能顺手把对方也夸回去","gold"],
+["笑笑说声谢谢，心里记下这份善意，想着以后还回去","moon"],
+["表面毫无波澜，内心想：这才哪到哪","fog"]]],
+["社交方式","理想的周末社交局，是哪一种？",[
+["一大桌人吃火锅，越吵越开心，最好再续个摊","cinnabar"],
+["两三个知己小酒馆深聊，聊到打烊都不够","wine"],
+["一个人逛展、看电影、喝咖啡，谁也不用迁就","purple"],
+["和朋友去郊外野餐、骑行，吹吹风晒晒太阳","mint"]]],
+["独处偏好","难得一个人待一下午，你会怎么过？",[
+["把房间收拾干净，泡壶茶，慢慢看一本书","moon"],
+["戴上耳机出门暴走，走到哪算哪，灵感自己会来","mint"],
+["关灯拉窗帘，窝在沙发里刷老电影，拒绝一切消息","deepblue"],
+["研究一门新技能或搞个小副业，时间不能白过","gold"]]],
+["色彩直觉","如果给房间选一个主色调，你第一眼想选？",[
+["热烈的红橙色，进门就觉得日子有奔头","cinnabar"],
+["深蓝或墨绿，沉下来才有安全感","deepblue"],
+["大面积留白配原木，干净得能呼吸","moon"],
+["说不清，就是喜欢那种灰调的、雾蒙蒙的高级感","fog"]]],
+["生活习惯","你的桌面（手机桌面也算）通常是？",[
+["东西很多但我全找得到，乱中有序，本人专属秩序","cinnabar"],
+["极简到空无一物，多一个图标都难受","fog"],
+["按颜色和类别排得整整齐齐，看着就治愈","moon"],
+["壁纸必须好看，布局可以乱，美感不能输","gold"]]],
+["情绪反应","心情跌到谷底时，你最想做的事是？",[
+["约最亲的人出来，边吃边吐槽，骂完就好了大半","cinnabar"],
+["谁也不找，自己消化，睡一觉重启系统","deepblue"],
+["去运动出汗，或者把屋子大扫除一遍，累到没空难过","mint"],
+["点一杯酒，听一晚歌，允许自己丧个够，明天再说","wine"]]],
+["社交方式","被拉进一个全是陌生人的新群，你会？",[
+["先潜水观察三天，摸清气氛再说话","deepblue"],
+["主动自我介绍带个梗，很快就能混熟","gold"],
+["有人@才回，没事基本不冒泡，但一直在看","fog"],
+["随缘发言，聊得来就多聊两句，不强求","mint"]]],
+["审美直觉","买衣服时，你最容易被哪种风格拿下？",[
+["剪裁利落、自带气场，穿上就是“姐/哥就是女王/大佬”","gold"],
+["软糯温柔的浅色系，看着就好亲近","moon"],
+["暗黑、解构、小众设计，撞衫率越低越好","purple"],
+["复古港风、法式碎花，有故事感的才对味","wine"]]],
+["独处偏好","下雨天被迫宅家，你的内心活动是？",[
+["窃喜：正好名正言顺地躺平，谁也别想叫我出门","fog"],
+["有点闷，盘算着雨小点就出去透透气","mint"],
+["氛围感拉满，适合写点东西、听雨发呆","purple"],
+["毫无影响，该干嘛干嘛，计划从不看天气脸色","deepblue"]]],
+["生活习惯","出门旅行前，你的准备风格是？",[
+["攻略做到小时级，表格拉满，跟着走就行","deepblue"],
+["只订机票酒店，到了再说，惊喜才是旅行的意义","mint"],
+["行李提前一周收好，清单核对三遍才安心","moon"],
+["重点研究当地美食和出片机位，吃和美都不能将就","wine"]]],
+["情绪反应","被误解了，对方还不听解释，你会？",[
+["当场说清，是我的认，不是我的绝不背锅","gold"],
+["算了，清者自清，时间会证明一切","fog"],
+["表面说没事，回家越想越气，半夜还在组织语言","cinnabar"],
+["找个共同朋友把来龙去脉讲透，心里这根刺必须拔掉","wine"]]],
+["社交方式","好朋友在你面前哭了，你通常会？",[
+["先抱抱，递纸巾，等TA哭完再慢慢聊","moon"],
+["不废话，直接问“谁欺负你了”，撸袖子就要出头","cinnabar"],
+["安静陪着，不追问，TA想说自然会说","deepblue"],
+["一边安慰一边已经在心里盘算怎么帮TA解决问题","gold"]]],
+["色彩直觉","选一张手机壁纸，你最可能选？",[
+["大海或星空的深色图，锁屏一亮就静下来了","deepblue"],
+["明亮的风景或可爱插画，看一眼心情就好","mint"],
+["纯色或极简线条，越素越耐看","fog"],
+["浓郁的油画或电影海报，要有质感和故事","purple"]]],
+["生活习惯","你的花钱风格更接近？",[
+["该省省该花花，但为喜欢的东西可以眼都不眨","wine"],
+["冲动型选手，购物车从不过夜，看对眼就拿下","cinnabar"],
+["记账达人，每笔支出都有名有姓","deepblue"],
+["体验优先：钱要变成回忆，而不是变成东西","mint"]]],
+["情绪反应","突然多出完全空白的一天，你的第一感觉是？",[
+["狂喜！立刻列一串想做的事，生怕浪费一分钟","gold"],
+["先睡到自然醒，剩下的随缘，不安排就是最好的安排","fog"],
+["有点慌，闲下来反而不知道手往哪放","moon"],
+["正好，把攒了很久的剧/书/游戏一次补完","purple"]]],
+["审美直觉","让你选一种最治愈的味道，你选？",[
+["雨后泥土和青草的清新味","mint"],
+["老木头、旧书页和檀香的味道","wine"],
+["刚晒过的被子，阳光的味道","moon"],
+["冷冽的雪松、海盐，清清冷冷的味道","fog"]]],
+["社交方式","团队里缺个角色时，你最常被推上去当？",[
+["拍板的人——大家吵不出结果时等你一句话","gold"],
+["出主意的人——鬼点子最多，总能打开新思路","purple"],
+["兜底的人——谁的活出岔子你都能接住","deepblue"],
+["气氛组组长——有你在就不会冷场","cinnabar"]]],
+["独处偏好","睡前最后一小时，你一般在干什么？",[
+["复盘今天、规划明天，脑子停不下来","gold"],
+["刷手机刷到困，困了就睡，主打一个随意","mint"],
+["听播客或白噪音，把情绪慢慢调到静音","deepblue"],
+["写日记、练字或者护肤，仪式感必须拉满","moon"]]],
+["生活习惯","朋友对你生活状态的评价，最可能是？",[
+["“TA过得好精致，看着就赏心悦目”","gold"],
+["“TA好像什么都不在乎，但什么都挺好”","fog"],
+["“TA永远热气腾腾的，跟TA在一起不会无聊”","cinnabar"],
+["“TA有自己的小世界，神秘又迷人”","purple"]]],
+["直觉一选","最后凭直觉选一个画面：你想走进哪一个？",[
+["正午的海边，阳光晃得人睁不开眼，冰饮冒着气泡","mint"],
+["深夜的老街，酒馆透出暖黄的光，里面有人在笑","wine"],
+["雪山之巅，万籁俱寂，只有风声和自己的呼吸","fog"],
+["黄昏的屋顶，整座城市在脚下亮起灯火，像为你加冕","gold"]]]
+];
+
+/* ============ 结果 ============ */
+var RESULTS = {
+cinnabar:{name:"朱砂红",en:"Vermilion Red",hex:"#C73E2C",hex2:"#E0684A",seal:"朱",
+slogan:"“我不是脾气大，我是活得烫。”",
+imagery:"情绪意象：像正午的一把火、过年的一串鞭炮、刚出锅的辣椒——你的出现，本身就是热气腾腾的现场。",
+desc:"你的底色是朱砂红：热烈、直接、不藏着掖着。开心就笑、难过就哭、生气就说，你的情绪从不隔夜发酵。别人需要三天才能熟络的关系，你一顿饭就能聊成老友。你的人生信条是“先做了再说”，行动力强得让拖延症患者自愧不如。",
+tags:["热烈直接","行动派","气氛发动机","爱憎分明"],
+traits:"你对人真诚到有点“烫手”：朋友有难你第一个到场，看不惯的事你当场就说。你的感染力极强，冷场在你这里不存在；但你的耐心余额不太充足，慢吞吞和弯弯绕绕最容易点着你。",
+hidden:"你的隐藏优势是“启动能力”：大多数人卡在想，你已经试错三轮了。世界奖励先动手的人，而你天生就是那个按启动键的人——很多机会不是等来的，是被你这样的人先撞开的。",
+match:"mint",matchTxt:"薄荷绿的清爽正好给你降温：你负责热烈，TA负责清凉，你们在一起像夏天的冰镇汽水，越过越有劲。",
+clash:"fog",clashTxt:"雾灰的“随缘吧”会让你急得跳脚，你的“现在就出发”也会让TA压力山大。不是谁错了，是你们的时钟根本不在一个时区。",
+egg:"彩蛋：你的手机相册里大概率存着一堆“下次一定发”的聚会照片——别存了，今晚就发，你的朋友们等这口热闹等很久了。"},
+deepblue:{name:"深海蓝",en:"Deep Sea Blue",hex:"#274B63",hex2:"#3E6E8E",seal:"海",
+slogan:"“我话不多，但我都在。”",
+imagery:"情绪意象：像深夜的大海、图书馆最后一排的灯——表面安静无波，底下藏着整个世界。",
+desc:"你的底色是深海蓝：沉静、可靠、深不见底。你不是慢热，你是“先观察再交付真心”。你讨厌无效社交，却愿意为重要的人随叫随到。你的情绪很少外露，但内心的潮汐比谁都汹涌，只是你习惯了自己消化、自己平复。",
+tags:["沉稳可靠","深度思考者","慢热长情","情绪自愈"],
+traits:"你做事有章法，答应的事从不掉链子，是朋友眼里最靠谱的“定海神针”。你擅长倾听，能听出别人话里的弦外之音；代价是你很少开口求助，累到极限也只会说一句“没事”。",
+hidden:"你的隐藏优势是“后劲”：短跑你可能不抢眼，但所有需要耐力、判断和定力的局，最后赢的往往是你。深水静流，说的就是你这种人。",
+match:"moon",matchTxt:"月光白的温柔能照进你的深海：TA不逼你说话，却总能懂你的沉默，你们是那种不用经营也舒服的关系。",
+clash:"cinnabar",clashTxt:"朱砂红的急性子会嫌你“想太多”，你会嫌TA“太吵”。一个在沸腾一个在深潜，同框需要翻译官。",
+egg:"彩蛋：你通讯录里一定有个聊了三年还没见过面的网友——别光聊了，深海也是需要上岸透气的。"},
+moon:{name:"月光白",en:"Moonlight White",hex:"#ECE5D3",hex2:"#D9CDB2",seal:"月",dark:true,
+slogan:"“温柔不是没脾气，是把锋利留给了自己。”",
+imagery:"情绪意象：像晒过的被子、深夜的一盏小灯、妈妈留的那碗汤——不耀眼，但谁靠近谁安心。",
+desc:"你的底色是月光白：温润、干净、让人放松。你好像天生自带“降噪”功能，再焦躁的场面，你一开口就慢下来了。你审美在线、生活讲究，不是矫情，是你真心觉得日子值得被认真对待。",
+tags:["温润治愈","审美在线","情绪稳定","细节控"],
+traits:"你体贴、共情力强，总能第一时间察觉别人的不舒服。但你的课题也很明显：太会照顾别人，就容易委屈自己；说了太多次“都可以”之后，记得问问自己到底想要什么。",
+hidden:"你的隐藏优势是“让人卸下防备”：很多人对全世界设防，却愿意在你面前说真话。这种信任是稀缺资源，它会为你带来最珍贵的人脉和机会。",
+match:"deepblue",matchTxt:"深海蓝的沉稳配你的温柔，一个负责深、一个负责暖，是传说中“过日子最舒服”的组合，细水长流型天花板。",
+clash:"wine",clashTxt:"酒红的浓烈和占有欲会让你喘不过气，你的“留白”在TA眼里又像冷淡。你们都很好，只是浓度对不上。",
+egg:"彩蛋：你的备忘录里大概率躺着一份没发出去的长消息——想清楚了就发，或者删掉，别让它在心里占着房租。"},
+purple:{name:"墨紫",en:"Ink Purple",hex:"#4B3062",hex2:"#6E4A8A",seal:"墨",
+slogan:"“别猜我，猜中了也不承认。”",
+imagery:"情绪意象：像午夜的图书馆、没写完结局的小说、一杯看不出深浅的酒——越靠近，越想一探究竟。",
+desc:"你的底色是墨紫：神秘、独立、有自己的宇宙。你对世界保持着恰到好处的距离感，不是高冷，是你的内心世界太丰富，外面的热闹很难跟你脑子里的戏比。你审美挑剔、品味独特，喜欢的东西通常小众但高级。",
+tags:["神秘独立","脑洞大开","小众品味","深夜哲学家"],
+traits:"你好奇心旺盛，越是冷门的东西越想研究；你不合群，但合群从来不是你的目标。你的情绪藏得很深，高兴和难过都只漏出三分，剩下七分留给自己慢慢品。",
+hidden:"你的隐藏优势是“看见别人看不见的”：你的视角永远偏那么一点点，而机会和灵感，恰恰都藏在那个偏掉的角度里。",
+match:"gold",matchTxt:"鎏金的耀眼能把你从自己的宇宙里拽出来看烟花，你的深邃又能让TA停下来想想——一个负责亮，一个负责深，绝配。",
+clash:"mint",clashTxt:"薄荷绿的“没心没肺快乐就好”会让你觉得浅，你的深沉也会让TA觉得累。你们适合做点头之交，不适合深夜谈心。",
+egg:"彩蛋：你收藏夹里那些“以后一定看”的内容已经攒了三位数了吧？今晚清一个，就一个，算我求你。"},
+mint:{name:"薄荷绿",en:"Mint Green",hex:"#7FC7A5",hex2:"#57AE87",seal:"荷",dark:true,
+slogan:"“人生苦短，我先快乐为敬。”",
+imagery:"情绪意象：像雨后的草地、加了薄荷的冰饮、春天的第一阵风——你一出现，空气都变新鲜了。",
+desc:"你的底色是薄荷绿：清新、松弛、自带回血功能。你的快乐阈值很低：一顿好吃的、一阵好风、一个好天气，都能让你满血复活。你不记仇、不内耗，烦恼在你这里的保质期通常不超过一顿饭。",
+tags:["松弛感拉满","快乐源泉","不内耗","适应力超强"],
+traits:"你随和好相处，到哪都能快速融入，新环境对你毫无压力。你的短板是“三分钟热度”：开头全靠热情，收尾全靠缘分；但话说回来，你的人生体验密度，比谁都高。",
+hidden:"你的隐藏优势是“恢复力”：别人摔一跤要躺半年，你拍拍土就起来了，还顺手发现了路边新开的花。这种生命力，是多少钱都买不到的配置。",
+match:"cinnabar",matchTxt:"朱砂红的热烈配你的清新，一个点火一个送风，日子永远热气腾腾又不腻，是朋友圈里最让人羡慕的组合。",
+clash:"wine",clashTxt:"酒红的深情和认真会让你想逃，你的随缘又会让TA没安全感。一个想谈未来，一个只想过好今天，频道不同。",
+egg:"彩蛋：你最近一次说“明天开始”是什么事来着？别装忘了——薄荷的保鲜期，也是需要续费的哦。"},
+gold:{name:"鎏金",en:"Gilded Gold",hex:"#D9A441",hex2:"#B9832A",seal:"金",dark:true,
+slogan:"“我不是爱出风头，我站哪儿哪儿就是舞台。”",
+imagery:"情绪意象：像黄昏的加冕礼、香槟开瓶的那一声响——你的存在感，是不需要自我介绍的。",
+desc:"你的底色是鎏金：耀眼、自信、天生主角命。你对自己的要求极高，要做就做最好，要出现就必须体面。你享受被注视，也确实扛得住注视——你的光芒不是虚张声势，是实力撑起来的底气。",
+tags:["天生主角","目标感强","审美与实力并存","自带气场"],
+traits:"你决策果断、审美在线，是团队里天然的定调者。你对朋友大方仗义，但对自己的消耗也最狠：你很少喊累，因为你觉得喊累不体面——其实偶尔示弱，不会让你的光芒暗一分。",
+hidden:"你的隐藏优势是“号召力”：你振臂一呼，真有人跟。这不是运气，是你长期用靠谱和担当攒下的信用额度，关键时刻能当钱花。",
+match:"purple",matchTxt:"墨紫的神秘正好接得住你的耀眼：你负责发光，TA负责让你光得有深度。强强联手，故事感拉满。",
+clash:"fog",clashTxt:"雾灰的“无所谓”最让你抓狂，你的“必须赢”也会让TA窒息。一个在加冕，一个在看云，互相理解需要翻译年费会员。",
+egg:"彩蛋：你的购物车里是不是躺着一件“重要场合才配穿”的衣服？别等了，明天就穿，日常也配得上你的隆重。"},
+fog:{name:"雾灰",en:"Fog Grey",hex:"#9AA0A3",hex2:"#767C80",seal:"雾",
+slogan:"“不是我冷淡，是我把热情调成了静音。”",
+imagery:"情绪意象：像清晨的山雾、关了灯的美术馆——不抢眼，不解释，却让人忍不住多看两眼。",
+desc:"你的底色是雾灰：疏离、克制、高级感拉满。你不是没情绪，你是情绪的“静音大师”：天大的事，你也能面不改色地先说一句“看看再说”。你讨厌被定义、被围观、被过度热情包围，你的安全感来自距离。",
+tags:["人间清醒","边界感强","情绪静音","高级疏离"],
+traits:"你观察力极强，饭局上话最少的那个，往往把所有人看得最透。你做决定只听自己的，很少被舆论裹挟；代价是别人总觉得你“难接近”——其实你的门不是锁了，是需要敲对暗号。",
+hidden:"你的隐藏优势是“不被裹挟”：全网都在上头的时候你能冷静，全场都在恐慌的时候你能定住。这种稀缺的清醒，是做大事的底盘。",
+match:"wine",matchTxt:"酒红的浓烈能一点点焐热你的克制，你的冷静又能接住TA的深情。一个像酒，一个像雾，酿出来的故事最上头。",
+clash:"gold",clashTxt:"鎏金的“全场看我”会让你想退到角落，你的“别看我”又会让TA觉得不被捧场。你们都需要观众，只是要的不是同一种。",
+egg:"彩蛋：你草稿箱里躺着至少三条写好又没发的朋友圈吧？雾再美，也得偶尔散一散，让喜欢你的人找得到你。"},
+wine:{name:"酒红",en:"Wine Red",hex:"#7E2434",hex2:"#A03A4C",seal:"酒",
+slogan:"“爱就爱到底，淡不了，也装不了。”",
+imagery:"情绪意象：像窖藏多年的红酒、老电影里的回眸——时间越久，越有味道，越品越上头。",
+desc:"你的底色是酒红：浓烈、深情、有故事感。你做人做事都讲究一个“到位”：爱要爱得认真，活要活得讲究，敷衍和将就是你的天敌。你的魅力来自阅历感——和你聊天，总觉得你的人生比别人多读了几章。",
+tags:["深情专一","讲究派","故事感","越品越有味"],
+traits:"你重感情、念旧，对认定的人掏心掏肺；你的品味挑剔但从不将就，吃穿用度都要对得起自己。你的课题是占有欲和期待值：你给得太多，也就难免希望对方回得一样多。",
+hidden:"你的隐藏优势是“时间的朋友”：很多人在岁月里贬值，你却在增值——阅历、品味、定力都在涨，你的好，是越往后越明显的那种。",
+match:"fog",matchTxt:"雾灰的克制配你的浓烈刚刚好：你负责深情，TA负责留白，你们的故事像一杯慢慢醒的酒，越品越有回甘。",
+clash:"moon",clashTxt:"月光白的“都可以”会让你觉得不被在意，你的“必须有答案”也会压得TA喘不过气。浓度差太多，需要慢慢调和。",
+egg:"彩蛋：你手机里一定留着某个人的老照片没舍得删——留着吧，酒红的人念旧不丢人，那是你深情的证据。"}
+};
+
+/* ============ 流程 ============ */
+var cur = 0, answers = [];
+var $ = function(id){ return document.getElementById(id);};
+function show(id){
+["v-home","v-quiz","v-result"].forEach(function(v){ $(v).classList.toggle("on", v===id);});
+window.scrollTo(0,0);
+}
+function renderQ(){
+var q = QUESTIONS[cur];
+$("q-count").textContent = "第 " + (cur+1) + " / 20 题";
+var pct = Math.round(cur/20*100);
+$("q-pct").textContent = pct + "%";
+$("q-bar").style.width = pct + "%";
+$("q-tag").textContent = q[0];
+$("q-text").textContent = q[1];
+var box = $("q-opts"); box.innerHTML = "";
+var card = $("q-card"); card.style.animation = "none"; void card.offsetWidth; card.style.animation = "";
+card.classList.remove("on");
+q[2].forEach(function(opt, i){
+var b = document.createElement("button");
+b.className = "opt" + (answers[cur] === i? " sel": "");
+b.innerHTML = '<span class="L">' + "ABCD"[i] + '</span><span></span>';
+b.querySelector("span:last-child").textContent = opt[0];
+b.addEventListener("click", function(){
+answers[cur] = i;
+box.querySelectorAll(".opt").forEach(function(o){ o.classList.remove("sel");});
+b.classList.add("sel");
+setTimeout(function(){
+if (cur < 19){ cur++; renderQ();} else { finish();}
+}, 220);
+});
+box.appendChild(b);
+});
+$("btn-back").style.visibility = cur === 0? "hidden": "visible";
+}
+function finish(){
+$("q-bar").style.width = "100%"; $("q-pct").textContent = "100%";
+var dims = [50,50,50,50,50,50], votes = {};
+answers.forEach(function(ai, qi){
+var arch = QUESTIONS[qi][2][ai][1];
+var d = ARCH[arch];
+for (var k=0;k<6;k++) dims[k] += d[k];
+votes[arch] = (votes[arch]||0) + 1;
+});
+var drift = [0,0,0,0,0,0];
+QUESTIONS.forEach(function(q){
+var s = [0,0,0,0,0,0];
+q[2].forEach(function(o){ var dd = ARCH[o[1]]; for (var k=0;k<6;k++) s[k] += dd[k]; });
+for (var k=0;k<6;k++) drift[k] += s[k]/4;
+});
+for (var k2=0;k2<6;k2++) dims[k2] -= drift[k2];
+dims = dims.map(function(v){ return Math.max(3, Math.min(97, Math.round(v)));});
+var best = null, bestScore = 1e9;
+Object.keys(PROTO).forEach(function(key){
+var p = PROTO[key], dist = 0;
+for (var k=0;k<6;k++){ var diff = dims[k]-p[k]; dist += diff*diff;}
+dist = Math.sqrt(dist) - (votes[key]||0)*12;
+if (dist < bestScore){ bestScore = dist; best = key;}
+});
+renderResult(best, dims);
+show("v-result");
+}
+function renderResult(key, dims){
+var r = RESULTS[key];
+document.querySelectorAll(".rcard,.pairbox").forEach(function(el){ el.style.setProperty("--rc", r.hex);});
+var poster = $("poster");
+poster.style.background = "linear-gradient(150deg," + r.hex2 + " 0%," + r.hex + " 55%," + r.hex + " 100%)";
+poster.style.color = r.dark? "#2e2417": "#fff";
+$("r-name").textContent = r.name;
+$("r-en").textContent = r.en;
+$("r-hex").textContent = "底色色值 " + r.hex;
+$("r-hex").style.borderColor = r.dark? "rgba(46,36,23,.5)": "rgba(255,255,255,.55)";
+$("r-slogan").textContent = r.slogan;
+$("r-imagery").textContent = r.imagery;
+$("r-seal").textContent = r.seal;
+$("r-seal").style.borderColor = r.dark? "rgba(46,36,23,.6)": "rgba(255,255,255,.75)";
+$("r-desc").textContent = r.desc;
+$("r-traits").textContent = r.traits;
+$("r-hidden").textContent = r.hidden;
+$("r-egg").textContent = r.egg;
+var tg = $("r-tags"); tg.innerHTML = "";
+r.tags.forEach(function(t){ var s = document.createElement("span"); s.textContent = t; tg.appendChild(s);});
+var dm = $("r-dims"); dm.innerHTML = "";
+DIM_NAMES.forEach(function(dn, i){
+var div = document.createElement("div"); div.className = "dim";
+div.innerHTML = '<div class="row"><span>' + dn[0] + ' · ' + dn[1] + ' ↔ ' + dn[2] + '</span><b>' + dims[i] + '</b></div><div class="track"><i data-w="' + dims[i] + '"></i></div>';
+dm.appendChild(div);
+});
+setTimeout(function(){ dm.querySelectorAll(".track i").forEach(function(el){ el.style.width = el.getAttribute("data-w") + "%";});}, 60);
+var m = RESULTS[r.match], c = RESULTS[r.clash];
+$("r-match-name").textContent = m.name;
+$("r-match-txt").textContent = r.matchTxt;
+$("r-match-dot").style.background = "linear-gradient(135deg," + m.hex2 + "," + m.hex + ")";
+$("r-clash-name").textContent = c.name;
+$("r-clash-txt").textContent = r.clashTxt;
+$("r-clash-dot").style.background = "linear-gradient(135deg," + c.hex2 + "," + c.hex + ")";
+poster.setAttribute("data-key", key);
+window._resultText = "我的性格底色是" + r.slogan + "——" + r.imagery.replace("情绪意象：","") + " 你也来测测你的性格底色吧！";
+}
+$("btn-start").addEventListener("click", function(){ cur = 0; answers = []; renderQ(); show("v-quiz");});
+$("btn-back").addEventListener("click", function(){ if (cur > 0){ cur--; renderQ();}});
+$("btn-home1").addEventListener("click", function(){ show("v-home");});
+$("btn-again").addEventListener("click", function(){ cur = 0; answers = []; renderQ(); show("v-quiz"); window.scrollTo(0,0);});
+$("btn-copy").addEventListener("click", function(){
+var txt = window._resultText || "";
+function done(){ var t = $("toast"); t.classList.add("on"); setTimeout(function(){ t.classList.remove("on");}, 2200);}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(txt).then(done).catch(function(){ fallback();});
+} else { fallback();}
+function fallback(){
+var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta);
+ta.select(); try { document.execCommand("copy");} catch(e){} document.body.removeChild(ta); done();
+}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<title>你在古代会拥有什么人生剧本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#f4efe3; --paper:#fffdf6; --ink:#23211b; --muted:#6f6a5c; --line:#e3dac6;
+--accent:#a33327; --accent2:#31584f; --gold:#b98d3e; --card:#ffffff;
+--shadow:0 18px 50px rgba(35,33,27,.14);
+}
+@media (prefers-color-scheme:dark){
+:root{--bg:#161512;--paper:#1f1e1a;--ink:#ede7d8;--muted:#aaa493;--line:#38352c;--card:#26241f;--shadow:0 18px 50px rgba(0,0,0,.55)}
+}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans SC",system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(620px 320px at 12% 0%,rgba(163,51,39,.10),transparent 60%),radial-gradient(620px 320px at 92% 8%,rgba(49,88,79,.12),transparent 60%);pointer-events:none}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px;position:relative}
+button{font-family:inherit;cursor:pointer;min-height:48px}
+.serif{font-family:"Noto Serif SC",serif}
+/* HOME */
+.home{text-align:center;padding:28px 0 0}
+.badge{display:inline-block;border:1px solid var(--line);background:var(--paper);padding:6px 14px;border-radius:999px;font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.home h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:40px;line-height:1.2;margin:22px 0 12px;letter-spacing:.02em}
+.home h1 em{font-style:normal;color:var(--accent)}
+.home p.lead{color:var(--muted);font-size:16px;max-width:520px;margin:0 auto}
+.scripts-strip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px 0}
+.scripts-strip span{padding:8px 14px;border-radius:999px;font-weight:700;font-size:13.5px;color:#fff}
+.postcard{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;text-align:left;box-shadow:var(--shadow);margin:8px 0 22px;position:relative;overflow:hidden}
+.postcard::after{content:"命 运 剧 本 · FATE SCRIPT";position:absolute;right:16px;top:16px;border:2px dashed var(--gold);color:var(--gold);font-size:11px;letter-spacing:.14em;padding:6px 8px;border-radius:8px;transform:rotate(5deg);font-weight:700}
+.postcard h3{margin:0 0 8px;font-size:17px;max-width:52%}
+.postcard p{margin:0;color:var(--muted);font-size:14.5px;max-width:80%}
+.meta{display:flex;gap:16px;justify-content:center;color:var(--muted);font-size:13px;margin:18px 0 22px;flex-wrap:wrap}
+.btn-main{background:var(--ink);color:var(--bg);border:none;padding:0 36px;border-radius:999px;font-size:17px;font-weight:900;letter-spacing:.06em;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.btn-main:active{transform:scale(.98)}
+.note{font-size:12.5px;color:var(--muted);margin-top:14px}
+/* QUIZ */
+.quiz-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 22px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px;transition:width.45s ease;width:0}
+.qcard{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:26px 22px;box-shadow:var(--shadow)}
+.qtag{font-size:12px;letter-spacing:.18em;color:var(--accent);font-weight:900}
+.qtitle{font-family:"Noto Serif SC",serif;font-size:24px;font-weight:800;line-height:1.4;margin:10px 0 20px}
+.opts{display:grid;gap:12px}
+.opt{width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px;font-size:15.5px;line-height:1.5;color:var(--ink);display:flex;gap:12px;align-items:flex-start;transition:.18s}
+.opt b{flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font-size:13px}
+.opt:hover{border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:rgba(163,51,39,.07)}
+.opt.sel b{background:var(--accent);color:#fff;border-color:var(--accent)}
+.quiz-foot{display:flex;justify-content:space-between;margin-top:16px}
+.btn-ghost{background:none;border:none;color:var(--muted);font-weight:700;padding:0 10px}
+.btn-ghost:disabled{opacity:.3}
+.fade{animation:fadeSlide.38s ease both}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade{animation:none}.progress i{transition:none}}
+/* CALC */
+.calc{text-align:center;padding:80px 0}
+.calc.seal{width:96px;height:96px;margin:0 auto 20px;border:3px dashed var(--accent);border-radius:14px;display:grid;place-items:center;font-family:"Noto Serif SC",serif;font-weight:900;color:var(--accent);font-size:19px;line-height:1.35;animation:sealPulse 1.2s ease infinite}
+@keyframes sealPulse{0%{transform:rotate(-5deg) scale(1)}50%{transform:rotate(2deg) scale(1.05)}100%{transform:rotate(-5deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.calc.seal{animation:none}}
+/* RESULT POSTER */
+.poster{border-radius:22px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--paper)}
+.poster-top{padding:30px 26px 22px;color:#fff;position:relative;overflow:hidden}
+.poster-top::after{content:attr(data-watermark);position:absolute;right:-8px;bottom:-26px;font-family:"Noto Serif SC",serif;font-size:104px;font-weight:900;opacity:.14;line-height:1}
+.poster-top.kicker{font-size:12px;letter-spacing:.22em;opacity:.92;font-weight:700}
+.poster-top h2{font-family:"Noto Serif SC",serif;font-size:38px;margin:8px 0 4px;line-height:1.2;font-weight:900;position:relative;z-index:1}
+.poster-top.sub{letter-spacing:.2em;font-size:13px;opacity:.88}
+.poster-top.slogan{font-family:"Noto Serif SC",serif;font-size:19px;margin-top:16px;line-height:1.55;max-width:94%;position:relative;z-index:1}
+.match{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700;margin-top:14px;position:relative;z-index:1}
+.poster-body{padding:24px 26px 26px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.tags span{border:1px solid var(--line);background:var(--bg);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.sec{margin:18px 0}
+.sec h4{margin:0 0 6px;font-size:13px;letter-spacing:.16em;color:var(--accent)}
+.sec p{margin:0;font-size:15px;color:var(--ink)}
+.dims{margin:20px 0 4px}
+.dim{display:grid;grid-template-columns:40px 1fr 36px;gap:10px;align-items:center;font-size:13px;margin:8px 0}
+.dim.bar{height:7px;background:var(--line);border-radius:99px;overflow:hidden}
+.dim.bar i{display:block;height:100%;background:var(--accent2);border-radius:99px}
+.dim b{text-align:right;font-variant-numeric:tabular-nums}
+.neighbors{font-size:13.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:14px;margin-top:18px}
+.actions{display:grid;gap:10px;margin-top:20px}
+.btn-copy{background:var(--accent);color:#fff;border:none;border-radius:999px;font-weight:900;font-size:16px}
+.btn-again{background:var(--paper);color:var(--ink);border:1.5px solid var(--line);border-radius:999px;font-weight:800;font-size:15px}
+.tip{text-align:center;color:var(--muted);font-size:12.5px;margin-top:12px}
+.hidden{display:none!important}
+@media(min-width:640px){.home h1{font-size:52px}.poster-top h2{font-size:46px}.qtitle{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HOME -->
+<section id="screen-home" class="home">
+<span class="badge">趣 味 人 格 测 试 · 20 题</span>
+<h1>你在古代会拥有<br>什么<em>人生剧本</em>？</h1>
+<p class="lead">封侯拜相、仗剑天涯，还是为爱私奔、大隐于市？你的性格早就替你写好了命运——20 道现代生活题，翻开属于你的那一页。</p>
+<div class="scripts-strip" id="strip"></div>
+<div class="postcard">
+<h3>这本剧本怎么翻？</h3>
+<p>20 道题全是现代生活场景：职场、恋爱、花钱、吵架、过周末……不考历史，不问年代。凭第一直觉选，测测你的野心、深情、洒脱与隐忍，会把你送进哪一种古代人生。</p>
+</div>
+<div class="meta"><span>⏱ 约 2 分钟</span><span>📜 9 种命运剧本</span><span>🖼 生成专属海报卡</span></div>
+<button class="btn-main" id="btn-start">翻开我的剧本 →</button>
+<p class="note">趣味测试，仅供娱乐，不是专业心理诊断，结果请笑着看。</p>
+</section>
+
+<!-- QUIZ -->
+<section id="screen-quiz" class="hidden">
+<div class="quiz-head"><span id="q-count">第 1 / 20 题</span><span id="q-cat">人生选择</span></div>
+<div class="progress"><i id="bar"></i></div>
+<div class="qcard fade" id="qcard">
+<div class="qtag" id="q-tag">CHOICE</div>
+<div class="qtitle" id="q-title"></div>
+<div class="opts" id="opts"></div>
+</div>
+<div class="quiz-foot">
+<button class="btn-ghost" id="btn-prev">← 上一题</button>
+<span style="font-size:13px;color:var(--muted);align-self:center">凭直觉选，别想太久</span>
+</div>
+</section>
+
+<!-- CALC -->
+<section id="screen-calc" class="hidden calc">
+<div class="seal">命书<br>批算中</div>
+<h2 class="serif" style="font-size:24px;margin:0 0 8px">正在翻开你的命书…</h2>
+<p style="color:var(--muted);margin:0" id="calc-text">数一数你的野心与深情…</p>
+</section>
+
+<!-- RESULT -->
+<section id="screen-result" class="hidden">
+<div class="poster fade" id="poster">
+<div class="poster-top" id="poster-top">
+<div class="kicker">你在古代的人生剧本是 · YOUR ANCIENT LIFE SCRIPT</div>
+<h2 id="r-title"></h2>
+<div class="sub" id="r-sub"></div>
+<div class="slogan" id="r-slogan"></div>
+<div class="match">剧本契合度 <span id="r-match"></span></div>
+</div>
+<div class="poster-body">
+<div class="tags" id="r-tags"></div>
+<div class="sec"><h4>剧本梗概 · 这一生</h4><p id="r-syn"></p></div>
+<div class="sec"><h4>性格特点</h4><p id="r-traits"></p></div>
+<div class="sec"><h4>匹配理由</h4><p id="r-reason"></p></div>
+<div class="sec"><h4>隐藏优势</h4><p id="r-adv"></p></div>
+<div class="sec"><h4>趣味彩蛋</h4><p id="r-egg"></p></div>
+<div class="dims" id="r-dims"></div>
+<div class="neighbors" id="r-neighbors"></div>
+</div>
+</div>
+<div class="actions">
+<button class="btn-copy" id="btn-copy">复制结果文案，去分享</button>
+<button class="btn-again" id="btn-again">重新测试</button>
+</div>
+<p class="tip">截图上方海报卡，就能发小红书 / 朋友圈啦</p>
+<p class="tip" id="copy-tip"></p>
+</section>
+</div>
+
+<script>
+/* dims: 0野心 1深情 2洒脱 3隐忍 4冒险 5权谋 6侠义 7淡泊 */
+var DIMS=["野心","深情","洒脱","隐忍","冒险","权谋","侠义","淡泊"];
+
+var SCRIPTS={
+fenghou:{title:"寒门逆袭封侯",short:"寒门封侯",wm:"侯",sub:"草 根 出 身 · 拜 将 封 侯",color:"#9a3324",color2:"#c9a86a",
+tags:["不服输","心气高","能吃苦","目标感强"],
+slogan:"“你从泥里来，要站到云上去——这一局，你赢了。”",
+syn:"你生在漏雨的草屋，靠一双手和一口不服输的气往上爬：科场落第过，边关吃过沙，最难的时候把棉袄当了买书。三十年后你封侯拜将、衣锦还乡，当年笑你痴心妄想的人跪在马前迎你。而你站在老屋门前，最想做的事，是给早逝的母亲上一炷香——她没能看到这一天。",
+traits:"你骨子里有股“凭什么”的劲儿。出身和起点从来不是你的借口，而是你的燃料：越是没人看好，你越是咬着牙往前走。",
+reason:"你的答案里全是向上走的执念——机会要抢、苦头要吃、长远账要算。你不靠运气翻身，靠的是把每一次低谷都当成台阶的狠劲，这正是寒门封侯的标准开局。",
+adv:"抗压能力是被生活捶打出来的，越是绝境越冷静。别人眼里天塌下来的事，到你这儿不过是一句“再想想办法”。",
+egg:"彩蛋：功成名就之后你会变得异常念旧——老物件舍不得扔，老朋友一个不落。富贵不忘本，是刻在你剧本最后一页的字。",
+prof:[4,0,0,3,1,0,1,0]},
+baishou:{title:"青梅竹马，白首不离",short:"青梅竹马",wm:"守",sub:"两 小 无 猜 · 一 生 一 世",color:"#2e6b5e",color2:"#7fb069",
+tags:["长情","专一","温厚","顾家"],
+slogan:"“别人的一生波澜壮阔，你的一生只有四个字：从一而终。”",
+syn:"你和那个人在巷口的老槐树下一起长大，挨过同一块戒尺，等过同一个卖糖人的担子。后来你读书也好、经商也罢，绕了半生，牵手的还是少年时那个人。你们吵过、穷过、病过，却从没想过松开手。八十岁那年你们坐在门槛上晒太阳，孙儿问什么是爱情，你俩相视一笑——什么都没说，又什么都说了。",
+traits:"你的心很小，只装得下几个人，但装进去就是一辈子。你不追求心跳加速的刺激，你要的是细水长流的确定感。",
+reason:"你的选择里，陪伴永远排在冒险前面，确定感永远赢过新鲜感。你不是不懂浪漫——你的浪漫是“认定了就不换”，这种人放进古代的剧本，只有一个名字：白首不离。",
+adv:"情绪价值拉满。和你在一起的人永远不用猜你的心思，因为你的偏爱明目张胆，而且从不打折。",
+egg:"意难平预警：这个剧本唯一的“刀”，是你们过得太顺了——顺到旁人嫉妒，顺到老天都只舍得在最后，用一场冬雪轻轻收尾。",
+prof:[0,3,0,2,0,0,1,2]},
+jianke:{title:"仗剑天涯，快意恩仇",short:"仗剑天涯",wm:"侠",sub:"一 剑 一 马 · 江 湖 为 家",color:"#274156",color2:"#8fa8bf",
+tags:["讲义气","行动派","嫉恶如仇","自由不羁"],
+slogan:"“十步杀一人，千里不留行——但你的剑，只为不平事出鞘。”",
+syn:"你十六岁负剑出门，从此江湖是家。路见不平你管，朋友有难你到，快意是真快意，结下的仇家也是真多。三十岁那年，你为救一个素不相识的人身负重伤，被一位姑娘所救——从此剑还在鞘里，只是身边多了一个人。结局没有封侯拜相，你在一座小镇开了家酒馆；过路的江湖人提起你的名字，声音都会低三分。",
+traits:"你受不了憋屈，更受不了不公。道理讲不通的时候，你相信担当；朋友一句话，你能连夜赶三百里路。",
+reason:"你的答案里没有“明哲保身”四个字：该出手时绝不围观，该冒险时绝不先算得失。这种把义气看得比命还重的性格，生在古代不当侠客，天理难容。",
+adv:"你的感染力来自真诚。不玩心眼的人走到哪儿，都有人愿意为他两肋插刀——你的人脉不是经营来的，是仗义出来的。",
+egg:"彩蛋：你退隐后开的那家酒馆从不赚钱，因为赊账的、吃白食的全是当年被你救过的人。账本记了厚厚一摞，债却一笔都没讨过。",
+prof:[0,0,2,0,3,0,3,0]},
+xianren:{title:"大隐于市，富贵闲人",short:"富贵闲人",wm:"闲",sub:"闹 市 隐 居 · 富 贵 浮 云",color:"#5f7052",color2:"#b98d3e",
+tags:["通透","松弛","不争","会享受"],
+slogan:"“朝堂上的风浪与你无关，你的江山，是自家后院的一亩三分地。”",
+syn:"你年轻时也曾聪明绝顶，却一眼看穿了官场那潭浑水，于是早早抽身，在城中最热闹的街口盘下一间铺子。卖什么不重要，重要的是巳时才开门、逢雨就打烊。达官贵人路过想结交，你笑着递上一杯茶，转身继续逗你的八哥。这一生你没赢过谁——你只是从一开始，就没上牌桌。",
+traits:"你是同龄人里最早想明白的那个：名利是别人的，日子是自己的。你不傻，你只是把聪明全用在了“怎么舒服怎么活”上。",
+reason:"你的选择永远绕开漩涡中心：不抢、不卷、不站队，却把小日子过得有滋有味。这种大智若愚的通透，正是“大隐于市”的精髓——隐的不是山，是心。",
+adv:"情绪稳定得可怕。天大的事到了你这儿，先泡杯茶再说。这种定力在关键时刻，是能救命的。",
+egg:"彩蛋：坊间传闻你是世外高人，有人千里迢迢来拜师。你收了人家一筐鸡蛋，然后教了他四个字：“早点睡觉。”",
+prof:[0,0,2,0,0,1,0,3]},
+quanchen:{title:"权倾朝野，全身而退",short:"权倾朝野",wm:"退",sub:"三 朝 元 老 · 急 流 勇 退",color:"#33302a",color2:"#b98d3e",
+tags:["深谋远虑","能忍","懂进退","滴水不漏"],
+slogan:"“你下了一辈子棋，最漂亮的一步，是亲手把棋盘收起来。”",
+syn:"你从一介小吏起步，在波谲云诡的朝堂上活成了传奇：三朝不倒，政敌换了一茬又一茬，你的乌纱却越戴越稳。所有人都等着看你晚节不保，你却在最风光的那年急流勇退，回乡修桥铺路、著书立说。十年后新君登基，翻遍旧档想寻你的把柄，翻到的只有你历年捐出的赈灾银两清单。",
+traits:"你看人看事永远多想三步，情绪从不上脸。你不是没有野心，你是把野心藏进了耐心和分寸里。",
+reason:"你的答案里全是“先看清局、再出手”的智慧：不冲动、不站错队、留后路、给人留台阶。这种在刀尖上跳舞还能全身而退的本事，古往今来没几个人练得成。",
+adv:"你真正的武器是信用——答应的事从不落空，借过的势从不滥用。所以到了关键时刻，所有人都愿意给你递一把梯子。",
+egg:"意难平的是：史书给你留的篇幅，还不如你提拔过的一个小官多。你却毫不在意——“被记住”从来不在你的棋盘上，能善终才是。",
+prof:[2,0,0,2,0,3,0,0]},
+siben:{title:"为爱私奔，浪迹江湖",short:"为爱私奔",wm:"奔",sub:"抛 下 繁 华 · 只 随 一 人",color:"#a83a5c",color2:"#e08aa5",
+tags:["敢爱敢恨","浪漫至死","行动力强","不惧世俗"],
+slogan:"“江山万里，不如你回头看我的那一眼。”",
+syn:"你原本有一条铺好的路：门当户对的婚事、安稳体面的日子。直到那个人出现，你退了聘礼、除了族谱的名，带着一个小包袱连夜出了城。这一路你们摆过摊、卖过艺、睡过破庙，也看过江南的烟雨和塞北的雪。旁人都说你们迟早后悔，可五十年后，你们开的那间小客栈里，挂着一块你亲手写的匾：不悔。",
+traits:"你的心永远比脑子快半拍。世俗的账你算不过来，也不想算——你只认一条：这辈子不能辜负自己的心动。",
+reason:"你的选择里，感情永远能压倒安全感：距离不怕、流言不怕、重头来过也不怕。这种为爱孤注一掷的勇气，在古代就是最动人、也最有话题度的私奔剧本。",
+adv:"生命力野蛮生长。什么环境都能活，什么苦都能吃出甜来——和你在一起，日子永远不会无聊。",
+egg:"彩蛋：你们的故事被说书人编成了话本，传遍大江南北，就是结局被改了——说书的说你们最后成了神仙眷侣，其实你们只是开了家客栈，而且房钱收得一点都不便宜。",
+prof:[0,3,2,0,2,0,0,0]},
+shachang:{title:"战死沙场，马革裹尸",short:"马革裹尸",wm:"烈",sub:"十 七 从 军 · 孤 城 不 退",color:"#7a2e22",color2:"#5c6670",
+tags:["血性","担当","无畏","家国在心"],
+slogan:"“你的命不是用来老的，是用来烧的——烧得越亮，越值。”",
+syn:"你从军那年十七岁，母亲往你包袱里塞了一双新鞋，你一次都没舍得穿。从小兵到先锋，你身上的疤比军功章还多。最后一战，援军迟了三日，你带着残部守住了孤城，身后的百姓一个都没少。捷报传回京城那天，你的名字被写进忠烈祠。没有儿女绕膝，没有白发苍苍——你的剧本短得像一道闪电，却照亮了很多人回家的路。",
+traits:"你是那种“总要有人去，那为什么不是我”的人。危险面前你的第一反应不是躲，是顶上去——这不是莽撞，是刻在骨子里的担当。",
+reason:"你的答案里，挺身而出永远快过权衡利弊，大局永远排在个人前面。这种把命看得轻、把责任看得重的人，注定要在史书上留下最烫的一页。",
+adv:"你的存在感就是安全感。只要你站在那儿，身边的人就觉得天塌不下来——这种气场，装是装不出来的。",
+egg:"意难平：那双没舍得穿的新鞋，后来被供在你家的堂屋里。你娘每年清明都拿出来晒一晒，说：“我儿走的时候，脚还是暖和的。”",
+prof:[1,0,0,2,2,0,4,0]},
+taoli:{title:"桃李满天下，清贫自乐",short:"桃李满天",wm:"师",sub:"半 生 授 业 · 满 园 春 风",color:"#54724a",color2:"#a9bc7a",
+tags:["温厚","有耐心","知足","育人不倦"],
+slogan:"“你没给自己攒下什么，却在很多人的心里，种下了一整个春天。”",
+syn:"你考了一辈子试，最好的一次也只是个举人，索性回乡办了间学堂。束脩收得随心：有钱的给钱，没钱的给一篮鸡蛋，实在困难的，你倒贴笔墨。五十年里，你送出去的学生有当官的、有经商的、有走遍天下的，每年回来看你的队伍能从村口排到学堂门口。你走的那天，全村人自发为你送行——他们说，先生这一辈子，活成了四个字：不亏不欠。",
+traits:"你不追逐自己的高光时刻，你享受的是看着别人发光。你的快乐很朴素：把懂的东西教给人，把难走的路替人先探一探。",
+reason:"你的选择里总有一种“成全别人”的温柔：不争先、不抢功，却愿意在幕后托举。这种润物细无声的性子，最适合写进“桃李满天下”的剧本。",
+adv:"你的人脉不在酒桌上，在人心上。几十年攒下的不是关系，是恩情——这种资产，越老越值钱。",
+egg:"彩蛋：你最得意的学生官至宰相，回乡时在你学堂门口跪了整整一炷香。你扶他起来，只说了一句：“你小时候那篇《咏鹅》，还是写错了一个字。”",
+prof:[0,1,0,2,0,0,1,2]},
+shangren:{title:"富甲一方，红顶商人",short:"红顶商人",wm:"贾",sub:"算 盘 天 下 · 信 义 立 身",color:"#8a6d1f",color2:"#c9a86a",
+tags:["精明","重信誉","眼光毒","敢下注"],
+slogan:"“别人读书做官，你算盘打天下——最后发现，官帽子还得找你买。”",
+syn:"你从学徒做起，睡过柜台、跑过码头，第一笔本钱是借来的，还差点被人骗光。你把信誉看得比命重：灾年平价售粮，宁可亏本也不囤积居奇。二十年后，你的商号遍布十三省，连朝廷办差都要先来拜你的码头。皇帝赏了你一顶红顶子，你转身把赏银捐去修了堤坝——你说，钱这东西，花出去才是自己的。",
+traits:"你对机会的嗅觉像猎犬，对风险的把控像账房。你信奉的道理很简单：钱要赚得干净、花得漂亮，名声比银子更保值。",
+reason:"你的答案里全是生意人的通透：先算账再下注、看长远不贪小利、关键时刻敢押上身家。这种既懂进取又懂分寸的头脑，生在古代就是富甲一方的命。",
+adv:"你的信用就是你的印钞机。当所有人都在为借不到钱发愁时，你的名字本身就是担保——这是多少银子都买不来的。",
+egg:"彩蛋：你晚年把账本全烧了，只留下一本《诚信录》，扉页上写着你一生的秘密：“我从没赚过朋友的钱，所以我的钱，朋友都帮我守着。”",
+prof:[3,0,0,0,2,2,0,0]}
+};
+var ORDER=["fenghou","baishou","jianke","xianren","quanchen","siben","shachang","taoli","shangren"];
+
+/* each option: t text, d [[dimIndex, points],...] */
+var Q=[
+{cat:"职场选择",tag:"CAREER",q:"公司有个去总部镀金的机会，名额只有一个，竞争激烈，你会？",o:[
+{t:"全力争取，机会从来不等人",d:[[0,2],[4,1]]},
+{t:"先观望，摸清竞争对手的底细再出手",d:[[5,2],[3,1]]},
+{t:"算了，现在的小日子挺舒服，不折腾",d:[[7,2],[2,1]]},
+{t:"看看哪位同事更需要，顺手帮他一把",d:[[6,2],[1,1]]}]},
+{cat:"情感模式",tag:"CRUSH",q:"暗恋很久的人要去外地发展了，你会？",o:[
+{t:"告白！成败另说，不能留遗憾",d:[[1,2],[4,1]]},
+{t:"什么都不说，把祝福藏在心里",d:[[1,1],[3,2]]},
+{t:"先努力让自己变得更好，等有底气了再说",d:[[0,2],[3,1]]},
+{t:"顺其自然吧，缘分强求不来",d:[[7,2],[2,1]]}]},
+{cat:"金钱观",tag:"MONEY",q:"手里有了一笔闲钱，你最想怎么处置？",o:[
+{t:"投个有前景的项目，搏一把大的",d:[[4,2],[0,1]]},
+{t:"稳稳存起来，安全感最重要",d:[[3,2],[7,1]]},
+{t:"换辆好车 / 买块好表，犒劳一下自己",d:[[2,2],[0,1]]},
+{t:"先借给急需用钱的朋友，解他燃眉之急",d:[[6,2],[1,1]]}]},
+{cat:"处事方式",tag:"CONFLICT",q:"同事抢了你的功劳，还在领导面前邀功，你会？",o:[
+{t:"当场对质，是我的谁也别想拿走",d:[[6,1],[4,2]]},
+{t:"不动声色，下次用结果说话，让领导自己看明白",d:[[5,2],[3,1]]},
+{t:"忍了，多一事不如少一事",d:[[3,2],[7,1]]},
+{t:"找机会单独聊聊，给对方留个台阶下",d:[[5,1],[1,1]]}]},
+{cat:"日常习惯",tag:"WEEKEND",q:"你理想中的周末，是怎么过的？",o:[
+{t:"呼朋唤友，热热闹闹过一天",d:[[2,2],[6,1]]},
+{t:"和最重要的人窝在家里，做顿饭、看场电影",d:[[1,2],[7,1]]},
+{t:"一个人爬山看云，把脑子彻底放空",d:[[7,2],[2,1]]},
+{t:"泡在书房里学点新东西，充实自己",d:[[0,1],[3,2]]}]},
+{cat:"风险偏好",tag:"RISK",q:"朋友拉你一起创业，前景不明，你的第一反应是？",o:[
+{t:"干！人生能有几回搏",d:[[4,2],[0,1]]},
+{t:"先把账算清、把人看清，再决定投不投",d:[[5,2],[3,1]]},
+{t:"婉拒，稳定的收入才是我的底气",d:[[3,2],[7,1]]},
+{t:"出钱不出人，全力支持朋友的梦想",d:[[6,2],[1,1]]}]},
+{cat:"社交方式",tag:"SOCIAL",q:"饭局上有人阴阳怪气地针对你，你会？",o:[
+{t:"笑着接招，四两拨千斤地怼回去",d:[[5,2],[4,1]]},
+{t:"不接茬，该吃吃该喝喝，气死他",d:[[7,2],[3,1]]},
+{t:"记在心里，以后跟这个人保持距离",d:[[3,2],[5,1]]},
+{t:"直接点破：有话直说，别拐弯抹角",d:[[6,2],[4,1]]}]},
+{cat:"人生选择",tag:"MAJOR",q:"如果能重新选一次行业，你最看重什么？",o:[
+{t:"离权力与资源中心最近的赛道",d:[[0,2],[5,1]]},
+{t:"能实实在在帮到更多人的",d:[[6,2],[1,1]]},
+{t:"自由度高、不用坐班的",d:[[2,2],[4,1]]},
+{t:"稳定体面、旱涝保收的",d:[[3,1],[7,2]]}]},
+{cat:"情感模式",tag:"QUARREL",q:"和伴侣吵架冷战了，你通常会？",o:[
+{t:"主动低头，先和好再说对错",d:[[1,2],[3,1]]},
+{t:"等对方先开口，谁先说话谁就输了",d:[[3,2],[0,1]]},
+{t:"写一段长长的话，把心里话都讲透",d:[[1,2],[5,1]]},
+{t:"出门散散心，回来就当没事发生",d:[[2,2],[7,1]]}]},
+{cat:"处事方式",tag:"DUTY",q:"领导交给你一个明显会得罪人的差事，你会？",o:[
+{t:"接！这正是露脸立威的机会",d:[[0,2],[4,1]]},
+{t:"接，但先想好怎么把各方都摆平",d:[[5,2],[3,1]]},
+{t:"能推就推，明哲保身要紧",d:[[7,1],[3,2]]},
+{t:"接，而且按规矩办，谁的面子都不给",d:[[6,2],[3,1]]}]},
+{cat:"日常习惯",tag:"ALBUM",q:"翻翻你的手机相册，数量最多的是？",o:[
+{t:"风景和天空，走到哪儿拍到哪儿",d:[[2,2],[7,1]]},
+{t:"和家人朋友的合照",d:[[1,2],[6,1]]},
+{t:"工作截图、资料和干货收藏",d:[[0,2],[5,1]]},
+{t:"美食打卡，吃过的店都要留档",d:[[2,1],[6,1]]}]},
+{cat:"价值取向",tag:"BELIEF",q:"下面四句话，你最认同哪一句？",o:[
+{t:"王侯将相，宁有种乎",d:[[0,2],[4,1]]},
+{t:"但行好事，莫问前程",d:[[6,2],[7,1]]},
+{t:"君子报仇，十年不晚",d:[[3,2],[5,1]]},
+{t:"一生一世一双人",d:[[1,3]]}]},
+{cat:"旅行偏好",tag:"TRAVEL",q:"出去旅行时，你是哪种画风？",o:[
+{t:"说走就走，攻略到了当地再说",d:[[4,2],[2,1]]},
+{t:"深度慢游，在一个地方住上十天半月",d:[[7,2],[2,1]]},
+{t:"把当地的市集和美食逛个遍",d:[[2,1],[6,1]]},
+{t:"结伴而行，路上结识新朋友最重要",d:[[6,2],[1,1]]}]},
+{cat:"事业态度",tag:"TEAMWORK",q:"项目到了最难的阶段，团队士气低迷，你会？",o:[
+{t:"顶上去，带头熬最苦的那几个班",d:[[3,2],[6,1]]},
+{t:"重新排兵布阵，找到破局点",d:[[5,2],[0,1]]},
+{t:"先给大家放个假，状态比进度重要",d:[[2,1],[1,2]]},
+{t:"描绘一个更大的前景，让大家看到终点",d:[[0,2],[5,1]]}]},
+{cat:"情感模式",tag:"DISTANCE",q:"你对“异地恋”的真实态度是？",o:[
+{t:"距离不是问题，心在就行",d:[[1,2],[3,1]]},
+{t:"太消耗了，我需要陪伴就在身边",d:[[1,2],[7,1]]},
+{t:"正好，各忙各的，互不打扰",d:[[2,2],[7,1]]},
+{t:"会努力调去同一个城市，结束异地",d:[[1,2],[0,1]]}]},
+{cat:"金钱观",tag:"LOTTERY",q:"假设你中了 500 万，第一件事是？",o:[
+{t:"辞职！先去环游一圈世界再说",d:[[2,2],[4,1]]},
+{t:"低调存好，谁也不告诉，日子照常过",d:[[7,2],[3,1]]},
+{t:"投资布局，让钱生钱",d:[[5,2],[0,1]]},
+{t:"给父母换套房，再帮衬一下亲友",d:[[1,2],[6,1]]}]},
+{cat:"处事方式",tag:"JUSTICE",q:"路上看到有人被欺负，你会？",o:[
+{t:"直接上前制止",d:[[6,2],[4,1]]},
+{t:"先报警、找保安，再见机行事",d:[[5,2],[6,1]]},
+{t:"默默记下细节，需要作证时站出来",d:[[3,1],[6,2]]},
+{t:"看一眼就走，少管闲事保平安",d:[[7,2],[2,1]]}]},
+{cat:"日常习惯",tag:"ROUTINE",q:"你的作息更接近哪一种？",o:[
+{t:"夜猫子，灵感总在深夜爆发",d:[[2,2],[4,1]]},
+{t:"早睡早起，自律得像个老干部",d:[[3,2],[7,1]]},
+{t:"随心所欲，困了就睡、醒了再说",d:[[2,2],[7,1]]},
+{t:"全看工作安排，忙起来日夜颠倒也认",d:[[0,1],[3,2]]}]},
+{cat:"人生选择",tag:"EXAM",q:"如果人生是一场考试，你最想拿满分的是？",o:[
+{t:"事业成就，被很多人记住",d:[[0,3]]},
+{t:"身边人，家人朋友都安好",d:[[1,2],[6,1]]},
+{t:"自由，想去哪去哪、想干嘛干嘛",d:[[2,3]]},
+{t:"内心安宁，不被外界裹挟",d:[[7,3]]}]},
+{cat:"结局想象",tag:"EPITAPH",q:"你希望别人提起你时，会怎么说？",o:[
+{t:"“他啊，是从泥里爬出来的人物。”",d:[[0,2],[3,1]]},
+{t:"“他这个人，靠谱，讲义气。”",d:[[6,2],[3,1]]},
+{t:"“他活得最潇洒，谁也束缚不了他。”",d:[[2,2],[4,1]]},
+{t:"“他这一辈子，没辜负过谁。”",d:[[1,2],[6,1]]}]}
+];
+
+var state={cur:0,answers:[]};
+var $=function(id){return document.getElementById(id)};
+function show(id){["screen-home","screen-quiz","screen-calc","screen-result"].forEach(function(s){$(s).classList.toggle("hidden",s!==id)})}
+
+/* home strip */
+(function(){var strip=$("strip");ORDER.forEach(function(k){var s=SCRIPTS[k];var el=document.createElement("span");el.textContent=s.short;el.style.background="linear-gradient(120deg,"+s.color+","+s.color2+")";strip.appendChild(el)})})();
+
+$("btn-start").addEventListener("click",function(){state.cur=0;state.answers=[];show("screen-quiz");renderQ()});
+
+function renderQ(){
+var q=Q[state.cur];
+$("q-count").textContent="第 "+(state.cur+1)+" / "+Q.length+" 题";
+$("q-cat").textContent=q.cat;
+$("bar").style.width=((state.cur)/Q.length*100)+"%";
+$("q-tag").textContent=q.tag;
+$("q-title").textContent=q.q;
+var box=$("opts");box.innerHTML="";
+var letters=["A","B","C","D"];
+q.o.forEach(function(op,i){
+var b=document.createElement("button");b.className="opt"+(state.answers[state.cur]===i?" sel":"");
+b.innerHTML="<b>"+letters[i]+"</b><span></span>";
+b.querySelector("span").textContent=op.t;
+b.addEventListener("click",function(){pick(i)});
+box.appendChild(b);
+});
+$("btn-prev").disabled=state.cur===0;
+var card=$("qcard");card.classList.remove("fade");void card.offsetWidth;card.classList.add("fade");
+}
+function pick(i){
+state.answers[state.cur]=i;
+renderQSelection(i);
+setTimeout(function(){
+if(state.cur<Q.length-1){state.cur++;renderQ()}
+else{finish()}
+},240);
+}
+function renderQSelection(i){
+var opts=$("opts").children;
+for(var j=0;j<opts.length;j++){opts[j].classList.toggle("sel",j===i)}
+$("bar").style.width=((state.cur+1)/Q.length*100)+"%";
+}
+$("btn-prev").addEventListener("click",function(){if(state.cur>0){state.cur--;renderQ()}});
+
+/* per-dimension attainable max, used to normalize dimension supply */
+var DIMMAX=(function(){
+var m=[0,0,0,0,0,0,0,0];
+Q.forEach(function(q){
+var best=[0,0,0,0,0,0,0,0];
+q.o.forEach(function(op){op.d.forEach(function(pair){if(pair[1]>best[pair[0]])best[pair[0]]=pair[1]})});
+for(var i=0;i<8;i++){m[i]+=best[i]}
+});
+return m;
+})();
+
+function compute(){
+var dims=[0,0,0,0,0,0,0,0];
+state.answers.forEach(function(ai,qi){
+var op=Q[qi].o[ai];
+op.d.forEach(function(pair){dims[pair[0]]+=pair[1]});
+});
+var n=dims.map(function(v,i){return v/DIMMAX[i]});
+var scored=ORDER.map(function(k){
+var s=SCRIPTS[k],score=0,psum=0;
+for(var i=0;i<8;i++){score+=s.prof[i]*n[i];psum+=s.prof[i]}
+return {key:k,ratio:score/psum};
+});
+scored.sort(function(a,b){return b.ratio-a.ratio});
+return {dims:dims,ranked:scored};
+}
+
+function finish(){
+show("screen-calc");
+var lines=["数一数你的野心与深情…","翻一翻你的隐忍与权谋…","看看你这一生的结局写在哪一页…"];
+var li=0;$("calc-text").textContent=lines[0];
+var timer=setInterval(function(){li=(li+1)%lines.length;$("calc-text").textContent=lines[li]},650);
+setTimeout(function(){
+clearInterval(timer);
+var res=compute();
+renderResult(res);
+show("screen-result");
+window.scrollTo({top:0,behavior:"smooth"});
+},2000);
+}
+
+var lastResult=null;
+function renderResult(res){
+var top=res.ranked[0],second=res.ranked[1];
+var s=SCRIPTS[top.key];
+lastResult={key:top.key,title:s.title};
+var pct=Math.min(98,Math.round(68+50*top.ratio));
+$("poster-top").style.background="linear-gradient(135deg,"+s.color+","+s.color2+")";
+$("poster-top").setAttribute("data-watermark",s.wm);
+$("r-title").textContent=s.title;
+$("r-sub").textContent=s.sub;
+$("r-slogan").textContent=s.slogan;
+$("r-match").textContent=pct+"%";
+$("r-tags").innerHTML=s.tags.map(function(t){return "<span>"+t+"</span>"}).join("");
+$("r-syn").textContent=s.syn;
+$("r-traits").textContent=s.traits;
+$("r-reason").textContent=s.reason;
+$("r-adv").textContent=s.adv;
+$("r-egg").textContent=s.egg;
+/* top 4 dims */
+var idx=res.dims.map(function(v,i){return i}).sort(function(a,b){return res.dims[b]-res.dims[a]}).slice(0,4);
+var maxD=Math.max.apply(null,res.dims.concat([1]));
+$("r-dims").innerHTML=idx.map(function(i){
+return '<div class="dim"><span>'+DIMS[i]+'</span><div class="bar"><i style="width:'+Math.round(res.dims[i]/maxD*100)+'%"></i></div><b>'+res.dims[i]+'</b></div>';
+}).join("");
+$("r-neighbors").textContent="差一点拿到的剧本：《"+SCRIPTS[second.key].title+"》——那是你人生的另一条支线。";
+$("copy-tip").textContent="";
+}
+
+$("btn-copy").addEventListener("click",function(){
+if(!lastResult)return;
+var s=SCRIPTS[lastResult.key];
+var text="我在《你在古代会拥有什么人生剧本》里测出了"+s.slogan+" 你在古代会是什么剧本？快来测测！";
+function done(){$("copy-tip").textContent="文案已复制，去粘贴分享吧 ✓"}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(function(){fallback()})}else{fallback()}
+function fallback(){
+var ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();
+try{document.execCommand("copy");done()}catch(e){$("copy-tip").textContent="复制失败，截图海报卡分享也一样出片"}
+document.body.removeChild(ta);
+}
+});
+$("btn-again").addEventListener("click",function(){
+state.cur=0;state.answers=[];lastResult=null;show("screen-home");window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
+</body>
+</html>

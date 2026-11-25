@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>你的恋爱隐藏短板</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+button, [role="button"] { min-height: 2.25rem;}
+* { box-sizing: border-box;}
+:root {
+--bg: #fff5f1;
+--bg-soft: #ffe9e2;
+--card: #fffdfb;
+--ink: #40222e;
+--ink-soft: #7a5563;
+--line: #f3d5cd;
+--accent: #e14b6d;
+--accent-deep: #c23355;
+--accent-soft: #fdeef1;
+--gold: #d99a3d;
+--shadow: 0 18px 44px rgba(194, 51, 85,.14);
+--radius: 20px;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+--bg: #221218;
+--bg-soft: #2e1a21;
+--card: #2c1a21;
+--ink: #f9e9ed;
+--ink-soft: #c9a3ae;
+--line: #4a2b36;
+--accent: #ff7d97;
+--accent-deep: #ff9db1;
+--accent-soft: #3d2230;
+--gold: #e5b45e;
+--shadow: 0 18px 44px rgba(0, 0, 0,.45);
+}
+}
+html, body { margin: 0; padding: 0;}
+body {
+font-family: "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+background:
+radial-gradient(560px 340px at 12% -60px, var(--bg-soft), transparent 70%),
+radial-gradient(520px 320px at 95% 8%, var(--bg-soft), transparent 70%),
+var(--bg);
+color: var(--ink);
+min-height: 100vh;
+-webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 680px; margin: 0 auto; padding: 28px 18px 56px;}
+.serif { font-family: "Noto Serif SC", "Songti SC", serif;}
+
+/* ---------- screens ---------- */
+.screen { display: none;}
+.screen.active { display: block; animation: screenIn.45s ease both;}
+@keyframes screenIn { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: none;}}
+
+/* ---------- home ---------- */
+.home { text-align: center; padding-top: 5vh;}
+.home .kicker {
+display: inline-block; font-size: 13px; letter-spacing:.35em; color: var(--accent-deep);
+border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px 7px 20px; background: var(--card);
+}
+.home h1 {
+font-family: "Noto Serif SC", "Songti SC", serif; font-weight: 900;
+font-size: clamp(38px, 9vw, 58px); line-height: 1.18; margin: 22px 0 6px;
+}
+.home h1 .hl { color: var(--accent); position: relative; white-space: nowrap;}
+.home .sub { color: var(--ink-soft); font-size: 16px; line-height: 1.8; margin: 10px auto 0; max-width: 30em;}
+.teasers { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 26px 0 6px;}
+.teasers span {
+font-size: 13px; color: var(--ink-soft); background: var(--card); border: 1px dashed var(--line);
+padding: 6px 12px; border-radius: 999px;
+}
+.meta-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 22px 0 30px;}
+.meta-row .m {
+background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 18px;
+font-size: 14px; color: var(--ink-soft);
+}
+.meta-row .m b { display: block; font-size: 19px; color: var(--ink); font-family: "Noto Serif SC", serif;}
+.btn {
+appearance: none; border: none; cursor: pointer; font-family: inherit;
+background: var(--accent); color: #fff; font-size: 17px; font-weight: 700;
+padding: 15px 44px; border-radius: 999px; box-shadow: 0 10px 24px rgba(225, 75, 109,.35);
+transition: transform.15s ease, box-shadow.15s ease, background.15s ease;
+}
+.btn:hover { background: var(--accent-deep); transform: translateY(-1px);}
+.btn:active { transform: translateY(1px) scale(.99);}
+.btn.ghost {
+background: var(--card); color: var(--accent-deep); border: 1.5px solid var(--accent);
+box-shadow: none;
+}
+.btn.ghost:hover { background: var(--accent-soft);}
+.disclaimer { margin-top: 26px; font-size: 12.5px; color: var(--ink-soft); line-height: 1.7;}
+
+/* ---------- quiz ---------- */
+.progress-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;}
+.progress-head .count { font-family: "Noto Serif SC", serif; font-size: 15px; color: var(--ink-soft);}
+.progress-head .count b { font-size: 22px; color: var(--accent-deep);}
+.progress-head .pct { font-size: 13px; color: var(--ink-soft);}
+.bar { height: 9px; border-radius: 99px; background: var(--bg-soft); overflow: hidden; border: 1px solid var(--line);}
+.bar i {
+display: block; height: 100%; width: 0; border-radius: 99px;
+background: linear-gradient(90deg, #f0859c, var(--accent));
+transition: width.45s cubic-bezier(.22,.8,.3, 1);
+}
+.qcard {
+margin-top: 22px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+box-shadow: var(--shadow); padding: 26px 22px 22px;
+}
+.qcard.swap { animation: qIn.38s ease both;}
+@keyframes qIn { from { opacity: 0; transform: translateX(26px);} to { opacity: 1; transform: none;}}
+.qcard.swap-back { animation: qInB.38s ease both;}
+@keyframes qInB { from { opacity: 0; transform: translateX(-26px);} to { opacity: 1; transform: none;}}
+.q-tag { font-size: 12.5px; letter-spacing:.22em; color: var(--gold); font-weight: 700; margin-bottom: 10px;}
+.q-text { font-family: "Noto Serif SC", serif; font-size: clamp(19px, 5vw, 23px); font-weight: 700; line-height: 1.55; margin: 0 0 20px;}
+.opts { display: grid; gap: 11px;}
+.opt {
+display: flex; gap: 12px; align-items: flex-start; text-align: left; width: 100%;
+background: var(--bg); border: 1.5px solid var(--line); border-radius: 14px;
+padding: 14px 16px; font-size: 15.5px; line-height: 1.6; color: var(--ink); cursor: pointer;
+font-family: inherit; transition: border-color.15s, background.15s, transform.1s;
+}
+.opt:hover { border-color: var(--accent); background: var(--accent-soft);}
+.opt .letter {
+flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; margin-top: 1px;
+border: 1.5px solid var(--accent); color: var(--accent-deep); font-size: 13.5px; font-weight: 700;
+display: flex; align-items: center; justify-content: center; background: var(--card);
+}
+.opt.picked { border-color: var(--accent); background: var(--accent-soft);}
+.opt.picked .letter { background: var(--accent); color: #fff;}
+.quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 18px;}
+.back-btn {
+background: none; border: none; color: var(--ink-soft); font-size: 14.5px; cursor: pointer;
+padding: 10px 6px; font-family: inherit;
+}
+.back-btn:disabled { opacity:.35; cursor: default;}
+.quiz-hint { font-size: 12.5px; color: var(--ink-soft);}
+
+/* ---------- result poster ---------- */
+.poster {
+position: relative; background: var(--card); border: 2px solid var(--rc, var(--accent));
+border-radius: 24px; box-shadow: var(--shadow); padding: 34px 26px 28px; overflow: hidden;
+}
+.poster::before {
+content: ""; position: absolute; inset: 8px; border: 1px solid var(--line); border-radius: 17px; pointer-events: none;
+}
+.poster .p-kicker { text-align: center; font-size: 12.5px; letter-spacing:.4em; color: var(--ink-soft);}
+.stamp {
+position: absolute; top: 22px; right: 22px; width: 58px; height: 58px;
+border: 2.5px solid var(--rc, var(--accent)); border-radius: 10px; transform: rotate(9deg);
+display: flex; align-items: center; justify-content: center;
+font-family: "Noto Serif SC", serif; font-weight: 900; font-size: 30px; color: var(--rc, var(--accent));
+background: color-mix(in srgb, var(--rc, var(--accent)) 8%, transparent);
+}
+.poster h2 {
+font-family: "Noto Serif SC", serif; font-weight: 900; text-align: center;
+font-size: clamp(30px, 8vw, 42px); line-height: 1.25; margin: 16px 0 4px; color: var(--rc, var(--accent-deep));
+}
+.poster .p-sub { text-align: center; font-size: 13px; letter-spacing:.3em; color: var(--ink-soft); margin-bottom: 16px;}
+.tagline {
+text-align: center; font-family: "Noto Serif SC", serif; font-size: clamp(16.5px, 4.6vw, 19px);
+line-height: 1.75; color: var(--ink); margin: 0 auto 8px; max-width: 26em;
+}
+.tagline::before { content: "「"; color: var(--rc, var(--accent));}
+.tagline::after { content: "」"; color: var(--rc, var(--accent));}
+.divider { display: flex; align-items: center; gap: 12px; margin: 22px 4px 16px; color: var(--rc, var(--accent));}
+.divider::before,.divider::after { content: ""; flex: 1; height: 1px; background: var(--line);}
+.divider span { font-size: 13px; letter-spacing:.3em; color: var(--ink-soft);}
+.sec { margin: 0 4px 20px; position: relative; z-index: 1;}
+.sec h3 {
+font-size: 14px; letter-spacing:.18em; color: var(--rc, var(--accent-deep)); margin: 0 0 10px;
+display: flex; align-items: center; gap: 8px;
+}
+.sec h3::after { content: ""; flex: 1; height: 1px; background: var(--line);}
+.sec p { font-size: 15px; line-height: 1.85; color: var(--ink); margin: 0;}
+.sec ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px;}
+.sec ul li {
+font-size: 15px; line-height: 1.7; padding-left: 20px; position: relative; color: var(--ink);
+}
+.sec ul li::before {
+content: ""; position: absolute; left: 2px; top:.62em; width: 7px; height: 7px; border-radius: 2px;
+background: var(--rc, var(--accent)); transform: rotate(45deg);
+}
+.advice-box {
+background: var(--accent-soft); border-radius: 14px; padding: 14px 16px;
+font-size: 15px; line-height: 1.85;
+}
+.egg-box {
+border: 1.5px dashed var(--gold); border-radius: 14px; padding: 13px 16px;
+font-size: 14.5px; line-height: 1.8; color: var(--ink);
+background: color-mix(in srgb, var(--gold) 7%, transparent);
+}
+.dims { display: grid; gap: 9px;}
+.dim-row { display: grid; grid-template-columns: 74px 1fr 34px; align-items: center; gap: 10px; font-size: 13.5px;}
+.dim-row .dn { color: var(--ink-soft);}
+.dim-row .track { display: block; height: 8px; border-radius: 99px; background: var(--bg-soft); overflow: hidden;}
+.dim-row .fill { display: block; height: 100%; border-radius: 99px; background: var(--rc, var(--accent)); width: 0; transition: width .9s cubic-bezier(.22,.8,.3, 1);}
+.dim-row .dv { text-align: right; font-weight: 700; color: var(--rc, var(--accent-deep)); font-size: 13px;}
+.poster .p-foot {
+text-align: center; font-size: 12px; color: var(--ink-soft); letter-spacing:.24em; margin-top: 24px; position: relative; z-index: 1;
+}
+.result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px;}
+.result-actions .btn { padding: 13px 30px; font-size: 15.5px;}
+.copied-tip { text-align: center; font-size: 13px; color: var(--accent-deep); height: 20px; margin-top: 12px;}
+.share-hint { text-align: center; font-size: 13px; color: var(--ink-soft); margin-top: 4px;}
+
+@media (max-width: 480px) {
+.wrap { padding: 20px 14px 44px;}
+.qcard { padding: 22px 16px 18px;}
+.poster { padding: 28px 18px 24px;}
+.stamp { width: 48px; height: 48px; font-size: 25px; top: 16px; right: 16px;}
+.dim-row { grid-template-columns: 66px 1fr 30px;}
+}
+@media (prefers-reduced-motion: reduce) {
+* { animation-duration:.01ms!important; transition-duration:.01ms!important;}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+<!-- ============ 首页 ============ -->
+<section class="screen active" id="screen-home">
+<div class="home">
+<span class="kicker">趣 味 人 格 测 试</span>
+<h1>你的恋爱<br /><span class="hl">隐藏短板</span></h1>
+<p class="sub">谈恋爱这件事，谁还没点自己都没察觉的小毛病？<br />20 道生活场景题，帮你把那块藏得最深的短板——温柔地拎出来晒晒太阳。</p>
+<div class="teasers">
+<span>是嘴硬心软？</span><span>还是冷战达人？</span><span>吃醋不承认？</span>
+<span>过度脑补？</span><span>付出型讨好？</span><span>恋爱脑上头快？</span>
+</div>
+<div class="meta-row">
+<div class="m"><b>20 题</b>生活场景单选</div>
+<div class="m"><b>8 种</b>隐藏短板</div>
+<div class="m"><b>约 2 分钟</b>轻松测完</div>
+</div>
+<button class="btn" id="btn-start" type="button">开始测试</button>
+<p class="disclaimer">凭第一直觉选，别演、别装，答案没有对错。<br />本测试为趣味娱乐，不是专业心理诊断，结果不对任何人的感情生活负责（但大概率很准）。</p>
+</div>
+</section>
+
+<!-- ============ 答题 ============ -->
+<section class="screen" id="screen-quiz">
+<div class="progress-head">
+<span class="count">第 <b id="q-now">1</b> / 20 题</span>
+<span class="pct" id="q-pct">0%</span>
+</div>
+<div class="bar"><i id="bar-fill"></i></div>
+<div class="qcard" id="qcard">
+<div class="q-tag" id="q-tag">吵架反应</div>
+<p class="q-text" id="q-text"></p>
+<div class="opts" id="q-opts"></div>
+</div>
+<div class="quiz-nav">
+<button class="back-btn" id="btn-back" type="button">← 上一题</button>
+<span class="quiz-hint">选完自动跳到下一题</span>
+</div>
+</section>
+
+<!-- ============ 结果 ============ -->
+<section class="screen" id="screen-result">
+<article class="poster" id="poster">
+<div class="p-kicker">你 的 恋 爱 隐 藏 短 板</div>
+<div class="stamp" id="r-stamp">硬</div>
+<h2 id="r-name"></h2>
+<div class="p-sub" id="r-sub"></div>
+<p class="tagline" id="r-tagline"></p>
+
+<div class="divider"><span>短 板 雷 达</span></div>
+<div class="sec">
+<div class="dims" id="r-dims"></div>
+</div>
+
+<div class="sec">
+<h3>具体表现</h3>
+<ul id="r-traits"></ul>
+</div>
+<div class="sec">
+<h3>为什么会这样</h3>
+<p id="r-why"></p>
+</div>
+<div class="sec">
+<h3>给你的小建议</h3>
+<div class="advice-box" id="r-advice"></div>
+</div>
+<div class="sec">
+<h3>趣味彩蛋</h3>
+<div class="egg-box" id="r-egg"></div>
+</div>
+<div class="p-foot">你 的 恋 爱 隐 藏 短 板 · 趣 味 测 试</div>
+</article>
+<div class="result-actions">
+<button class="btn" id="btn-restart" type="button">再测一次</button>
+<button class="btn ghost" id="btn-copy" type="button">复制我的结果</button>
+</div>
+<p class="copied-tip" id="copy-tip"></p>
+<p class="share-hint">长按或截图上方卡片，就能分享到小红书和朋友圈啦</p>
+</section>
+
+</main>
+
+<script>
+/* ================= 维度 =================
+expr 表达力 / secu 安全感 / bound 边界感 / stab 情绪稳定
+dep 依赖度 / care 体贴度 / imag 脑补力 */
+var DIMS = [
+{ k: "expr", n: "表达力"},
+{ k: "secu", n: "安全感"},
+{ k: "bound", n: "边界感"},
+{ k: "stab", n: "情绪稳定"},
+{ k: "dep", n: "依赖度"},
+{ k: "care", n: "体贴度"},
+{ k: "imag", n: "脑补力"}
+];
+
+/* ================= 结果 =================
+zy 嘴硬心软 / lz 冷战达人 / nb 过度脑补 / th 付出讨好
+cc 吃醋不承认 / tb 逃避沟通 / st 上头快 / cg 查岗侦探 */
+var RESULTS = {
+zy: {
+stamp: "硬", name: "嘴硬心软型", sub: "THE TOUGH-TALKING SOFTIE", color: "#e14b6d",
+tagline: "嘴上说着“随便”，心里已经把台词排练了八百遍",
+traits: [
+"“没事”“随便”“你开心就好”——三句一出，必有大事",
+"吵架时输出全靠气势，和好时全靠对方先伸手",
+"明明想被抱一下，开口却变成了“你离我远点”",
+"对方真信了你的“没事”，你又委屈：他怎么能真信"
+],
+why: "你不是不想说，是从小到大没怎么练习过“直接表达需求”。在你的经验里，直说像是示弱，嘴硬才像盔甲。于是爱意在心里转了九曲十八弯，出口就只剩反话——你以为这是酷，其实对方常常只收到一团雾。",
+advice: "下次想说反话之前，先在心里把句子翻个面：“你离我远点”→“你抱抱我”。一开始会别扭得像在说外语，但说出口一次，你就会发现：被抱住的感觉，比赢了吵架爽多了。",
+egg: "冷知识：你的“随便”是全宇宙最不随便的词。餐厅选址环节，你说随便之后否决的店，平均有 4.7 家。"
+},
+lz: {
+stamp: "冷", name: "冷战达人型", sub: "THE SILENT TREATMENT PRO", color: "#5b7fa6",
+tagline: "不吵不闹不回消息，主打一个“你猜”",
+traits: [
+"生气的方式不是爆发，是消失——情绪直接进入飞行模式",
+"冷战时长以天计算，纪录保持者就是你本人",
+"心里的小剧场演到第 80 集，脸上依然是“无事发生”",
+"对方来哄，你还要再冻他半天，以示惩戒"
+],
+why: "对你来说，冲突本身比问题更可怕。开口吵怕失控、怕说错话、怕场面难看，于是沉默成了你的自我保护：至少不说话，就不会把关系弄得更糟。可惜对方感受到的不是冷静，是被关在门外。",
+advice: "不用学吵架，先学“报平安”：生气的时候发一句“我现在很生气，需要冷静一下，晚点我们聊”。就这一句，能把冷战从三天缩短到三小时，对方也不用在门外冻着猜谜。",
+egg: "系统提示：你已累计冷战时长可绕地球两圈半。好消息是，你每次冷战其实都在等对方先敲门——这事对方要是知道了，能笑你一整年。"
+},
+nb: {
+stamp: "补", name: "过度脑补型", sub: "THE OVERTHINKING SCREENWRITER", color: "#8a6fc9",
+tagline: "对方回了个“嗯”，你已经写完了一整部虐恋小说",
+traits: [
+"消息回复慢五分钟，大脑自动生成 12 种坏结局",
+"语气词鉴赏大师：“哦”和“哦哦”在你这里是两种人生",
+"睡前复盘白天的对话，连标点符号都不放过",
+"事情往往没发生，你的情绪已经先受完一轮伤"
+],
+why: "脑补其实是你的雷达太灵敏。你太在乎这段关系，所以任何风吹草动都被放大解读——本质是想提前预知风险、保护自己。只是雷达灵敏度调得太高，连路过的麻雀都会触发警报。",
+advice: "给自己立个规矩：没有实锤之前，脑补只许写三行，写完就停。真不安的时候，直接问一句“你刚刚那句话是什么意思呀”，九成的虐恋剧情，问出口就当场大结局了。",
+egg: "如果脑补能发电，你的恋爱电量足够点亮一座小镇。编剧行业痛失一位人才，影视公司看了你的内心戏都想签你。"
+},
+th: {
+stamp: "好", name: "付出型讨好型", sub: "THE OVER-GIVING PLEASER", color: "#e08a3c",
+tagline: "爱一个人，先把自己感动到热泪盈眶",
+traits: [
+"他的喜好你背得比自己的还熟，他的随口一提你记一周",
+"吵架先认错，哪怕错不在你——先灭火，再委屈",
+"付出从不挂在嘴边，但心里有个小账本，偶尔翻出来叹气",
+"累到不行还问一句：你今天过得怎么样"
+],
+why: "你把“被需要”等同于“被爱”。从小你可能就发现：乖一点、懂事一点、多做一点，就能换来肯定。于是到了恋爱里，你还是习惯用付出买安全感——不是不累，是不敢停，怕一停下就不被爱了。",
+advice: "练习一件小事：下次想付出之前，先问自己“我今天想要什么”。把给他的清单分一半给自己。记住，好的关系不是你感动了自己，而是你们互相照顾——你也值得被排在第一位。",
+egg: "你的付出如果有会员积分，早就兑换环球旅行了。温馨提示：感动自己不算数，对方没接收到的好意，系统会自动清零哦。"
+},
+cc: {
+stamp: "醋", name: "吃醋不承认型", sub: "THE JEALOUSY DENIER", color: "#4d9e7a",
+tagline: "我没吃醋，我只是突然对空气过敏",
+traits: [
+"他提别的女生，你的语气温度瞬间降到零下",
+"嘴上说“挺好的呀”，手已经点开了对方的主页",
+"醋意从不直说，全靠阴阳怪气和突然的沉默传达",
+"最气的是：他居然真的没看出来你在吃醋"
+],
+why: "吃醋本身不可耻，它只是说明你在乎。但你觉得承认吃醋显得“小气”“不酷”，于是把醋意伪装成不在意。问题是，醋这东西藏不住，它总会从语气、表情和突然的冷淡里漏出来，还不如大大方方倒出来。",
+advice: "下次醋意上头，试试直接说：“我吃醋了，你哄我一下。”你会发现这句话有奇效——对方多半会觉得你可爱得不行。承认吃醋不丢人，硬撑着阴阳怪气才最耗感情。",
+egg: "你的醋坛子容量经检测为：游泳池级别。而你的否认技术经检测为：小学生偷吃辣条说没吃级别——全写在脸上了。"
+},
+tb: {
+stamp: "逃", name: "逃避沟通型", sub: "THE CONVERSATION ESCAPIST", color: "#7a7f8c",
+tagline: "有话不直说，撤退比冲锋熟练一百倍",
+traits: [
+"“我们谈谈”四个字一出，你的灵魂已经出走了一半",
+"不满从不当面提，全靠憋——憋到某天突然总爆发",
+"暗示、借口、讲别人的故事……就是不开口说重点",
+"问题从没解决过，只是被你熟练地绕过去了"
+],
+why: "你潜意识里把“谈问题”和“关系要完”画了等号。过去的经验告诉你，摊开说往往换来争吵或冷场，所以你学会了绕路：能忍就忍，能拖就拖。可惜问题不会自己消失，它只会在角落里利滚利。",
+advice: "沟通不用一步到位，先从小事练起：用“我有点在意……”开头说一件本周的小事，控制在三句话以内。谈完你会发现，天没塌，关系也没完，反而松了一口气。",
+egg: "你的撤退路线规划能力，放古代是兵法大家的水平。就是有个小问题：战场上撤退叫战略，恋爱里撤退久了，对方会以为你已经退伍了。"
+},
+st: {
+stamp: "热", name: "恋爱脑上头快型", sub: "THE FAST-FALLING ROMANTIC", color: "#e05a4e",
+tagline: "三天上头，七天规划婚礼，十四天想好孩子的名字",
+traits: [
+"心动来得像龙卷风，朋友还在问“谁啊”，你已经见完家长了（在脑内）",
+"聊天记录翻来覆去看，他随口一句话你能开心一整天",
+"热恋期恨不得 24 小时黏在一起，分离焦虑拉满",
+"上头时滤镜八百层，对方打个喷嚏你都觉得是心动信号"
+],
+why: "你对爱情的感受力天生比别人强，喜欢一个人对你来说是全情投入的盛事。这不是缺点——你的热烈、真诚和仪式感，是很多人求都求不来的。只是速度太快时，容易把“心动”误判成“命中注定”，也容易在热度退潮时摔个跟头。",
+advice: "给上头装个“延迟三天”开关：再心动，也等 72 小时再做重大决定（表白、官宣、送贵重礼物）。三天后还坚定的喜欢，才是真的喜欢；三天就凉的，恭喜你，省下了一整段故事。",
+egg: "你的心动速度已超越 99% 的用户，建议申报吉尼斯纪录。另：你脑内婚礼的司仪都换了三茬了，新郎本人还不知道这件事。"
+},
+cg: {
+stamp: "查", name: "查岗侦探型", sub: "THE LOVE DETECTIVE", color: "#3f8f8a",
+tagline: "福尔摩斯看了你的查岗技术，都想拜师学艺",
+traits: [
+"他的社交动态、点赞列表、上线时间，你比他本人还清楚",
+"“跟谁？在哪？几点回？”——关心三连，张口就来",
+"前任的账号你翻过，共同好友的动态你筛过",
+"美其名曰“关心”，其实安全感全靠情报支撑"
+],
+why: "查岗的底层不是控制欲，是不安。你怕失去，所以想用信息把不确定性填满：知道得越多，心里越踏实。可情报永远查不完，查得越多反而越焦虑——因为你找的从来不是答案，是“他不会离开”的保证，而那个保证，翻手机翻不出来。",
+advice: "下次手痒想查岗，先把手机放下十分钟，去做点别的事，十次里有八次冲动会自己消退。真正缺安全感的时候，直接跟他说“我最近有点不安，抱抱我”——比翻一百条动态都管用。",
+egg: "以你的侦查能力，不去当私家侦探真的可惜。友情提醒：你查他岗的工夫，他正在查今晚的外卖哪家评分高——你们都很忙。"
+}
+};
+
+/* ================= 题目 =================
+每题: tag 场景 / q 题干 / opts[4]: t 文案, r 主结果+权重, d 维度加分 */
+var QUESTIONS = [
+{ tag: "吵架反应", q: "吵架之后，对方先低头说“是我不好”，你的第一反应是？",
+opts: [
+{ t: "还在气头上：“哦。”然后转身去洗澡，澡洗了四十分钟", r: { lz: 2}, d: { stab: 1, expr: -1}},
+{ t: "心里早就软了，嘴上再撑三秒：“……下次注意点。”", r: { zy: 2}, d: { expr: -1, care: 1}},
+{ t: "旧账突然上线：上次那件事，你还没跟我说清楚呢", r: { nb: 2}, d: { imag: 2}},
+{ t: "赶紧也道歉，生怕他真的生气，先和好再说", r: { th: 2}, d: { care: 2, bound: -1}}
+]},
+{ tag: "吃醋表现", q: "你发现对方和一位异性同事单独吃了顿饭，你会？",
+opts: [
+{ t: "表面说“没事啊”，回家默默把他朋友圈翻了三遍", r: { cc: 3}, d: { imag: 1, expr: -1}},
+{ t: "大方一问：哪家店？好吃吗？下次带我去", r: { zy: 1}, d: { expr: 2, secu: 2}},
+{ t: "脑内已经上演完“从拼桌到结婚”的完整剧情", r: { nb: 2}, d: { imag: 2, secu: -1}},
+{ t: "不动声色，接下来一周对他格外好，好到他心里发毛", r: { th: 2}, d: { care: 2, expr: -1}}
+]},
+{ tag: "消息焦虑", q: "对方两个小时没回消息，你的状态是？",
+opts: [
+{ t: "脑补全开：是不是出事了？还是……腻了？", r: { nb: 2}, d: { imag: 2, secu: -1}},
+{ t: "以牙还牙：你晾我两小时，我晾你四小时", r: { lz: 2}, d: { stab: 1, expr: -1}},
+{ t: "试探三连：“在吗？”“在干嘛？”“人呢？”", r: { cg: 2}, d: { dep: 2, secu: -1}},
+{ t: "嘴上说不在意，手机五分钟解锁八次", r: { zy: 2, cc: 1}, d: { dep: 1, expr: -1}}
+]},
+{ tag: "纪念日", q: "重要的纪念日，对方居然忘了，你会？",
+opts: [
+{ t: "不提醒，就冷脸等他想起来——想起来之前都是冬天", r: { lz: 2}, d: { expr: -1, stab: 1}},
+{ t: "提前一周疯狂暗示，暗示到对方以为在对暗号", r: { tb: 2}, d: { expr: -1, imag: 1}},
+{ t: "自己订餐厅买礼物，仪式感我一个人也能拉满", r: { th: 2}, d: { care: 2}},
+{ t: "有点失落，但嘴上说：“没事，我也不记得哪天。”", r: { zy: 2}, d: { expr: -1, care: 1}}
+]},
+{ tag: "沟通习惯", q: "你想让对方周末陪你去办件小事，你通常怎么开口？",
+opts: [
+{ t: "发一堆链接疯狂暗示，就是不直说“陪我去”", r: { tb: 2}, d: { expr: -2}},
+{ t: "直接撒娇安排上：就这周六，你陪我，不许拒绝", r: { st: 2}, d: { expr: 2, dep: 1}},
+{ t: "先问他累不累忙不忙，铺垫十分钟才敢说重点", r: { th: 2}, d: { care: 1, expr: -1}},
+{ t: "算了自己去——然后一路想：他为什么不主动说陪我", r: { zy: 1, nb: 1}, d: { imag: 1, expr: -1}}
+]},
+{ tag: "吃醋表现", q: "对方当着你的面夸别的女生“她还挺好看的”，你？",
+opts: [
+{ t: "“哦，是吗。”——语气温度瞬间骤降十度", r: { cc: 3}, d: { expr: -1, secu: -1}},
+{ t: "默默记在小本本上，三天后吵架时精准引用", r: { cc: 2, nb: 1}, d: { imag: 2}},
+{ t: "笑着附和“是挺好看”，回家对着镜子照了半小时", r: { cc: 3}, d: { secu: -1, expr: -1}},
+{ t: "侦查模式启动：她是谁？哪个部门的？认识多久了？", r: { cg: 2}, d: { dep: 1, secu: -1}}
+]},
+{ tag: "冷战处理", q: "冷战进入第二天，你的内心活动最接近哪种？",
+opts: [
+{ t: "谁先说话谁输，我能耗到地老天荒", r: { lz: 2}, d: { stab: 1, expr: -2}},
+{ t: "和好台词都背熟了，就等他先开口，我立马顺坡下", r: { zy: 2}, d: { expr: -1}},
+{ t: "疯狂复盘：是不是我那句话说错了？他是不是不爱了？", r: { nb: 2}, d: { imag: 2, secu: -1}},
+{ t: "买了他爱吃的，假装顺路，不经意地放在他桌上", r: { th: 2}, d: { care: 2, expr: -1}}
+]},
+{ tag: "安全感", q: "对方要和朋友去外地玩三天，你的第一反应？",
+opts: [
+{ t: "行程、酒店、同行人员，报备得越详细我越安心", r: { cg: 2}, d: { secu: -1, dep: 1}},
+{ t: "表面潇洒“去吧去吧”，他一出门我就开始数小时", r: { cc: 2, zy: 1}, d: { dep: 1, expr: -1}},
+{ t: "把自己的三天排得满满当当，忙起来就不会想他", r: { tb: 1, lz: 1}, d: { bound: 1, dep: -1}},
+{ t: "已经开始策划他回来那天的接机惊喜了", r: { st: 2}, d: { care: 1, dep: 1}}
+]},
+{ tag: "付出方式", q: "你生病了，心里最希望对方怎么做？",
+opts: [
+{ t: "嘴上说“小病没事”，心里盼着他端水递药守着我", r: { zy: 2}, d: { expr: -1, dep: 1}},
+{ t: "直接列清单：粥、药、热水、陪我去医院，一个不能少", r: { st: 2}, d: { expr: 2, dep: 1}},
+{ t: "不说，等他自己发现；他没发现，我就默默委屈", r: { tb: 2}, d: { expr: -2, imag: 1}},
+{ t: "自己先扛着，还不忘问一句：你今天吃饭了没", r: { th: 2}, d: { care: 2, bound: -1}}
+]},
+{ tag: "吃醋表现", q: "刷手机时不小心刷到对方前任的动态，你会？",
+opts: [
+{ t: "点进去，把近三年的动态翻了个底朝天", r: { cg: 2}, d: { imag: 1, secu: -1}},
+{ t: "截图发给闺蜜：快，帮我分析一下这个人", r: { nb: 2}, d: { imag: 2}},
+{ t: "找机会“无意”地问起：你前任是个什么样的人呀？", r: { cc: 3}, d: { expr: 1, secu: -1}},
+{ t: "心里咯噔一下，然后假装什么都没发生过", r: { zy: 2}, d: { expr: -1, stab: 1}}
+]},
+{ tag: "相处日常", q: "对方最近特别忙，陪你的时间明显变少，你会？",
+opts: [
+{ t: "理解但失落，失落但不说，不说但脸色全写着", r: { tb: 2}, d: { expr: -2}},
+{ t: "主动迁就他的时间，再晚也要等他下班聊两句", r: { th: 2}, d: { care: 2, dep: 1, bound: -1}},
+{ t: "开始怀疑：忙是真忙吗？（默默打开他的社交账号）", r: { cg: 2}, d: { imag: 1, secu: -1}},
+{ t: "行，那我也忙起来，看咱俩谁先找谁", r: { lz: 2}, d: { stab: 1, expr: -1}}
+]},
+{ tag: "吵架反应", q: "吵架时对方突然提高了音量，你通常会？",
+opts: [
+{ t: "立刻沉默，转身进房间——这场对话到此结束", r: { tb: 2}, d: { expr: -2, stab: -1}},
+{ t: "眼泪先掉下来，话到嘴边一句都说不出来", r: { nb: 1, zy: 1}, d: { stab: -2, imag: 1}},
+{ t: "冷笑一声：“行，你继续。”然后戴上耳机", r: { lz: 2}, d: { stab: 1, expr: -1}},
+{ t: "赶紧认错，哪怕不觉得自己错——先灭火再说", r: { th: 2}, d: { care: 1, bound: -2, stab: -1}}
+]},
+{ tag: "沟通习惯", q: "对方有个小习惯让你很不舒服，你一般怎么处理？",
+opts: [
+{ t: "憋着，憋到某天因为另一件小事一起总爆发", r: { tb: 2}, d: { expr: -2, stab: -1}},
+{ t: "用开玩笑的语气吐槽一句，说完还要补：“开玩笑的”", r: { zy: 2}, d: { expr: -1}},
+{ t: "郑重其事写篇小作文，图文并茂地发过去", r: { st: 2}, d: { expr: 2, imag: 1}},
+{ t: "算了，他开心就好，我忍忍就过去了", r: { th: 2}, d: { bound: -2, care: 1}}
+]},
+{ tag: "上头速度", q: "刚确认关系一周，你的状态最像哪种？",
+opts: [
+{ t: "情侣头像、纪念日计划、见家长话术，已全部就位", r: { st: 2}, d: { dep: 1, care: 1}},
+{ t: "开心但克制，怕自己表现得太主动、太上赶着", r: { zy: 2}, d: { expr: -1, bound: 1}},
+{ t: "开始研究他的星座、MBTI，算算我俩到底合不合", r: { nb: 2}, d: { imag: 2}},
+{ t: "把他的喜好记进备忘录，记得比自己的密码还牢", r: { cg: 2, th: 1}, d: { care: 2}}
+]},
+{ tag: "付出方式", q: "对方送了你一件并不喜欢的礼物，你会？",
+opts: [
+{ t: "笑着收下夸他用心，然后……默默压箱底", r: { zy: 2}, d: { expr: -1, care: 1}},
+{ t: "有点失落：他是不是其实没那么了解我？", r: { nb: 2}, d: { imag: 2, secu: -1}},
+{ t: "感动得不行！礼物不重要，心意无价，当场发朋友圈", r: { st: 2}, d: { dep: 1, expr: 1}},
+{ t: "记在心里：下次过节，我要加倍送回去", r: { th: 2}, d: { care: 2}}
+]},
+{ tag: "沟通习惯", q: "你特别想知道对方今天过得怎么样，你会怎么做？",
+opts: [
+{ t: "等他主动说；他不说，我就自己默默猜一整晚", r: { nb: 2}, d: { imag: 2, expr: -1}},
+{ t: "查岗三连：今天跟谁？去哪了？几点回的？", r: { cg: 2}, d: { dep: 1, secu: -1}},
+{ t: "旁敲侧击，去问他的同事或朋友", r: { tb: 1, cg: 1}, d: { expr: -1}},
+{ t: "嘴上一个字不问，耳朵竖得比天线还高", r: { zy: 2}, d: { expr: -1}}
+]},
+{ tag: "冷战处理", q: "对方说“我想一个人静静”，你的反应是？",
+opts: [
+{ t: "表面同意，转头就想：静静？他是不是想分手？", r: { nb: 2}, d: { imag: 2, secu: -1}},
+{ t: "行，那我也静静——这一静，就是三天", r: { lz: 2}, d: { expr: -1, stab: 1}},
+{ t: "追问到底：静静是什么意思？你对我有什么不满？", r: { st: 2, cg: 1}, d: { dep: 1, bound: -1}},
+{ t: "默默给他倒杯水放在门口，不打扰，但也不走开", r: { th: 2}, d: { care: 2}}
+]},
+{ tag: "情绪反应", q: "朋友随口说“感觉你俩最近好像有点问题”，你会？",
+opts: [
+{ t: "立刻回家，把最近七天的聊天记录全部复盘一遍", r: { nb: 2}, d: { imag: 2}},
+{ t: "嘴硬：“我们好着呢。”——然后回家越想越不对劲", r: { zy: 2}, d: { expr: -1, imag: 1}},
+{ t: "问题？什么问题？没有问题。（继续冷处理一切）", r: { lz: 1, tb: 1}, d: { expr: -1, stab: 1}},
+{ t: "当晚就拉他认真谈一次——谈之前先把自己感动哭", r: { st: 2}, d: { expr: 1, dep: 1}}
+]},
+{ tag: "付出方式", q: "你为对方做了一件很贴心的小事，接下来你会？",
+opts: [
+{ t: "必须让他知道，但要用“我就顺手而已”的方式让他知道", r: { zy: 2}, d: { care: 1, expr: -1}},
+{ t: "不说，等他自己发现；要是没发现，心里默默记一笔", r: { tb: 2}, d: { expr: -2, imag: 1}},
+{ t: "这才哪到哪，我已经做了十件，还有十件在计划中", r: { th: 2}, d: { care: 2, bound: -1}},
+{ t: "发一条仅他可见的朋友圈，坐等他点赞评论", r: { st: 2}, d: { expr: 1, dep: 1}}
+]},
+{ tag: "睡前时分", q: "睡前躺在床上，你脑子里最常转的是？",
+opts: [
+{ t: "复盘他今天哪句话的语气，好像不太对劲", r: { nb: 2}, d: { imag: 2}},
+{ t: "明天要不要主动聊聊那件事……还是再等等吧", r: { tb: 2}, d: { expr: -1, imag: 1}},
+{ t: "他睡了吗？要不……看一眼他最后上线时间", r: { cg: 2}, d: { dep: 1, secu: -1}},
+{ t: "盘算明天给他带点什么好吃的", r: { th: 2}, d: { care: 2}}
+]}
+];
+
+/* ================= 逻辑 ================= */
+var answers = new Array(QUESTIONS.length).fill(-1);
+var current = 0;
+var lastResult = null;
+
+var $ = function (id) { return document.getElementById(id);};
+var screens = { home: $("screen-home"), quiz: $("screen-quiz"), result: $("screen-result")};
+
+function show(name) {
+for (var k in screens) screens[k].classList.toggle("active", k === name);
+window.scrollTo({ top: 0, behavior: "smooth"});
+}
+
+function renderQuestion(dir) {
+var q = QUESTIONS[current];
+$("q-now").textContent = current + 1;
+var pct = Math.round((current / QUESTIONS.length) * 100);
+$("q-pct").textContent = pct + "%";
+$("bar-fill").style.width = pct + "%";
+$("q-tag").textContent = q.tag;
+$("q-text").textContent = q.q;
+var box = $("q-opts");
+box.innerHTML = "";
+var letters = ["A", "B", "C", "D"];
+q.opts.forEach(function (opt, i) {
+var b = document.createElement("button");
+b.type = "button";
+b.className = "opt" + (answers[current] === i? " picked": "");
+b.innerHTML = '<span class="letter">' + letters[i] + '</span><span></span>';
+b.lastChild.textContent = opt.t;
+b.addEventListener("click", function () { pick(i);});
+box.appendChild(b);
+});
+$("btn-back").disabled = current === 0;
+var card = $("qcard");
+card.classList.remove("swap", "swap-back");
+void card.offsetWidth;
+card.classList.add(dir === "back"? "swap-back": "swap");
+}
+
+function pick(i) {
+answers[current] = i;
+var opts = $("q-opts").children;
+for (var j = 0; j < opts.length; j++) opts[j].classList.toggle("picked", j === i);
+setTimeout(function () {
+if (current < QUESTIONS.length - 1) {
+current++;
+renderQuestion("next");
+} else {
+$("bar-fill").style.width = "100%";
+$("q-pct").textContent = "100%";
+finish();
+}
+}, 240);
+}
+
+function computeScores() {
+var rs = {}, ds = {}, dmax = {}, rmax = {};
+for (var k in RESULTS) { rs[k] = 0; rmax[k] = 0;}
+DIMS.forEach(function (d) { ds[d.k] = 0; dmax[d.k] = 0;});
+QUESTIONS.forEach(function (q, qi) {
+DIMS.forEach(function (d) {
+var best = 0;
+q.opts.forEach(function (o) { if (o.d && o.d[d.k]) best = Math.max(best, o.d[d.k]);});
+dmax[d.k] += best;
+});
+var per = {};
+q.opts.forEach(function (o) { for (var rk in o.r) per[rk] = Math.max(per[rk] || 0, o.r[rk]);});
+for (var pk in per) rmax[pk] += per[pk];
+var a = answers[qi];
+if (a < 0) return;
+var opt = q.opts[a];
+for (var rk2 in opt.r) rs[rk2] += opt.r[rk2];
+for (var dk in opt.d) ds[dk] += opt.d[dk];
+});
+return { rs: rs, ds: ds, dmax: dmax, rmax: rmax};
+}
+
+function finish() {
+var s = computeScores();
+var bestKey = null, bestVal = -1;
+for (var k in s.rs) {
+var v = s.rs[k] / (s.rmax[k] + 16);
+if (v > bestVal) { bestVal = v; bestKey = k;}
+}
+lastResult = { key: bestKey, data: RESULTS[bestKey], scores: s};
+renderResult();
+show("result");
+}
+
+function renderResult() {
+var r = lastResult.data, s = lastResult.scores;
+var poster = $("poster");
+poster.style.setProperty("--rc", r.color);
+$("r-stamp").textContent = r.stamp;
+$("r-name").textContent = r.name;
+$("r-sub").textContent = r.sub;
+$("r-tagline").textContent = r.tagline;
+$("r-why").textContent = r.why;
+$("r-advice").textContent = r.advice;
+$("r-egg").textContent = r.egg;
+var ul = $("r-traits");
+ul.innerHTML = "";
+r.traits.forEach(function (t) {
+var li = document.createElement("li");
+li.textContent = t;
+ul.appendChild(li);
+});
+var dimsBox = $("r-dims");
+dimsBox.innerHTML = "";
+var rows = DIMS.map(function (d) {
+var raw = s.ds[d.k], max = s.dmax[d.k] || 1;
+var pct = Math.round(((raw + max) / (2 * max)) * 100);
+return { n: d.n, pct: Math.max(4, Math.min(98, pct))};
+}).sort(function (a, b) { return b.pct - a.pct;});
+rows.forEach(function (row) {
+var div = document.createElement("div");
+div.className = "dim-row";
+div.innerHTML = '<span class="dn"></span><span class="track"><span class="fill"></span></span><span class="dv"></span>';
+div.querySelector(".dn").textContent = row.n;
+div.querySelector(".dv").textContent = row.pct;
+div.querySelector(".fill").setAttribute("data-w", row.pct);
+dimsBox.appendChild(div);
+});
+setTimeout(function () {
+var fills = dimsBox.querySelectorAll(".fill");
+for (var i = 0; i < fills.length; i++) fills[i].style.width = fills[i].getAttribute("data-w") + "%";
+}, 120);
+}
+
+$("btn-start").addEventListener("click", function () {
+answers = new Array(QUESTIONS.length).fill(-1);
+current = 0;
+show("quiz");
+renderQuestion("next");
+});
+$("btn-back").addEventListener("click", function () {
+if (current > 0) { current--; renderQuestion("back");}
+});
+$("btn-restart").addEventListener("click", function () {
+answers = new Array(QUESTIONS.length).fill(-1);
+current = 0;
+show("home");
+});
+$("btn-copy").addEventListener("click", function () {
+if (!lastResult) return;
+var r = lastResult.data;
+var text = "测出来了：我是「" + r.name + "」！\n" +
+"“" + r.tagline + "”\n" +
+"彩蛋：" + r.egg + "\n" +
+"—— 你也来测测你的恋爱隐藏短板是什么？";
+var tip = $("copy-tip");
+function done() {
+tip.textContent = "已复制！去粘贴给朋友看看 ta 是哪种";
+setTimeout(function () { tip.textContent = "";}, 2600);
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(text).then(done, function () { fallback();});
+} else { fallback();}
+function fallback() {
+var ta = document.createElement("textarea");
+ta.value = text;
+ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta);
+ta.select();
+try { document.execCommand("copy"); done();}
+catch (e) { tip.textContent = "复制失败，截图卡片分享也一样好看";}
+document.body.removeChild(ta);
+}
+});
+</script>
+</body>
+</html>

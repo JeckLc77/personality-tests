@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>你适合什么样的生活节奏</title>
+<style>
+:root{
+--bg:#f4f1ea; --bg2:#ece7db; --card:#fffdf8; --ink:#23201b; --ink2:#5c564c; --ink3:#8a8378;
+--line:#ddd5c6; --accent:#c8502e; --accent-ink:#fff;
+--shadow:0 18px 44px rgba(60,48,30,.14);
+--r-color:#c8502e;
+}
+@media (prefers-color-scheme: dark){
+:root{
+--bg:#171512; --bg2:#100f0d; --card:#221f1b; --ink:#efe9dd; --ink2:#b8b0a1; --ink3:#847c6e;
+--line:#3a362f; --accent:#e0683f; --shadow:0 18px 44px rgba(0,0,0,.5);
+}
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit; min-height:44px; cursor:pointer}
+.wrap{max-width:640px;margin:0 auto;padding:28px 18px 56px}
+.serif{font-family:"Songti SC","STSong","Noto Serif SC",serif}
+
+/* ---------- screens ---------- */
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp.45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.screen.active{animation:none}.opt{transition:none}}
+
+/* ---------- home ---------- */
+.home{padding-top:5vh;text-align:left}
+.kicker{font-size:13px;letter-spacing:.35em;color:var(--accent);font-weight:700}
+.home h1{font-size:clamp(34px,8.5vw,52px);line-height:1.22;margin:16px 0 6px;font-weight:900;letter-spacing:.01em}
+.home h1 em{font-style:normal;color:var(--accent)}
+.home.sub{font-size:16px;line-height:1.85;color:var(--ink2);margin:14px 0 0;max-width:30em}
+.tempo-strip{display:flex;align-items:flex-end;gap:5px;height:64px;margin:34px 0 6px}
+.tempo-strip i{flex:1;background:var(--accent);opacity:.9;border-radius:3px 3px 0 0;animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scaleY(.82)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion: reduce){.tempo-strip i{animation:none}}
+.strip-note{font-size:12px;color:var(--ink3);letter-spacing:.2em}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 30px}
+.meta-chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-size:13px;color:var(--ink2)}
+.btn-primary{
+display:block;width:100%;border:none;border-radius:14px;background:var(--accent);color:var(--accent-ink);
+font-size:18px;font-weight:800;letter-spacing:.12em;padding:16px;box-shadow:0 10px 24px rgba(200,80,46,.32);
+transition:transform.15s ease, box-shadow.15s ease;
+}
+.btn-primary:active{transform:scale(.98)}
+.disclaimer{margin-top:18px;font-size:12.5px;color:var(--ink3);line-height:1.7;text-align:center}
+.eight{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:30px}
+.eight span{border:1px dashed var(--line);border-radius:10px;padding:10px 4px;text-align:center;font-size:12.5px;color:var(--ink2);background:color-mix(in srgb,var(--card) 60%,transparent)}
+@media (max-width:480px){.eight{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- quiz ---------- */
+.progress-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.progress-head.qcount{font-size:14px;font-weight:700;letter-spacing:.1em}
+.progress-head.qcount b{color:var(--accent);font-size:20px}
+.progress-head.dim{font-size:12px;color:var(--ink3);letter-spacing:.15em}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:30px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width.4s ease}
+.q-cat{font-size:12.5px;letter-spacing:.3em;color:var(--accent);font-weight:700;margin-bottom:10px}
+.q-text{font-size:clamp(21px,5.4vw,26px);line-height:1.5;font-weight:800;margin:0 0 24px}
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{
+text-align:left;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--ink);
+border-radius:14px;padding:16px 18px;font-size:16px;line-height:1.6;display:flex;gap:12px;align-items:flex-start;
+transition:border-color.15s ease, background.15s ease, transform.15s ease;
+}
+.opt.tag{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:800;color:var(--ink2);margin-top:1px}
+.opt:hover{border-color:var(--accent)}
+.opt:active{transform:scale(.99)}
+.opt.picked{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--card))}
+.opt.picked.tag{background:var(--accent);border-color:var(--accent);color:#fff}
+.quiz-nav{display:flex;justify-content:space-between;margin-top:26px}
+.btn-ghost{border:1px solid var(--line);background:transparent;color:var(--ink2);border-radius:10px;padding:10px 18px;font-size:14px;min-height:44px}
+.btn-ghost:disabled{opacity:.35;cursor:default}
+
+/* ---------- poster ---------- */
+.poster{
+background:var(--card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);
+border:1px solid var(--line);
+}
+.poster-top{padding:30px 28px 0;position:relative}
+.poster-top::before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:var(--r-color)}
+.p-kicker{font-size:12px;letter-spacing:.35em;color:var(--r-color);font-weight:800;margin-top:6px}
+.p-title{font-size:clamp(30px,8vw,40px);font-weight:900;line-height:1.25;margin:12px 0 4px}
+.p-en{font-size:12px;letter-spacing:.28em;color:var(--ink3);text-transform:uppercase}
+.p-quote{font-size:17.5px;line-height:1.75;font-weight:700;margin:18px 0 0;padding:14px 16px;border-radius:12px;background:color-mix(in srgb,var(--r-color) 8%,transparent);color:var(--ink)}
+.p-quote::before{content:"「"}.p-quote::after{content:"」"}
+.poster-body{padding:24px 28px 28px}
+.sec-t{font-size:13px;font-weight:800;letter-spacing:.25em;color:var(--r-color);margin:24px 0 10px;display:flex;align-items:center;gap:10px}
+.sec-t::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-t:first-child{margin-top:0}
+.p-text{font-size:15px;line-height:1.9;color:var(--ink2);margin:0}
+.curve-box{border:1px solid var(--line);border-radius:14px;padding:14px 14px 8px;background:color-mix(in srgb,var(--card) 70%,var(--bg))}
+.curve-box svg{width:100%;height:auto;display:block}
+.curve-cap{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);padding:2px 2px 6px}
+.dims{display:flex;flex-direction:column;gap:9px}
+.dim-row{display:grid;grid-template-columns:64px 1fr 30px;align-items:center;gap:10px;font-size:13px}
+.dim-row.dn{color:var(--ink2);font-weight:600}
+.dim-row.dv{text-align:right;font-weight:800;color:var(--ink)}
+.dim-track{height:7px;border-radius:99px;background:var(--line);overflow:hidden}
+.dim-track i{display:block;height:100%;background:var(--r-color);border-radius:99px;width:0;transition:width.8s ease}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--r-color) 45%,var(--line));color:var(--ink);background:color-mix(in srgb,var(--r-color) 6%,transparent)}
+.warn{border-radius:12px;padding:14px 16px;background:color-mix(in srgb,#d99a26 12%,transparent);border:1px solid color-mix(in srgb,#d99a26 40%,var(--line))}
+.warn p{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink)}
+.egg{font-size:14.5px;line-height:1.85;color:var(--ink2);margin:0}
+.egg b{color:var(--r-color)}
+.poster-foot{padding:16px 28px 22px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink3);letter-spacing:.12em}
+.poster-foot.seal{width:40px;height:40px;border:2px solid var(--r-color);color:var(--r-color);border-radius:8px;display:grid;place-items:center;font-size:17px;font-weight:900;transform:rotate(-6deg);font-family:"Songti SC","STSong",serif}
+.actions{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.btn-copy{border:none;border-radius:14px;background:var(--ink);color:var(--bg);font-size:16px;font-weight:700;padding:15px;letter-spacing:.08em}
+.btn-again{border:1.5px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font-size:16px;font-weight:700;padding:15px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.3s ease;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.calcing{text-align:center;padding:12vh 0}
+.calcing.big{font-size:22px;font-weight:800;margin-top:20px}
+.calcing.small{color:var(--ink3);font-size:13.5px;margin-top:8px;letter-spacing:.15em}
+.spin{width:54px;height:54px;margin:0 auto;border-radius:50%;border:5px solid var(--line);border-top-color:var(--accent);animation:sp 0.9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spin{animation-duration:2.4s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 首页 -->
+<section class="screen active" id="s-home">
+<div class="home">
+<div class="kicker">趣 味 人 格 测 试</div>
+<h1 class="serif">你适合什么样的<br /><em>生活节奏</em>？</h1>
+<p class="sub">有人天生是油门，有人生来是刹车；有人靠闹钟活着，有人靠月亮下班。20 道生活场景题，测出你的专属节拍——是冲锋、是潮汐，还是随缘漂流。</p>
+<div class="tempo-strip" id="strip" aria-hidden="true"></div>
+<div class="strip-note">每个人心里，都有一条自己的电量曲线</div>
+<div class="meta-row">
+<span class="meta-chip">共 20 题 · 约 2 分钟</span>
+<span class="meta-chip">8 种生活节奏</span>
+<span class="meta-chip">附专属电量曲线</span>
+</div>
+<button class="btn-primary" id="btn-start">开始测试</button>
+<div class="eight" aria-hidden="true">
+<span>冲锋型</span><span>慢生活型</span><span>夜行动物型</span><span>潮汐型</span>
+<span>随缘漂流型</span><span>精确计划型</span><span>爆发冲刺型</span><span>深海潜行型</span>
+</div>
+<p class="disclaimer">本测试为趣味娱乐向人格小游戏，不是专业心理诊断。<br />凭第一直觉选，别想太多——想太多就不是你的节奏了。</p>
+</div>
+</section>
+
+<!-- 答题 -->
+<section class="screen" id="s-quiz">
+<div class="progress-head">
+<div class="qcount">第 <b id="q-now">1</b> / 20 题</div>
+<div class="dim" id="q-dim"></div>
+</div>
+<div class="bar"><i id="bar-fill"></i></div>
+<div class="q-cat" id="q-cat"></div>
+<h2 class="q-text" id="q-text"></h2>
+<div class="opts" id="q-opts"></div>
+<div class="quiz-nav">
+<button class="btn-ghost" id="btn-back">← 上一题</button>
+<button class="btn-ghost" id="btn-home2">回到首页</button>
+</div>
+</section>
+
+<!-- 计算中 -->
+<section class="screen" id="s-calc">
+<div class="calcing">
+<div class="spin"></div>
+<div class="big">正在读取你的节拍…</div>
+<div class="small">对齐闹钟 · 潮汐 · 月亮与咖啡因</div>
+</div>
+</section>
+
+<!-- 结果 -->
+<section class="screen" id="s-result">
+<div class="poster" id="poster">
+<div class="poster-top">
+<div class="p-kicker">我 的 生 活 节 奏</div>
+<div class="p-title serif" id="r-title"></div>
+<div class="p-en" id="r-en"></div>
+<p class="p-quote" id="r-quote"></p>
+</div>
+<div class="poster-body">
+<div class="sec-t">节奏画像</div>
+<p class="p-text" id="r-portrait"></p>
+
+<div class="sec-t">你的电量曲线</div>
+<div class="curve-box">
+<svg id="r-curve" viewBox="0 0 300 110" role="img" aria-label="电量曲线图"></svg>
+<div class="curve-cap"><span>6:00</span><span>10:00</span><span>14:00</span><span>18:00</span><span>22:00</span><span>2:00</span></div>
+</div>
+<p class="p-text" id="r-curve-note" style="margin-top:10px"></p>
+
+<div class="sec-t">六维节奏图谱</div>
+<div class="dims" id="r-dims"></div>
+
+<div class="sec-t">性格特点</div>
+<div class="tags" id="r-tags"></div>
+<p class="p-text" id="r-traits" style="margin-top:12px"></p>
+
+<div class="sec-t">隐藏优势</div>
+<p class="p-text" id="r-adv"></p>
+
+<div class="sec-t">节奏错位提醒</div>
+<div class="warn"><p id="r-warn"></p></div>
+
+<div class="sec-t">趣味彩蛋</div>
+<p class="egg" id="r-egg"></p>
+</div>
+<div class="poster-foot">
+<span>你适合什么样的生活节奏 · 趣味测试</span>
+<span class="seal" id="r-seal">奏</span>
+</div>
+</div>
+<div class="actions">
+<button class="btn-copy" id="btn-copy">复制我的结果文案</button>
+<button class="btn-again" id="btn-again">重新测试</button>
+</div>
+<p class="disclaimer">长按或截图上方海报卡，即可分享到小红书和朋友圈。<br />结果仅供娱乐，开心最重要。</p>
+</section>
+</div>
+<div class="toast" id="toast">已复制，去分享给朋友吧</div>
+
+<script>
+/* ============ 维度 ============ */
+/* speed 速度感 / control 掌控感 / flex 弹性度 / focus 专注力 / night 夜猫指数 / social 社交续航 */
+var DIMS = [
+{k:'speed', n:'速度感'},
+{k:'control',n:'掌控感'},
+{k:'flex', n:'弹性度'},
+{k:'focus', n:'专注力'},
+{k:'night', n:'夜猫指数'},
+{k:'social', n:'社交续航'}
+];
+
+/* ============ 结果 ============ */
+var RESULTS = {
+rush:{ name:'大城市冲锋型', en:'The Sprinter', color:'#c8502e', seal:'冲',
+quote:'人生苦短，我选快进。',
+portrait:'你的体内装了一台永动机。城市越快，你越兴奋——红灯是热身，排队是事故，高峰期的地铁是你的主场。你享受那种"一切都在往前冲"的推背感，慢下来反而会心慌。对你来说，效率即正义，人生信条是：能今天干完的，绝不拖到明天；能走路解决的，绝不站着等。',
+curve:[30,95,88,92,70,25], curveNote:'全天高位运行，上午直接拉满，晚上靠意志力续航——你的电量不是慢慢掉的，是"啪"一下关机的。',
+tags:['急性子本子','多线程战士',' deadline 冲浪手','走路带风'],
+traits:'反应快、执行力爆棚、讨厌等待。你是朋友里的"发起人"，群里说走就走的那种。但你也容易把身边的人带得气喘吁吁——不是所有人都装了涡轮增压。',
+adv:'隐藏优势是"启动速度"。别人还在做心理建设，你已经干完一半了。机会这种东西，往往就是被你这种先伸手的人拿走的。',
+warn:'当你被塞进慢节奏的环境（比如排队两小时的网红店、开会只聊天不开工的团队），你会烦躁到想原地起飞。提醒：别人的慢不是错，学着把油门松一档，风景也是生产力。',
+egg:'彩蛋：你的手机相册里，截图最多的东西是<b>外卖预计送达时间</b>。你的人生没有"随便吃点"，只有"几点能到"。'},
+slow:{ name:'小城慢生活型', en:'The Slow Liver', color:'#7a8c4f', seal:'慢',
+quote:'日子是用来过的，不是用来赶的。',
+portrait:'你的人生 BGM 是民谣，不是电音。你坚信热汤要慢慢煲、路要慢慢走、觉要睡到自然醒。你的幸福感来源非常具体：一碗热粥、一下午的太阳、一只睡在脚边的猫。大城市的霓虹再亮，也不如老家巷口那盏路灯让你安心。',
+curve:[45,65,60,68,62,30], curveNote:'电量平稳如湖面，没有大起大落——你不是没电，你是根本不屑于飙车。',
+tags:['热汤爱好者','散步哲学家','反内卷先锋','午睡钉子户'],
+traits:'情绪稳定、耐心极好、知足常乐。你是朋友圈里的"定海神针"，天大的事到你这儿，先吃口饭再说。缺点是启动太慢，机会敲门时你可能还在穿鞋。',
+adv:'隐藏优势是"续航"。速朽的东西你不碰，所以你攒下的人、钱和健康，都是复利型的。十年后回头看，跑得最远的往往是你这种不慌的。',
+warn:'当生活突然提速（比如临时出差、项目赶工），你会像被拔了网线的路由器——不是不能转，是需要预热。提醒：提前给自己留缓冲带，别让所有急事都变成"突然袭击"。',
+egg:'彩蛋：你的人生理想被精准概括为——<b>有院子、有猫、下雨天不用出门</b>。如果再加一条：外卖能送到院门口。'},
+night:{ name:'夜行动物型', en:'The Night Owl', color:'#4a5a8a', seal:'夜',
+quote:'白天是别人的，夜晚才是我的。',
+portrait:'太阳下山，你的系统才正式开机。深夜的你思如泉涌、灵感爆棚，白天的你像被抽走了电池。你的巅峰产出时段是 23:00–3:00，那个世界安静得只剩下你的键盘声。你不是懒，你只是和大多数人活在不同的时区——自带时差，无需倒。',
+curve:[8,25,40,55,85,98], curveNote:'教科书级的反向上升曲线：别人关机时你满格，别人满格时你在省电模式。',
+tags:['月亮的合伙人','深夜灵感贩子','早起困难户','越夜越清醒'],
+traits:'创造力强、独处能力满分、夜里格外温柔（回消息都带语气词）。弱点是白天社交场合容易灵魂出窍，晨会上的你，眼神里写着"人在，魂没到"。',
+adv:'隐藏优势是"错峰竞争力"。当全世界都在睡觉，你在悄悄赶路——很多改变命运的事，都是在没人围观的深夜里完成的。',
+warn:'当你被迫进入朝九晚五的作息，你会像被调了时区的手机——时间是对的，状态全是错的。提醒：没法改作息时，就把最重要的事尽量挪到你的"黄金夜场"，别硬扛晨型人生。',
+egg:'彩蛋：你发过最多的深夜动态时间是<b>凌晨 2:17</b>。别问为什么是这个点——问就是灵感它不守时。'},
+tide:{ name:'张弛有度的潮汐型', en:'The Tide Keeper', color:'#2e7f86', seal:'汐',
+quote:'该拼的时候拼，该躺的时候躺。',
+portrait:'你是天生的节奏大师，像潮汐一样有涨有落。忙起来可以连轴转，闲下来能心安理得地发一下午呆。你很少内耗，因为你清楚：一直紧绷的弦会断，一直松着的弦弹不出声。你的生活有明确的"工作模式"和"充电模式"，切换开关就在你自己手里。',
+curve:[55,90,65,88,60,35], curveNote:'标准的波浪形曲线：冲一波、缓一波。你的电量管理，是所有人里最像"智能省电"的。',
+tags:['松弛感本感','劳逸结合课代表','情绪稳定器','会休息才会赢'],
+traits:'自律但不自虐，拼搏但不拼命。朋友评价你"靠谱又好相处"，因为你既不会卷到让人窒息，也不会摆烂到让人着急。偶尔的烦恼是：切换太丝滑，容易被误会成"没全力以赴"。',
+adv:'隐藏优势是"可持续"。短跑选手赢一时，潮汐型选手赢一世——你的节奏能跑马拉松，还能在终点保持微笑。',
+warn:'当环境只许涨潮不许退潮（比如连续数月无休），你的系统会悄悄透支，直到某天突然"大退潮"躺平一周。提醒：小退潮要勤，别攒成海啸。',
+egg:'彩蛋：你的日历里藏着一种神秘事件——<b>名为"有事"，实为"躺着"</b>。别狡辩，每个潮汐型都有这一页。'},
+drift:{ name:'随缘漂流型', en:'The Drifter', color:'#b07a3f', seal:'漂',
+quote:'计划赶不上变化，那就别计划了。',
+portrait:'你的人生是一条没有航线图的河，流到哪儿算哪儿——而且神奇的是，总能流到不错的地方。你不焦虑未来，不纠结过去，主打一个"船到桥头自然直"。朋友说你佛系，你说这叫"对生活的基本信任"。惊喜体质说的就是你：随便走走都能发现好吃的店，随手一投都能中个再来一瓶。',
+curve:[40,55,48,62,58,42], curveNote:'电量随缘波动，没有规律就是你的规律——像天气，像心情，像你的人生。',
+tags:['佛系本系','惊喜体质','计划粉碎机','既来之则安之'],
+traits:'心态无敌、适应力极强、天塌下来先睡一觉。你是团队里的气氛缓和剂，再紧张的局面，你一句"多大点事"就能降温。短板是重要的事也容易"随缘"过头，deadline 是你唯一的闹钟。',
+adv:'隐藏优势是"低内耗"。别人纠结三天的事，你三分钟翻篇。这种心理弹性，是花钱买不到的顶级配置。',
+warn:'当你被塞进强计划的环境（比如事事要报备、步步要审批），你会像被装进鱼缸的河鱼——憋得慌。提醒：大方向可以随缘，但银行卡余额和体检报告，建议你偶尔"不随缘"一下。',
+egg:'彩蛋：你的人生信条被外卖软件精准拿捏——<b>"附近有什么吃什么"</b>，而且你吃完还经常真香。'},
+plan:{ name:'精确到分钟的计划型', en:'The Scheduler', color:'#5d6e46', seal:'表',
+quote:'我的日历，比闹钟还懂我。',
+portrait:'你的生活是一张精密运行的时刻表：几点起床、几点健身、几点复盘，分毫不差。你享受"一切尽在掌握"的安全感，待办清单划掉最后一项的瞬间，是你一天的高光时刻。别人觉得你自律得可怕，你觉得这只是"把日子过明白了"。不确定性是你的天敌，表格是你的铠甲。',
+curve:[70,92,85,90,75,40], curveNote:'电量曲线像你的日程表一样规整：准时满格、准时回落，连低电量都是计划之内的。',
+tags:['清单狂魔','时间管理大师','提前三天准备','备忘录永动机'],
+traits:'靠谱、守时、执行力强，是所有人眼里的"定心丸"。和你合作过的人都会上瘾——因为你说几点交，就几点交。弱点是对意外零容忍，计划被打乱时，你的烦躁值会瞬间爆表。',
+adv:'隐藏优势是"复利人生"。你的每一天都在按计划增值，别人在靠运气，你在靠系统——长期来看，系统从不输给运气。',
+warn:'当生活给你发来"计划外包裹"（比如突如其来的变动、说走就走的旅行邀约），你的第一反应是抗拒。提醒：偶尔把日历空出一格，写上一个"随便"——惊喜有时候就藏在那一格里。',
+egg:'彩蛋：你的备忘录里有一条<b>三年前建的"临时清单"</b>，至今还在更新。临时是不可能临时的，这辈子都不可能。'},
+burst:{ name:'爆发式冲刺型', en:'The Burster', color:'#a83a5e', seal:'爆',
+quote:'平时勿扰，爆发时请让道。',
+portrait:'你的日常画风是"躺平"，但千万别被骗了——你的发动机是涡轮增压式的：平时怠速省油，一旦目标锁定，瞬间红线拉满。你的产出曲线极其陡峭：三天没动静，第四天交出别人两周的量。你讨厌匀速前进的无聊，你爱的是心跳加速、一击必中的快感。',
+curve:[25,35,30,98,92,20], curveNote:'心电图式曲线：长时间平缓，然后突然冲上云霄。你的电量不是用掉的，是"引爆"的。',
+tags:['拖延症晚期但能交活','大心脏选手','灵感型爆发户','不鸣则已'],
+traits:'抗压能力惊人，越到关键时刻越冷静。平时看着懒散，其实大脑一直在后台攒大招。短板是怠速期太长，容易给人留下"不靠谱"的第一印象——虽然你每次都能用结果翻盘。',
+adv:'隐藏优势是"峰值战力"。全场比耐力你可能输，但比关键一击，没人敢跟你赌。人生很多局，赢的就是那一下。',
+warn:'当你被放进"每天匀速打卡"的环境，你的电量会被无聊一点点漏光。提醒：主动给自己设"假想敌"和"假 deadline"，你的引擎需要敌人才能点火。',
+egg:'彩蛋：你的经典名场面是——<b>ddl 前一晚开了挂，ddl 后一周躺成饼</b>。朋友问你累不累，你说：这叫节奏。'},
+deep:{ name:'深海潜行型', en:'The Deep Diver', color:'#3e5c50', seal:'潜',
+quote:'世界越吵，我潜得越深。',
+portrait:'你不喜欢在水面上扑腾，你喜欢一头扎进深海：一件事、一个领域、一坐一下午。你的专注力是稀缺资源——进入状态后，外卖凉了、消息爆了、世界都与你无关。你社交不多，但每段关系都潜得很深；你话不多，但开口往往一针见血。慢热，是你对这个浮躁世界的温柔抵抗。',
+curve:[35,60,85,95,80,45], curveNote:'缓慢爬升、长时间高位潜航：你的电量启动慢，但一旦进入深水区，谁都追不上。',
+tags:['沉浸式选手','深度工作者','社交精选制','一钻到底'],
+traits:'专注、沉稳、有自己的一套。你讨厌碎片化，手机通知全关是你的基本操作。朋友觉得你有点"高冷"，熟了才知道你只是把热情都留给了真正重要的事。弱点是切换成本高，被频繁打断会格外烦躁。',
+adv:'隐藏优势是"深度复利"。这个时代最不缺浅尝辄止的人，缺的是能潜到海底的人——而宝藏，从来都在深海里。',
+warn:'当你被放进高频切换、多线并行的环境（比如同时跟进八个群、每小时开一次会），你的电量会漏得比谁都快。提醒：给自己留整块的"潜水时间"，哪怕每天只有两小时。',
+egg:'彩蛋：你的手机常年处于<b>勿扰模式</b>，朋友找你靠"随缘刷到"。但你回消息的那一刻，永远是全文最认真的那一条。'}
+};
+
+/* ============ 题目 ============ */
+/* 每项: t 文案, s 维度加分, r 主结果+3, r2 次结果+1 */
+var QUESTIONS = [
+{cat:'作 息', t:'你的闹钟，通常是什么画风？', opts:[
+{t:'定点一个，分秒不差，起床流程像发车时刻表', s:{control:3,plan:1}, r:'plan', r2:'rush'},
+{t:'连环夺命 call，五六个闹钟接力才把我捞起来', s:{night:2,speed:1}, r:'burst', r2:'night'},
+{t:'基本靠自然醒，太阳晒屁股就是闹钟', s:{flex:3}, r:'drift', r2:'slow'},
+{t:'比闹钟早醒，洗漱晨练吃早餐，一样不落', s:{control:2,speed:1}, r:'slow', r2:'plan'}]},
+{cat:'通 勤', t:'上班/上学的路上，你的状态是？', opts:[
+{t:'掐着点狂奔，换乘时间精确到秒，绝不浪费一分钟', s:{speed:3}, r:'rush', r2:'plan'},
+{t:'耳机一戴，谁也不爱，在自己的世界里潜水', s:{focus:3,social:0}, r:'deep', r2:'night'},
+{t:'骑车或步行，看天气看心情，绕路买杯豆浆也行', s:{flex:2,social:1}, r:'tide', r2:'slow'},
+{t:'能躺着绝不站着，网约车后座就是我的移动卧室', s:{flex:2,night:1}, r:'slow', r2:'drift'}]},
+{cat:'工 作', t:'新任务来了，你的第一反应是？', opts:[
+{t:'先列清单排优先级，拆解到每一步再说', s:{control:3}, r:'plan', r2:'deep'},
+{t:'直接开干！边做边想，手比脑子快', s:{speed:3}, r:'rush', r2:'burst'},
+{t:'先放一放，等状态来了再一口气搞定', s:{flex:2,focus:1}, r:'burst', r2:'drift'},
+{t:'深吸一口气，关掉通知，准备沉浸式开工', s:{focus:3}, r:'deep', r2:'plan'}]},
+{cat:'多 任 务', t:'同时有三件事砸过来，你会？', opts:[
+{t:'爽！多线程全开，越忙越兴奋', s:{speed:3,social:1}, r:'rush', r2:'burst'},
+{t:'排个序，一件一件来，乱了阵脚是大忌', s:{control:3}, r:'tide', r2:'plan'},
+{t:'先挑最有感觉的那件，其他的随缘排队', s:{flex:3}, r:'drift', r2:'burst'},
+{t:'挑最重要的一件潜下去，另外两件先静音', s:{focus:3}, r:'deep', r2:'tide'}]},
+{cat:'午 休', t:'午休时间，你的打开方式是？', opts:[
+{t:'雷打不动睡 20 分钟，下午准时满血复活', s:{control:2,focus:1}, r:'tide', r2:'plan'},
+{t:'随便吃点，刷刷手机，电量靠快乐回充', s:{flex:2,social:1}, r:'slow', r2:'drift'},
+{t:'午休？那是用来赶进度的黄金时段', s:{speed:2,control:1}, r:'burst', r2:'rush'},
+{t:'慢慢吃一顿好的，再溜达一圈消消食', s:{flex:1,social:1}, r:'slow', r2:'tide'}]},
+{cat:'下 午', t:'下午三点，困意来袭，你怎么办？', opts:[
+{t:'咖啡续命，音乐拉满，原地满血', s:{speed:2,night:1}, r:'night', r2:'rush'},
+{t:'趴一会儿，就十分钟，小睡是门艺术', s:{flex:2}, r:'tide', r2:'slow'},
+{t:'困？我下午才是真正的主场，越晚越精神', s:{night:3}, r:'night', r2:'deep'},
+{t:'起来走走接杯水，靠节奏切换硬扛过去', s:{control:2}, r:'tide', r2:'plan'}]},
+{cat:'计 划', t:'你的日程表/备忘录长什么样？', opts:[
+{t:'密密麻麻，精确到半小时，颜色分类齐全', s:{control:3}, r:'plan', r2:'rush'},
+{t:'有是有，但基本是个摆设，执行全靠缘分', s:{flex:3}, r:'drift', r2:'burst'},
+{t:'只有大节点，细节留白，随机应变', s:{flex:2,control:1}, r:'tide', r2:'drift'},
+{t:'重要的事记脑子里，清单只会增加焦虑', s:{focus:2,flex:1}, r:'deep', r2:'night'}]},
+{cat:'意 外', t:'精心安排的计划被突发情况打乱，你的内心 OS 是？', opts:[
+{t:'烦！但立刻重排，B 计划三分钟内上线', s:{control:2,speed:1}, r:'plan', r2:'rush'},
+{t:'无所谓啊，计划本来就是用来变的', s:{flex:3}, r:'drift', r2:'tide'},
+{t:'正好，趁机歇会儿，天意如此', s:{flex:2}, r:'slow', r2:'drift'},
+{t:'打乱我可以，但别打断我正在做的事', s:{focus:3}, r:'deep', r2:'plan'}]},
+{cat:'下 班', t:'下班的那一刻，你通常？', opts:[
+{t:'准时撤退，工作是工作，生活是生活', s:{control:2,flex:1}, r:'tide', r2:'slow'},
+{t:'再冲一波！趁热打铁把尾巴收了', s:{speed:3}, r:'burst', r2:'rush'},
+{t:'我的夜生活才刚刚开始，晚饭只是序幕', s:{night:3,social:1}, r:'night', r2:'drift'},
+{t:'不急，慢慢收尾，今天的事今天毕', s:{control:2,focus:1}, r:'deep', r2:'plan'}]},
+{cat:'晚 间', t:'晚上的黄金时间，你更想？', opts:[
+{t:'约朋友吃饭聊天，热闹才是充电宝', s:{social:3}, r:'rush', r2:'night'},
+{t:'一个人待着，看书打游戏，谁也别找我', s:{focus:2,social:0,night:1}, r:'deep', r2:'night'},
+{t:'泡个澡、追个剧，早早钻进被窝', s:{flex:1,control:1}, r:'slow', r2:'tide'},
+{t:'看心情，心情说出门就出门，说躺平就躺平', s:{flex:3}, r:'drift', r2:'tide'}]},
+{cat:'周 末', t:'理想的周六上午，是什么样？', opts:[
+{t:'睡到自然醒，醒来先发半小时呆', s:{flex:2,night:1}, r:'slow', r2:'drift'},
+{t:'早起搞定一周的杂事，下午彻底自由', s:{control:2,speed:1}, r:'rush', r2:'plan'},
+{t:'上午？我的周六从中午才开始计时', s:{night:3}, r:'night', r2:'burst'},
+{t:'约上人爬山逛街，行程排满才过瘾', s:{social:3,speed:1}, r:'rush', r2:'tide'}]},
+{cat:'周 末', t:'周末计划，你是哪一派？', opts:[
+{t:'提前排好：周六干嘛周日干嘛，一清二楚', s:{control:3}, r:'plan', r2:'tide'},
+{t:'零计划，醒来再说，主打一个随机掉落', s:{flex:3}, r:'drift', r2:'slow'},
+{t:'一半计划一半留白，进可攻退可躺', s:{flex:2,control:1}, r:'tide', r2:'plan'},
+{t:'攒了一周的活儿，周末一口气全干完', s:{speed:2,focus:1}, r:'burst', r2:'rush'}]},
+{cat:'旅 行', t:'出去旅行，你的风格是？', opts:[
+{t:'攻略做到小时级，餐厅门票全部提前订好', s:{control:3}, r:'plan', r2:'rush'},
+{t:'只订机票酒店，到了再说，迷路也是风景', s:{flex:3}, r:'drift', r2:'slow'},
+{t:'每天一个主题，玩透一个地方就够了', s:{focus:3}, r:'deep', r2:'slow'},
+{t:'特种兵式打卡，一天刷完别人三天的量', s:{speed:3}, r:'burst', r2:'rush'}]},
+{cat:'消 息', t:'手机消息，你的回复速度是？', opts:[
+{t:'秒回！红点不清，全身难受', s:{speed:3,social:1}, r:'rush', r2:'plan'},
+{t:'看完再回，回就回一大段，认真得像写信', s:{focus:2,social:1}, r:'deep', r2:'slow'},
+{t:'随缘回，可能秒回，也可能三天后', s:{flex:3}, r:'drift', r2:'night'},
+{t:'白天免打扰，晚上集中处理一批', s:{control:2,night:1}, r:'night', r2:'plan'}]},
+{cat:'死 线', t:'面对 deadline，你的节奏是？', opts:[
+{t:'提前完工，留足检查时间，绝不卡点', s:{control:3}, r:'plan', r2:'deep'},
+{t:'匀速推进，每天做一点，稳如老狗', s:{control:2,flex:1}, r:'tide', r2:'plan'},
+{t:'前松后紧，最后 24 小时开启神仙模式', s:{speed:2,focus:1}, r:'burst', r2:'rush'},
+{t:'ddl 是第一生产力，没有 ddl 就没有我', s:{speed:1,flex:2}, r:'burst', r2:'drift'}]},
+{cat:'社 交', t:'连着三天都有饭局聚会，你的感受是？', opts:[
+{t:'快乐加倍！人多才热闹，我就是气氛组组长', s:{social:3,speed:1}, r:'rush', r2:'night'},
+{t:'第一天开心，第三天只想回家躺着', s:{social:1,flex:1}, r:'tide', r2:'slow'},
+{t:'救命，我需要一周独处来回血', s:{focus:2,social:0}, r:'deep', r2:'slow'},
+{t:'白天的局能推就推，晚上的局勉强营业', s:{night:2,social:1}, r:'night', r2:'drift'}]},
+{cat:'运 动', t:'运动这件事，你靠什么坚持？', opts:[
+{t:'固定时间固定项目，风雨无阻打卡', s:{control:3}, r:'plan', r2:'tide'},
+{t:'兴致来了连练三天，兴致走了躺平三周', s:{flex:2,speed:1}, r:'burst', r2:'drift'},
+{t:'不刻意运动，散步遛弯就是养生', s:{flex:2}, r:'slow', r2:'tide'},
+{t:'夜跑爱好者，城市睡了我才出门', s:{night:3}, r:'night', r2:'deep'}]},
+{cat:'消 费', t:'想买的东西，你的决策路径是？', opts:[
+{t:'看准就下单，犹豫就会败北', s:{speed:3}, r:'burst', r2:'rush'},
+{t:'加购物车放一周，冷静期过了再说', s:{control:2,focus:1}, r:'plan', r2:'deep'},
+{t:'随缘刷到就买，讲究一个眼缘', s:{flex:3}, r:'drift', r2:'slow'},
+{t:'深夜下单率最高，夜里冲动消费防不胜防', s:{night:3}, r:'night', r2:'drift'}]},
+{cat:'睡 前', t:'睡前最后一小时，你在干嘛？', opts:[
+{t:'复盘今天、列好明天，安心关灯', s:{control:3}, r:'plan', r2:'tide'},
+{t:'刷手机刷到困，困了自然睡', s:{night:2,flex:1}, r:'drift', r2:'night'},
+{t:'这才是一天的开始：游戏、电影、创作，全安排', s:{night:3,focus:1}, r:'night', r2:'burst'},
+{t:'泡脚、拉伸、听轻音乐，仪式感拉满', s:{control:1,flex:1}, r:'slow', r2:'tide'}]},
+{cat:'理 想', t:'如果明天完全不用考虑任何事，你想怎么过？', opts:[
+{t:'排满体验清单：新店、新展、新路线，全打卡', s:{speed:2,social:1}, r:'rush', r2:'burst'},
+{t:'找个山清水秀的地方，发呆、喝茶、看云', s:{flex:2,focus:1}, r:'slow', r2:'deep'},
+{t:'睡到下午，晚上才是我的主场，通宵也行', s:{night:3}, r:'night', r2:'drift'},
+{t:'上午高效搞定想做的事，下午彻底放空', s:{control:2,flex:1}, r:'tide', r2:'plan'}]}
+];
+
+/* ============ 逻辑 ============ */
+var cur = 0, answers = [];
+var $ = function(id){ return document.getElementById(id);};
+
+function show(id){
+['s-home','s-quiz','s-calc','s-result'].forEach(function(s){ $(s).classList.toggle('active', s===id);});
+window.scrollTo({top:0});
+}
+
+/* 首页节拍条 */
+(function(){
+var h=[22,38,55,80,64,95,48,70,88,42,60,100,52,76,34,66,90,46,58,84];
+var html='';
+h.forEach(function(v,i){ html += '<i style="height:'+v+'%;animation-delay:'+(i*0.13)+'s"></i>';});
+$('strip').innerHTML = html;
+})();
+
+function renderQ(){
+var q = QUESTIONS[cur];
+$('q-now').textContent = cur+1;
+$('q-dim').textContent = '凭第一直觉选';
+$('bar-fill').style.width = ((cur)/QUESTIONS.length*100)+'%';
+$('q-cat').textContent = q.cat;
+$('q-text').textContent = q.t;
+var box = $('q-opts'); box.innerHTML='';
+var letters=['A','B','C','D'];
+q.opts.forEach(function(o,i){
+var b=document.createElement('button');
+b.className='opt'+(answers[cur]===i?' picked':'');
+b.innerHTML='<span class="tag">'+letters[i]+'</span><span>'+o.t+'</span>';
+b.onclick=function(){ pick(i);};
+box.appendChild(b);
+});
+$('btn-back').disabled = cur===0;
+var quiz=$('s-quiz'); quiz.classList.remove('active'); void quiz.offsetWidth; quiz.classList.add('active');
+}
+
+function pick(i){
+answers[cur]=i;
+renderPicked(i);
+setTimeout(function(){
+if(cur < QUESTIONS.length-1){ cur++; renderQ();}
+else finish();
+}, 220);
+}
+function renderPicked(i){
+var opts=$('q-opts').children;
+for(var j=0;j<opts.length;j++) opts[j].classList.toggle('picked', j===i);
+$('bar-fill').style.width = ((cur+1)/QUESTIONS.length*100)+'%';
+}
+
+function compute(){
+var score={}, dims={};
+Object.keys(RESULTS).forEach(function(k){ score[k]=0;});
+DIMS.forEach(function(d){ dims[d.k]=0;});
+answers.forEach(function(ai,qi){
+var o=QUESTIONS[qi].opts[ai];
+score[o.r]+=3; score[o.r2]+=1;
+for(var k in o.s) dims[k]+=o.s[k];
+});
+/* 维度归一化为 0-100（每维满分约 30） */
+var dimPct={};
+DIMS.forEach(function(d){
+var max=0;
+QUESTIONS.forEach(function(q){ var m=0; q.opts.forEach(function(o){ if(o.s[d.k]&&o.s[d.k]>m) m=o.s[d.k];}); max+=m;});
+dimPct[d.k]= max? Math.round(dims[d.k]/max*100): 0;
+});
+var best=null, bestV=-1;
+Object.keys(score).forEach(function(k){ if(score[k]>bestV){ bestV=score[k]; best=k;}});
+return {key:best, score:score, dimPct:dimPct};
+}
+
+function finish(){
+show('s-calc');
+setTimeout(function(){
+var res=compute();
+renderResult(res);
+show('s-result');
+}, 1100);
+}
+
+function curveSVG(pts, color){
+var W=300,H=110,P=12;
+var xs=pts.map(function(_,i){ return P + i*(W-2*P)/(pts.length-1);});
+var ys=pts.map(function(v){ return H-14 - (v/100)*(H-34);});
+var path='M'+xs.map(function(x,i){ return x.toFixed(1)+' '+ys[i].toFixed(1);}).join(' L ');
+var area=path+' L '+xs[xs.length-1].toFixed(1)+' '+(H-8)+' L '+xs[0].toFixed(1)+' '+(H-8)+' Z';
+var dots=xs.map(function(x,i){ return '<circle cx="'+x.toFixed(1)+'" cy="'+ys[i].toFixed(1)+'" r="3.5" fill="'+color+'"/>';}).join('');
+var grid='';
+[0.25,0.5,0.75].forEach(function(f){ var y=(H-14-(f)*(H-34)).toFixed(1); grid+='<line x1="'+P+'" y1="'+y+'" x2="'+(W-P)+'" y2="'+y+'" stroke="currentColor" opacity="0.12" stroke-dasharray="3 4"/>';});
+return grid+'<path d="'+area+'" fill="'+color+'" opacity="0.14"/><path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'+dots;
+}
+
+var lastResult=null, lastDimPct=null;
+function renderResult(res){
+var r=RESULTS[res.key];
+lastResult=r; lastDimPct=res.dimPct;
+document.getElementById('poster').style.setProperty('--r-color', r.color);
+$('r-title').textContent=r.name;
+$('r-en').textContent=r.en;
+$('r-quote').textContent=r.quote;
+$('r-portrait').textContent=r.portrait;
+$('r-curve').innerHTML=curveSVG(r.curve, r.color);
+$('r-curve-note').textContent=r.curveNote;
+$('r-tags').innerHTML=r.tags.map(function(t){ return '<span>'+t+'</span>';}).join('');
+$('r-traits').textContent=r.traits;
+$('r-adv').textContent=r.adv;
+$('r-warn').textContent=r.warn;
+$('r-egg').innerHTML=r.egg;
+$('r-seal').textContent=r.seal;
+var dh='';
+DIMS.forEach(function(d){ dh+='<div class="dim-row"><span class="dn">'+d.n+'</span><span class="dim-track"><i data-w="'+res.dimPct[d.k]+'"></i></span><span class="dv">'+res.dimPct[d.k]+'</span></div>';});
+$('r-dims').innerHTML=dh;
+setTimeout(function(){
+document.querySelectorAll('#r-dims.dim-track i').forEach(function(el){ el.style.width=el.getAttribute('data-w')+'%';});
+}, 60);
+}
+
+$('btn-start').onclick=function(){ cur=0; answers=[]; show('s-quiz'); renderQ();};
+$('btn-back').onclick=function(){ if(cur>0){ cur--; renderQ();}};
+$('btn-home2').onclick=function(){ show('s-home');};
+$('btn-again').onclick=function(){ cur=0; answers=[]; show('s-quiz'); renderQ();};
+$('btn-copy').onclick=function(){
+if(!lastResult) return;
+var d=lastDimPct;
+var txt='\n我的生活节奏是：'+lastResult.name+'\n'+
+'专属文案：「'+lastResult.quote+'」\n'+
+'六维图谱：速度感 '+d.speed+' · 掌控感 '+d.control+' · 弹性度 '+d.flex+' · 专注力 '+d.focus+' · 夜猫指数 '+d.night+' · 社交续航 '+d.social+'\n'+
+'隐藏优势：'+lastResult.adv+'\n你也来测测你是什么节奏？';
+function done(){ var t=$('toast'); t.classList.add('show'); setTimeout(function(){ t.classList.remove('show');},2200);}
+if(navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(txt).then(done).catch(function(){ fallback();});
+} else fallback();
+function fallback(){
+var ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+document.body.appendChild(ta); ta.select();
+try{ document.execCommand('copy'); done();}catch(e){}
+document.body.removeChild(ta);
+}
+};
+</script>
+</body>
+</html>

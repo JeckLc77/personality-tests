@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>你的隐藏天赋测试</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#f4f0e6; --bg2:#ece5d3; --card:#fffdf7; --ink:#1c1a17; --ink2:#5c564c; --line:#ddd3bd;
+--accent:#b3541e; --accent2:#1f5f5b; --gold:#c99a2e;
+--shadow:0 18px 50px rgba(60,45,20,.16);
+--radius:20px;
+}
+@media (prefers-color-scheme: dark){
+:root{ --bg:#141310; --bg2:#1b1a16; --card:#22211c; --ink:#f2ecdd; --ink2:#b8b0a0; --line:#3a372e; --accent:#e08a4c; --accent2:#5fb3ac; --gold:#e0b84e; --shadow:0 18px 50px rgba(0,0,0,.5);}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans SC",system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;min-height:44px}
+.wrap{max-width:680px;margin:0 auto;padding:20px 18px 56px}
+.serif{font-family:"Noto Serif SC",serif}
+
+/* ---------- screens ---------- */
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp.45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.screen.active{animation:none}.opt{transition:none}}
+
+/* ---------- home ---------- */
+.hero{padding:34px 6px 8px;text-align:center}
+.kicker{display:inline-block;font-size:12px;letter-spacing:.35em;color:var(--accent);font-weight:700;border:1px solid var(--line);border-radius:999px;padding:6px 16px 6px 20px;background:var(--card)}
+.hero h1{font-family:"Noto Serif SC",serif;font-weight:900;font-size:clamp(38px,9vw,58px);line-height:1.2;margin:22px 0 6px;letter-spacing:.02em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero.sub{font-family:"Noto Serif SC",serif;font-size:clamp(16px,4.4vw,20px);color:var(--ink2);margin:8px 0 0}
+.hero p.lead{color:var(--ink2);font-size:15px;max-width:480px;margin:18px auto 0}
+.talent-cloud{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px auto 4px;max-width:520px}
+.talent-cloud span{font-size:13px;font-weight:500;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;color:var(--ink2)}
+.talent-cloud span b{color:var(--ink);font-weight:700}
+.meta-row{display:flex;gap:10px;justify-content:center;margin:22px 0 6px;flex-wrap:wrap}
+.meta-row>div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 18px;text-align:center;min-width:96px}
+.meta-row.n{font-family:"Noto Serif SC",serif;font-size:22px;font-weight:900;line-height:1.1}
+.meta-row.l{font-size:12px;color:var(--ink2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:999px;font-weight:700;font-size:16px;padding:14px 38px;transition:transform.15s ease, box-shadow.15s ease}
+.btn-primary{background:var(--ink);color:var(--bg);box-shadow:0 10px 26px rgba(0,0,0,.22)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--ink2)}
+.cta-row{text-align:center;margin-top:26px}
+.note{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:16px}
+.how{margin:34px 0 0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 22px 8px}
+.how h2{font-family:"Noto Serif SC",serif;font-size:18px;margin:0 0 6px}
+.how li{margin:0 0 12px;color:var(--ink2);font-size:14.5px}
+.how ol{margin:10px 0;padding-left:22px}
+
+/* ---------- quiz ---------- */
+.quiz-head{display:flex;align-items:center;gap:12px;margin:10px 0 4px}
+.back-btn{background:none;border:1px solid var(--line);border-radius:999px;width:44px;height:44px;font-size:18px;color:var(--ink);display:flex;align-items:center;justify-content:center;flex:none}
+.qcount{font-size:13px;color:var(--ink2);font-weight:700;letter-spacing:.08em}
+.progress{height:8px;background:var(--bg2);border-radius:99px;overflow:hidden;margin:12px 0 26px;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--accent));border-radius:99px;transition:width.4s ease;width:0}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px 24px;box-shadow:var(--shadow)}
+.qtag{font-size:12px;letter-spacing:.25em;color:var(--accent2);font-weight:700}
+.qtext{font-family:"Noto Serif SC",serif;font-size:clamp(20px,5.4vw,25px);font-weight:700;line-height:1.5;margin:10px 0 22px}
+.opts{display:flex;flex-direction:column;gap:11px}
+.opt{display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:15.5px;color:var(--ink);line-height:1.55;transition:border-color.15s ease, background.15s ease, transform.15s ease}
+.opt:hover{border-color:var(--accent);transform:translateX(3px)}
+.opt.key{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--ink2);margin-top:1px;background:var(--card)}
+.opt.picked{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 10%, var(--bg))}
+.opt.picked.key{background:var(--accent);border-color:var(--accent);color:#fff}
+.qcard.slide-out{animation:slideOut.22s ease both}
+.qcard.slide-in{animation:slideIn.3s ease both}
+@keyframes slideOut{to{opacity:0;transform:translateX(-16px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
+.quiz-tip{text-align:center;font-size:12.5px;color:var(--ink2);margin-top:16px}
+
+/* ---------- analyzing ---------- */
+.analyzing{text-align:center;padding:70px 10px}
+.analyzing.ring{width:74px;height:74px;margin:0 auto 22px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--accent);animation:spin 0.9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.analyzing.ring{animation-duration:2.4s}}
+.analyzing h2{font-family:"Noto Serif SC",serif;font-size:22px;margin:0 0 8px}
+.analyzing p{color:var(--ink2);font-size:14px;margin:0}
+
+/* ---------- result poster ---------- */
+.poster{border-radius:26px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);background:var(--card)}
+.poster-top{padding:34px 28px 26px;color:#fff;position:relative;background:var(--rc,#333)}
+.poster-top::after{content:"";position:absolute;inset:0;background:radial-gradient(420px 200px at 85% -10%,rgba(255,255,255,.28),transparent 60%);pointer-events:none}
+.poster-top.plabel{font-size:12px;letter-spacing:.4em;opacity:.85;font-weight:700}
+.poster-top h2{font-family:"Noto Serif SC",serif;font-size:clamp(36px,9vw,50px);font-weight:900;margin:12px 0 4px;line-height:1.15;position:relative;z-index:1}
+.poster-top.en{font-size:13px;letter-spacing:.22em;opacity:.8;text-transform:uppercase;position:relative;z-index:1}
+.poster-top.tagline{font-family:"Noto Serif SC",serif;font-size:clamp(16.5px,4.6vw,19px);margin:18px 0 0;line-height:1.6;position:relative;z-index:1;font-weight:600}
+.seal{position:absolute;top:26px;right:24px;z-index:1;width:58px;height:58px;border:2px solid rgba(255,255,255,.85);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:"Noto Serif SC",serif;font-weight:900;font-size:15px;line-height:1.25;text-align:center;transform:rotate(6deg);background:rgba(255,255,255,.12)}
+.poster-body{padding:26px 28px 8px}
+.sec{margin-bottom:22px}
+.sec h3{font-size:13px;letter-spacing:.3em;color:var(--accent);margin:0 0 8px;font-weight:900}
+.sec p{margin:0;font-size:15px;color:var(--ink)}
+.sec ul{margin:0;padding-left:20px}
+.sec li{font-size:15px;margin-bottom:5px}
+.sec.egg{background:var(--bg);border:1px dashed var(--gold);border-radius:14px;padding:13px 16px;font-size:14.5px}
+.dims{margin:4px 0 24px}
+.dim-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.dim-row.dn{width:64px;flex:none;font-weight:700}
+.dim-row.bar{flex:1;height:9px;background:var(--bg2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.dim-row.bar i{display:block;height:100%;border-radius:99px;background:var(--rc,#888)}
+.dim-row.dv{width:36px;text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
+.poster-foot{padding:0 28px 24px;display:flex;justify-content:space-between;align-items:center;color:var(--ink2);font-size:12px;border-top:1px dashed var(--line);padding-top:16px;margin:0 28px 24px;padding-left:0;padding-right:0}
+.result-actions{display:flex;gap:12px;justify-content:center;margin:24px 0 6px;flex-wrap:wrap}
+.result-actions.btn{flex:1;min-width:150px;max-width:240px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:11px 22px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:all.3s ease;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.3);white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.others{margin-top:30px}
+.others h3{font-family:"Noto Serif SC",serif;font-size:17px;text-align:center;margin:0 0 14px}
+.others-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.others-grid div{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px 14px;font-size:13.5px}
+.others-grid b{display:block;font-size:14.5px;margin-bottom:2px}
+.others-grid span{color:var(--ink2);font-size:12.5px;line-height:1.45;display:block}
+footer{text-align:center;color:var(--ink2);font-size:12px;margin-top:36px}
+@media (max-width:480px){
+.poster-top,.poster-body{padding-left:20px;padding-right:20px}
+.poster-foot{margin-left:20px;margin-right:20px}
+.seal{width:50px;height:50px;font-size:13px;top:22px;right:18px}
+.qcard{padding:22px 18px 20px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ======= HOME ======= -->
+<section class="screen active" id="screen-home">
+<div class="hero">
+<span class="kicker">趣 味 人 格 测 试</span>
+<h1>你的<em>隐藏天赋</em><br>测试</h1>
+<p class="sub">有些本事，你从小用到大，却从没把它当回事。</p>
+<p class="lead">20 道题，不问成绩、不问技能，只聊小时候的偏好、你的学习方式、动手习惯和朋友对你的评价——测出那个被你当成「性格」，其实是天赋的东西。</p>
+<div class="talent-cloud" id="talentCloud"></div>
+<div class="meta-row">
+<div><div class="n">20</div><div class="l">道生活题</div></div>
+<div><div class="n">8</div><div class="l">个天赋维度</div></div>
+<div><div class="n">8</div><div class="l">种隐藏天赋</div></div>
+<div><div class="n">3<span style="font-size:14px">分钟</span></div><div class="l">测完出结果</div></div>
+</div>
+<div class="cta-row">
+<button class="btn btn-primary" id="btnStart">开始挖掘我的天赋 →</button>
+<p class="note">凭第一直觉选，没有对错。趣味测试，非专业心理诊断，结果仅供娱乐与自我探索。</p>
+</div>
+</div>
+<div class="how">
+<h2>怎么测？</h2>
+<ol>
+<li>逐题作答，每题选最像你的那个选项，别想太多，第一反应最准。</li>
+<li>系统会从逻辑、共情、动手、审美、记忆、表达、直觉、领导力八个维度为你计分。</li>
+<li>得分最高的维度组合，会为你揭晓一种隐藏天赋，并附上专属海报卡，截图就能分享。</li>
+</ol>
+</div>
+<footer>你的隐藏天赋测试 · 做完记得截图，看看朋友们都是哪一种</footer>
+</section>
+
+<!-- ======= QUIZ ======= -->
+<section class="screen" id="screen-quiz">
+<div class="quiz-head">
+<button class="back-btn" id="btnBack" aria-label="上一题">←</button>
+<span class="qcount" id="qCount">第 1 / 20 题</span>
+</div>
+<div class="progress"><i id="progressBar"></i></div>
+<div class="qcard" id="qCard">
+<div class="qtag" id="qTag"></div>
+<div class="qtext" id="qText"></div>
+<div class="opts" id="qOpts"></div>
+</div>
+<p class="quiz-tip">选完自动进入下一题 · 选最像你的，不要选「应该的」</p>
+</section>
+
+<!-- ======= ANALYZING ======= -->
+<section class="screen" id="screen-loading">
+<div class="analyzing">
+<div class="ring"></div>
+<h2>正在翻你的成长档案…</h2>
+<p id="loadingText">比对八个天赋维度中</p>
+</div>
+</section>
+
+<!-- ======= RESULT ======= -->
+<section class="screen" id="screen-result">
+<div class="poster" id="poster">
+<div class="poster-top" id="posterTop">
+<div class="plabel">你 的 隐 藏 天 赋 是</div>
+<div class="seal" id="rSeal"></div>
+<h2 id="rName"></h2>
+<div class="en" id="rEn"></div>
+<p class="tagline" id="rTagline"></p>
+</div>
+<div class="poster-body">
+<div class="sec">
+<h3>天 赋 雷 达</h3>
+<div class="dims" id="rDims"></div>
+</div>
+<div class="sec">
+<h3>它 在 你 身 上 的 表 现</h3>
+<ul id="rSigns"></ul>
+</div>
+<div class="sec">
+<h3>为 什 么 你 自 己 没 发 现</h3>
+<p id="rWhy"></p>
+</div>
+<div class="sec">
+<h3>低 成 本 开 始 用 它</h3>
+<ul id="rStart"></ul>
+</div>
+<div class="sec">
+<h3>隐 藏 优 势</h3>
+<p id="rAdv"></p>
+</div>
+<div class="sec">
+<h3>趣 味 彩 蛋</h3>
+<p class="egg" id="rEgg"></p>
+</div>
+</div>
+<div class="poster-foot">
+<span>《你的隐藏天赋测试》</span>
+<span id="rMatch"></span>
+</div>
+</div>
+<div class="result-actions">
+<button class="btn btn-primary" id="btnCopy">复制结果文案</button>
+<button class="btn btn-ghost" id="btnRetest">重新测试</button>
+</div>
+<p class="note">长按或截图上方海报卡，即可分享到小红书 / 朋友圈</p>
+<div class="others">
+<h3>其他 7 种隐藏天赋，看看哪个像你朋友</h3>
+<div class="others-grid" id="othersGrid"></div>
+</div>
+<footer>趣味人格测试 · 不是专业心理诊断，开心最重要</footer>
+</section>
+</div>
+<div class="toast" id="toast">已复制，去分享给朋友吧</div>
+
+<script>
+/* ================= 数据：维度 ================= */
+var DIMS = {
+logic: { name: "逻辑力", color: "#3e6fb0"},
+empathy: { name: "共情力", color: "#d96f8e"},
+craft: { name: "动手力", color: "#b3541e"},
+aesthetic: { name: "审美力", color: "#7a5fb5"},
+memory: { name: "记忆力", color: "#2e8b6e"},
+expression: { name: "表达力", color: "#d99a26"},
+intuition: { name: "直觉力", color: "#4a7fb5"},
+leadership: { name: "领导力", color: "#a03d5c"}
+};
+
+/* ================= 数据：20 道题 ================= */
+/* 每题 4 个选项，各对应一个维度 +3 分；20 题共 80 个选项槽，8 个维度各出现 10 次，保持均衡 */
+var QUESTIONS = [
+{ tag: "小时候", q: "小时候玩积木或乐高，你最常见的状态是？", opts: [
+{ t: "拼过一次的造型，下次不用看图纸也能原样拼出来", d: "memory"},
+{ t: "不看图纸，凭感觉乱搭，搭出什么算什么", d: "intuition"},
+{ t: "手就停不下来，能连着拼一下午，拼完特别有成就感", d: "craft"},
+{ t: "先挑颜色顺眼的零件，丑的坚决不用，作品必须好看", d: "aesthetic"}
+]},
+{ tag: "学习方式", q: "背课文或背单词时，你最靠哪一招？", opts: [
+{ t: "先理解意思，顺着逻辑往下推，忘了也能接上", d: "logic"},
+{ t: "把内容编成顺口溜或小故事，念着念着就记住了", d: "expression"},
+{ t: "在脑子里给每段配一幅画，背的时候像翻相册", d: "memory"},
+{ t: "一边走一边念，或者抄写几遍，手和脚比脑子记得牢", d: "craft"}
+]},
+{ tag: "观察力", q: "去一个新地方，你最先注意到的是？", opts: [
+{ t: "谁的情绪不太对，气氛哪里怪怪的", d: "empathy"},
+{ t: "布局和动线：门在哪、怎么走最省事", d: "logic"},
+{ t: "光线、配色、装修细节，好不好看先过一遍眼", d: "aesthetic"},
+{ t: "说不清，就是有种「这里让我舒服 / 不舒服」的感觉", d: "intuition"}
+]},
+{ tag: "朋友眼中的你", q: "朋友心情不好时，最常对你做的事是？", opts: [
+{ t: "直接打电话来倾诉，说跟你聊完就好多了", d: "empathy"},
+{ t: "让你帮忙分析：这事到底该怎么办", d: "logic"},
+{ t: "让你带他出去玩，你总能把气氛搞热", d: "expression"},
+{ t: "什么都不说，就想在你旁边待着，觉得安心", d: "leadership"}
+]},
+{ tag: "动手习惯", q: "新买的东西需要自己组装，你的第一反应是？", opts: [
+{ t: "说明书先通读一遍，心里有数再动手", d: "logic"},
+{ t: "说明书是什么？直接上手，装错了再说", d: "craft"},
+{ t: "先把零件按大小颜色排整齐，看着就舒服", d: "aesthetic"},
+{ t: "喊上朋友或家人一起，分工合作热热闹闹", d: "leadership"}
+]},
+{ tag: "小时候", q: "小时候的课堂上，你最容易因为什么被老师点名？", opts: [
+{ t: "跟同桌讲小话，故事讲得停不下来", d: "expression"},
+{ t: "盯着窗外发呆，脑子里在放电影", d: "intuition"},
+{ t: "在课本上涂涂画画，或者摆弄橡皮文具", d: "craft"},
+{ t: "替旁边同学打抱不平，或者帮人出头", d: "leadership"}
+]},
+{ tag: "记忆力", q: "下面哪件事对你来说最轻松？", opts: [
+{ t: "记住多年前的某个细节：谁穿了什么、说了哪句话", d: "memory"},
+{ t: "看一遍路线就能记住，下次闭着眼都能带路", d: "memory"},
+{ t: "听过的歌哼两遍就会唱，台词看一遍能复述", d: "expression"},
+{ t: "第一次见的人，下次还能准确叫出名字", d: "empathy"}
+]},
+{ tag: "放松方式", q: "彻底放松的时候，你最想做什么？", opts: [
+{ t: "做点手工、拼图、烘焙，手上有事做心里就静", d: "craft"},
+{ t: "刷喜欢的博主、看展、翻画册，眼睛吃饱了就行", d: "aesthetic"},
+{ t: "找朋友聊天八卦，或者自己写点东西、录个视频", d: "expression"},
+{ t: "翻翻老照片、旧聊天记录，回忆杀最治愈", d: "memory"}
+]},
+{ tag: "团队协作", q: "小组作业或团建时，你通常自然地变成？", opts: [
+{ t: "定计划、分任务、催进度的那个人", d: "leadership"},
+{ t: "负责最后检查、找漏洞的那个人", d: "logic"},
+{ t: "照顾大家情绪、有人掉队就拉一把的那个人", d: "empathy"},
+{ t: "负责做 PPT、排版美化、拿得出手的那个人", d: "aesthetic"}
+]},
+{ tag: "直觉时刻", q: "有没有过这种体验：还没发生，你就预感到了？", opts: [
+{ t: "经常！选人、选路、避坑，第六感很少骗我", d: "intuition"},
+{ t: "偶尔，事后回想才发现当时其实有预感", d: "intuition"},
+{ t: "不太有，我更信摆在眼前的事实和证据", d: "logic"},
+{ t: "我更擅长预感别人的状态：谁要哭、谁在硬撑", d: "empathy"}
+]},
+{ tag: "消费偏好", q: "挑一件要天天用的东西（杯子、本子、手机壳），你最看重？", opts: [
+{ t: "颜值，必须顺眼，看着丑的用不下去", d: "aesthetic"},
+{ t: "手感和质感，拿在手里舒不舒服最重要", d: "craft"},
+{ t: "性价比和参数，货比三家算明白再买", d: "logic"},
+{ t: "眼缘，第一眼心动就它了，不纠结", d: "intuition"}
+]},
+{ tag: "讲故事", q: "把一件小事讲给朋友听，你的风格是？", opts: [
+{ t: "绘声绘色带表演，朋友听得笑出声", d: "expression"},
+{ t: "细节拉满：时间地点原话，一样不落", d: "memory"},
+{ t: "条理清楚：起因经过结果，三分钟讲完", d: "logic"},
+{ t: "特别会渲染气氛，讲到关键处大家屏住呼吸", d: "empathy"}
+]},
+{ tag: "动手习惯", q: "家里的东西坏了（水龙头滴水、椅子晃了），你会？", opts: [
+{ t: "先自己上手试试，拆开看看，没准就修好了", d: "craft"},
+{ t: "搜教程研究原理，搞懂了再决定修不修", d: "logic"},
+{ t: "组织全家：谁拿工具、谁打手电，分工明确", d: "leadership"},
+{ t: "先放着，哪天灵感来了突然就想通怎么修了", d: "intuition"}
+]},
+{ tag: "审美日常", q: "发朋友圈或小红书前，你最折腾的是？", opts: [
+{ t: "修图调色排版，九宫格必须和谐统一", d: "aesthetic"},
+{ t: "文案，改了又改，要有梗还要有点意思", d: "expression"},
+{ t: "不折腾，原图直出，真实最重要", d: "craft"},
+{ t: "想发的时间点和配什么音乐，凭感觉来", d: "intuition"}
+]},
+{ tag: "考试复习", q: "考试或面试前，你的复习方式是？", opts: [
+{ t: "把知识点串成框架图，逻辑通了就全通了", d: "logic"},
+{ t: "靠反复默写和翻错题，本子记得比脑子还全", d: "memory"},
+{ t: "讲给别人听，讲明白了就是真学会了", d: "expression"},
+{ t: "先押题，凭经验猜重点，命中率还不低", d: "intuition"}
+]},
+{ tag: "社交场合", q: "一群人冷场的时候，你通常会？", opts: [
+{ t: "主动抛话题、讲段子，把场子热起来", d: "expression"},
+{ t: "默默观察，发现谁被冷落了就去跟他聊", d: "empathy"},
+{ t: "提议玩个游戏或者换个地方，自然地接管节奏", d: "leadership"},
+{ t: "不慌，我享受安静，冷场也是一种舒服", d: "aesthetic"}
+]},
+{ tag: "记忆力", q: "朋友随口提过的小事（忌口、生日、怕什么），你？", opts: [
+{ t: "基本都记得，下次见面自然就照顾到了", d: "memory"},
+{ t: "记得特别牢，因为我在意这个人", d: "empathy"},
+{ t: "记个大概，重要的会专门记在手机备忘录", d: "leadership"},
+{ t: "经常忘，但动手做过的事我一次就记住", d: "craft"}
+]},
+{ tag: "危机时刻", q: "出门旅行突然状况频出（误车、订错房），你会？", opts: [
+{ t: "迅速冷静下来，列出选项，一个个解决", d: "leadership"},
+{ t: "先安抚同行的人，情绪稳了事就好办了", d: "empathy"},
+{ t: "凭直觉先选一条路，走着走着办法就来了", d: "intuition"},
+{ t: "翻出之前的攻略和截图，还好我都存着", d: "memory"}
+]},
+{ tag: "朋友评价", q: "朋友最常这样形容你：", opts: [
+{ t: "「你手也太巧了，什么都能修能做」", d: "craft"},
+{ t: "「你品味真好，跟着你买从没踩过雷」", d: "aesthetic"},
+{ t: "「你记性绝了，陈年旧事都记得」", d: "memory"},
+{ t: "「有你在就特别踏实，天塌下来你都能扛」", d: "leadership"}
+]},
+{ tag: "理想周末", q: "完全自由的一天，你最想怎么过？", opts: [
+{ t: "逛市集、看展、淘点好看的小东西", d: "aesthetic"},
+{ t: "约上三五好友，我来组局我来安排", d: "leadership"},
+{ t: "陪家人或朋友慢慢待着，聊聊近况就很好", d: "empathy"},
+{ t: "把心里攒了很久的话写下来，或者拍条视频讲出来", d: "expression"}
+]}
+];
+
+/* ================= 数据：8 种隐藏天赋 ================= */
+var RESULTS = {
+empathy: {
+name: "天生共情者", en: "The Empath", seal: "共情", color: "#c2506f",
+tagline: "你不是太敏感，你是自带天线的人——别人没说出口的话，你都收得到。",
+signs: [
+"朋友开口三句话，你就知道他今天是真的开心还是在硬撑",
+"看电影、刷到陌生人的故事，你比当事人还先红眼眶",
+"谁被冷落、谁在尴尬，你总是第一个发现并悄悄递台阶",
+"别人随口提的忌口和喜好，你记住了，还默默照顾到"
+],
+why: "因为这份敏感从小被说成「想太多」「玻璃心」，你学会了把它藏起来。加上它太自然了，自然到你以为人人如此——其实不是，大多数人真的听不到那些「没说出口的话」。",
+start: [
+"把你的观察写下来：每天记一句「今天我注意到谁的情绪变了」，一周后回看，准确率会吓到你",
+"下次朋友倾诉时，先不给建议，只复述他的感受——你会发现这就是最稀缺的能力",
+"试着帮一位朋友写一段安慰或祝福的文字，你的表达配上共情，杀伤力极强"
+],
+adv: "共情是所有「与人打交道」行业的底层天赋：咨询、教育、服务、内容、销售、管理——哪里需要理解人，哪里就是你的主场。AI 能算数据，但算不出人心，这份天赋只会越来越贵。",
+egg: "彩蛋：你大概率是朋友圈的「深夜树洞」，手机里存着最多的人间故事。注意给自己的天线放假，接收器也需要关机充电。"
+},
+logic: {
+name: "细节侦探", en: "The Detail Detective", seal: "侦探", color: "#3e6fb0",
+tagline: "别人看热闹，你看门道——世界的漏洞，在你眼里无处藏身。",
+signs: [
+"看悬疑剧总比主角早两集猜到凶手，还忍不住剧透",
+"合同、说明书、规则条款，你扫一眼就知道坑在哪",
+"东西一乱你就难受，必须理出顺序和分类才舒服",
+"别人吵半天没结论，你一句话就能总结：问题出在第三步"
+],
+why: "因为在学校里，这份能力只被用来「检查作业对不对」，从来没人告诉你它叫洞察力。你自己也觉得「这不就是认真一点吗」——不，多数人看三遍都找不到那个错别字和那条逻辑漏洞。",
+start: [
+"玩推理类桌游或剧本杀，你会发现自己是天生的关键先生 / 女士",
+"帮朋友看一份合同、简历或方案，练一次「挑刺服务」，口碑来得比想象快",
+"把你发现的「生活漏洞」写成小帖子：避坑指南类内容，天然有人看"
+],
+adv: "细节侦探的尽头是风控、审计、质检、产品、法务、编辑——所有「错一次就代价惨重」的岗位，都在高价收购你的眼睛。而且你天生适合做副业咨询：别人花三小时纠结的事，你十分钟看清结构。",
+egg: "彩蛋：你大概率受不了别人消息里的错别字和标点乱用，并且在心里默默改对了才继续看。承认吧，你连菜单都挑出过错字。"
+},
+craft: {
+name: "金手指匠人", en: "The Golden Hands", seal: "匠人", color: "#b3541e",
+tagline: "你的手比脑子先学会——别人还在看教程，你已经做完了。",
+signs: [
+"新东西到手先上手摸，说明书永远是最后才看的",
+"做手工、拼模型、烘焙时能进入心流，几小时不看手机",
+"家里小东西坏了，你的第一反应是「拆开看看」而不是报修",
+"学任何技能，看别人做一遍，你的手就大概会了"
+],
+why: "因为动手能力在「唯分数论」的年代最不被当回事：手工课是副课，修好东西叫「瞎捣鼓」。加上你做的时候太轻松，轻松到自己都怀疑这算什么本事——它算，而且是越来越稀缺的那种。",
+start: [
+"挑一个小项目练手：旧物改造、木工小件、烘焙、陶艺，成本控制在 100 元内",
+"把过程拍下来发小红书：手工过程视频是天然的流量池，你的手就是主角",
+"帮朋友修一样小东西或做一份手工礼物，收下那句「你手也太巧了」——那是市场在给你报价"
+],
+adv: "在一个满屏都是虚拟产品的时代，能做出实物的人自带稀缺性。手作、烘焙、维修、改造、原型制作——你的手既能疗愈自己，也能变成真金白银的技能，而且越老越吃香，机器替代不了手感。",
+egg: "彩蛋：你的购物软件里大概率躺着一堆「买了工具就等于学会了」的收藏。别光收藏了，这个周末就动手做一个。"
+},
+aesthetic: {
+name: "天生策展人", en: "The Born Curator", seal: "策展", color: "#7a5fb5",
+tagline: "丑的东西在你手里活不过三秒——你的眼睛，天生自带滤镜和秩序。",
+signs: [
+"进一家店先看陈列和配色，不好看的店好吃也不想进",
+"拍照不用教构图，随手一拍就比别人精心摆的好看",
+"朋友买东西、装修、挑衣服，总爱先发给你过目",
+"桌面、相册、歌单都要分类整理，乱和丑你都受不了"
+],
+why: "因为审美从小被当成「虚荣」和「不务正业」：花时间搭配衣服会被说臭美，修图会被说矫情。没人告诉你，那叫视觉判断力，是设计、品牌、内容行业花钱买的核心能力。",
+start: [
+"给自己的房间或工位做一次小改造，拍前后对比图——你的第一份作品集就有了",
+"在小红书发一组你的日常审美：穿搭、桌面、收藏，策展人的人设天然吸粉",
+"帮朋友把关一次重要场合的穿搭或礼物，用你的眼睛换一次真实反馈"
+],
+adv: "审美是最难速成、最吃天赋的能力之一：技术可以学，品味学不会。在人人都能用模板做图的时代，「知道什么好看」的人成了最后的把关者。陈列、造型、选品、视觉策划——你的眼睛就是生产工具。",
+egg: "彩蛋：你大概率因为一家店的菜单排版太丑而默默拉黑过它。放心，这不是挑剔，这是职业敏感（提前版）。"
+},
+memory: {
+name: "时光档案员", en: "The Living Archive", seal: "档案", color: "#2e8b6e",
+tagline: "你的大脑是一座档案馆——别人忘了的时光，你都替他们存着。",
+signs: [
+"多年前的聚会，谁坐哪、说了什么，你能复盘得像录像回放",
+"路线走一遍就记住，你是朋友出门自带的活导航",
+"歌词、台词、电话号码，过耳不忘，别人惊讶你习以为常",
+"朋友忘了自己说过的话，你能原句奉还，还带时间地点"
+],
+why: "因为记忆力太「安静」了：它不像唱歌跳舞能表演，只在考试时被夸一句「背得快」。出了学校没人再考你背书，这座档案馆就被你当成了仓库——其实它存的都是别人丢掉的宝贝。",
+start: [
+"做一次「记忆服务」：帮家人整理老照片并配上你记得的故事，成品会让全家人破防",
+"试试记忆类挑战：速记扑克、背圆周率，验证一下你的上限到底在哪",
+"把你记得的城市老店、童年地标写下来，这类「时光内容」在社交平台非常吃香"
+],
+adv: "超强记忆是学习一切的加速器：语言、法律、医学、历史、销售话术——别人要复习五遍的，你过一遍就刻盘。更重要的是，你是人群中的「关系硬盘」：记住别人的小事，就是最顶级的社交能力。",
+egg: "彩蛋：你大概率记着一堆没用的信息：小学同桌的生日、十年前广告的台词、早搬走的邻居的车牌。没用的不是记忆，是还没遇到用它的场合。"
+},
+expression: {
+name: "故事大王", en: "The Storyteller", seal: "故事", color: "#c07f13",
+tagline: "同一件事，经你的嘴一说，立刻有了主角光环和背景音乐。",
+signs: [
+"讲个买菜的经历，你能讲出起承转合，听众不舍得去厕所",
+"群里最有梗的段子、给朋友起的外号，大多出自你手",
+"冷场时你一开口，气氛肉眼可见地活过来",
+"写东西比说还溜，小作文、文案、祝福语，朋友都找你代笔"
+],
+why: "因为小时候这份天赋的名字叫「话多」和「贫嘴」，还因此挨过不少说。你慢慢学会了收着点，把舞台让给别人——但只要一开口，熟悉你的朋友都知道：正片开始了。",
+start: [
+"把你最拿手的那个故事录成一条 60 秒短视频发出去，数据会教育你什么叫天赋",
+"给朋友写一次生日祝福或婚礼致辞，练一次「付费级代笔」的完成度",
+"开一个小号专门讲身边的小事：故事大王的库存，够你更新三年"
+],
+adv: "会讲故事是这个时代最通用的硬通货：销售、直播、短视频、演讲、写作、面试、汇报——把事说得让人爱听，在哪里都值钱。而且表达力是所有天赋的放大器：有它，别的本事才能被看见。",
+egg: "彩蛋：你大概率在洗澡时排练过获奖感言或吵架复盘，并且每次复盘都能说出更绝的回击。别浪费，那些都是你的素材库。"
+},
+intuition: {
+name: "第六感导航员", en: "The Intuition Navigator", seal: "直觉", color: "#4a7fb5",
+tagline: "你的预感不是玄学，是大脑在你没察觉时算完的答案。",
+signs: [
+"选人、选合作、选路，第一感觉很少出错，事后总被验证",
+"莫名不想去的地方、不想接的活，后来都证明躲对了",
+"做选择时道理列不出三条，但就是知道该选哪个",
+"对「不对劲」的感知特别早：气氛、人心、风向，你先闻到味"
+],
+why: "因为直觉拿不出证据，从小到大没人给它发过奖状，你自己也常怀疑「是不是想多了」。直到一次次被现实验证，你才半信半疑——其实科学早就说了：直觉是经验在潜意识里的快速运算，你只是算得比别人快。",
+start: [
+"建一个「预感记录本」：每次有强烈预感就记下日期和内容，一个月后对账，准确率会给你底气",
+"做重要决定前，先写下第一反应再列利弊，别让分析覆盖掉你的雷达信号",
+"在熟悉的领域刻意用直觉小步试错：选品、选内容、选时机，把天赋练成可复用的判断力"
+],
+adv: "在信息过载的时代，能快速判断「什么值得、什么有坑」的人最稀缺。直觉强的人做决策速度是别人的几倍，特别适合投资嗅觉、选品、公关、谈判和一切需要「先人一步」的场合。",
+egg: "彩蛋：你大概率做过「刚想到某个人，他就发消息来」的体验。别怕，那不是超能力，是你的雷达又立功了。"
+},
+leadership: {
+name: "乱局掌舵者", en: "The Chaos Captain", seal: "掌舵", color: "#a03d5c",
+tagline: "越是乱成一团，你越冷静——你天生是那个说「听我的」的人。",
+signs: [
+"一群人出游，最后定行程、订餐厅、兜底收尾的总是你",
+"突发状况时大家先看你：你不慌，场子就稳了",
+"分工、协调、催进度，你做得像呼吸一样自然",
+"朋友吵架、团队卡壳，最后出来主持大局的还是你"
+],
+why: "因为小时候这份天赋常被叫「爱出风头」或「太强势」，尤其在被教育「要低调」的环境里，你学会了往后退。但每次真出事，人们还是会下意识地看向你——位置可以让，气场让不掉。",
+start: [
+"主动组一个小局：一顿饭、一次短途游、一个读书会，全程由你操盘并复盘",
+"在团队里接一次「没人想管」的烂摊子，用结果而不是嗓门证明自己",
+"学一点项目管理的基础方法（清单、节点、复盘），把你的天赋装上仪表盘"
+],
+adv: "领导力是最难教、最贵的天赋：技术岗千千万，能带队的人永远缺。你的价值不在于自己做得多好，而在于能让一群人变得更好——这是所有组织里升得最快、也最不可替代的位置。",
+egg: "彩蛋：你大概率是朋友群里的「群主本主」：建群的是你、定时间的是你、最后买单兜底的还是你。辛苦了，船长。"
+}
+};
+
+/* 次维度微调：让结果不只由单一维度决定，平局时参考第二维度 */
+var TIE_BREAK = ["empathy","expression","leadership","intuition","memory","aesthetic","craft","logic"];
+
+/* ================= 逻辑 ================= */
+var state = { idx: 0, answers: [], scores: {}};
+var $ = function(id){ return document.getElementById(id);};
+
+function showScreen(id){
+var screens = document.querySelectorAll(".screen");
+for (var i=0;i<screens.length;i++) screens[i].classList.remove("active");
+$(id).classList.add("active");
+window.scrollTo({ top: 0, behavior: "smooth"});
+}
+
+function buildCloud(){
+var names = ["天生共情者","细节侦探","金手指匠人","天生策展人","时光档案员","故事大王","第六感导航员","乱局掌舵者"];
+var html = "";
+names.forEach(function(n, i){ html += "<span>" + (i===0? "<b>": "") + n + (i===0? "</b>": "") + "</span>";});
+$("talentCloud").innerHTML = html;
+}
+
+function renderQuestion(animate){
+var q = QUESTIONS[state.idx];
+$("qCount").textContent = "第 " + (state.idx+1) + " / " + QUESTIONS.length + " 题";
+$("progressBar").style.width = ((state.idx) / QUESTIONS.length * 100) + "%";
+$("qTag").textContent = q.tag;
+$("qText").textContent = q.q;
+var keys = ["A","B","C","D"];
+var html = "";
+q.opts.forEach(function(o, i){
+var picked = state.answers[state.idx] === i? " picked": "";
+html += '<button class="opt' + picked + '" data-i="' + i + '"><span class="key">' + keys[i] + '</span><span>' + o.t + '</span></button>';
+});
+$("qOpts").innerHTML = html;
+var btns = $("qOpts").querySelectorAll(".opt");
+btns.forEach(function(b){
+b.addEventListener("click", function(){ pickAnswer(parseInt(b.getAttribute("data-i"), 10), b);});
+});
+$("btnBack").style.visibility = state.idx === 0? "hidden": "visible";
+if (animate){
+var card = $("qCard");
+card.classList.remove("slide-in"); void card.offsetWidth; card.classList.add("slide-in");
+}
+}
+
+function pickAnswer(i, el){
+state.answers[state.idx] = i;
+var btns = $("qOpts").querySelectorAll(".opt");
+btns.forEach(function(b){ b.classList.remove("picked");});
+el.classList.add("picked");
+var card = $("qCard");
+setTimeout(function(){
+if (state.idx < QUESTIONS.length - 1){
+card.classList.add("slide-out");
+setTimeout(function(){
+card.classList.remove("slide-out");
+state.idx++;
+renderQuestion(true);
+}, 200);
+} else {
+$("progressBar").style.width = "100%";
+finishQuiz();
+}
+}, 260);
+}
+
+function computeResult(){
+var scores = {};
+Object.keys(DIMS).forEach(function(k){ scores[k] = 0;});
+state.answers.forEach(function(a, qi){
+if (a === undefined || a === null) return;
+var d = QUESTIONS[qi].opts[a].d;
+scores[d] += 3;
+});
+state.scores = scores;
+var max = -1;
+Object.keys(scores).forEach(function(k){ if (scores[k] > max) max = scores[k];});
+var tops = Object.keys(scores).filter(function(k){ return scores[k] === max;});
+var winner = tops[0];
+if (tops.length > 1){
+for (var qi = state.answers.length - 1; qi >= 0; qi--){
+var av = state.answers[qi];
+if (av === undefined || av === null) continue;
+var dd = QUESTIONS[qi].opts[av].d;
+if (tops.indexOf(dd) > -1){ winner = dd; break;}
+}
+}
+return winner;
+}
+
+function finishQuiz(){
+showScreen("screen-loading");
+var texts = ["比对八个天赋维度中","正在翻你的成长档案","找到了，就是它——"];
+var ti = 0;
+var timer = setInterval(function(){
+ti++;
+if (ti < texts.length) $("loadingText").textContent = texts[ti];
+}, 550);
+setTimeout(function(){
+clearInterval(timer);
+var winner = computeResult();
+renderResult(winner);
+showScreen("screen-result");
+}, 1750);
+}
+
+function renderResult(key){
+var r = RESULTS[key];
+document.documentElement.style.setProperty("--rc", r.color);
+$("posterTop").style.background = "linear-gradient(135deg," + r.color + "," + shade(r.color, -28) + ")";
+$("rSeal").textContent = r.seal;
+$("rName").textContent = r.name;
+$("rEn").textContent = r.en;
+$("rTagline").textContent = r.tagline;
+$("rSigns").innerHTML = r.signs.map(function(s){ return "<li>" + s + "</li>";}).join("");
+$("rWhy").textContent = r.why;
+$("rStart").innerHTML = r.start.map(function(s){ return "<li>" + s + "</li>";}).join("");
+$("rAdv").textContent = r.adv;
+$("rEgg").textContent = r.egg;
+
+/* 维度条：按分数排序展示全部 8 维，百分比 = 得分/最高可能(30) */
+var entries = Object.keys(state.scores).map(function(k){ return [k, state.scores[k]];});
+entries.sort(function(a,b){ return b[1]-a[1];});
+var dimHtml = "";
+entries.forEach(function(e){
+var pct = Math.round(e[1] / 30 * 100);
+dimHtml += '<div class="dim-row"><span class="dn">' + DIMS[e[0]].name + '</span><span class="bar"><i style="width:' + Math.max(pct,4) + '%;background:' + DIMS[e[0]].color + '"></i></span><span class="dv">' + pct + '%</span></div>';
+});
+$("rDims").innerHTML = dimHtml;
+var matchPct = Math.round(state.scores[key] / 30 * 100);
+$("rMatch").textContent = "天赋浓度 " + matchPct + "%";
+
+/* 其他结果 */
+var others = "";
+Object.keys(RESULTS).forEach(function(k){
+if (k === key) return;
+others += "<div><b>" + RESULTS[k].name + "</b><span>" + RESULTS[k].tagline + "</span></div>";
+});
+$("othersGrid").innerHTML = others;
+
+/* 复制文案 */
+$("btnCopy").onclick = function(){
+var text = "我在《你的隐藏天赋测试》测出了——" + r.tagline + " 你的隐藏天赋是什么？快来测测看！";
+copyText(text);
+};
+}
+
+function shade(hex, amt){
+var n = parseInt(hex.slice(1), 16);
+var r = Math.max(0, Math.min(255, (n >> 16) + amt));
+var g = Math.max(0, Math.min(255, ((n >> 8) & 0xff) + amt));
+var b = Math.max(0, Math.min(255, (n & 0xff) + amt));
+return "#" + ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0");
+}
+
+function copyText(text){
+function done(){
+var t = $("toast");
+t.classList.add("show");
+setTimeout(function(){ t.classList.remove("show");}, 2200);
+}
+if (navigator.clipboard && navigator.clipboard.writeText){
+navigator.clipboard.writeText(text).then(done).catch(function(){ fallback();});
+} else { fallback();}
+function fallback(){
+var ta = document.createElement("textarea");
+ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+document.body.appendChild(ta); ta.select();
+try { document.execCommand("copy");} catch(e){}
+document.body.removeChild(ta); done();
+}
+}
+
+/* ================= 事件 ================= */
+$("btnStart").addEventListener("click", function(){
+state.idx = 0; state.answers = [];
+showScreen("screen-quiz");
+renderQuestion(false);
+});
+$("btnBack").addEventListener("click", function(){
+if (state.idx > 0){ state.idx--; renderQuestion(true);}
+});
+$("btnRetest").addEventListener("click", function(){
+state.idx = 0; state.answers = []; state.scores = {};
+showScreen("screen-home");
+window.scrollTo({ top: 0, behavior: "smooth"});
+});
+
+buildCloud();
+</script>
+</body>
+</html>
